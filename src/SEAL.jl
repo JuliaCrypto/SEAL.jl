@@ -11,6 +11,7 @@ export PublicKey
 export SecretKey
 export RelinKeys
 export KeyGenerator, public_key, secret_key, relin_keys_local, relin_keys
+export Encryptor
 
 include("version.jl")
 include("encryptionparams.jl")
@@ -20,5 +21,6 @@ include("publickey.jl")
 include("secretkey.jl")
 include("relinkeys.jl")
 include("keygenerator.jl")
+include("encryptor.jl")
 
 end

@@ -15,9 +15,11 @@ function example_ckks_basics()
 
   keygen = KeyGenerator(context)
 
-  pub_key = public_key(keygen)
-  sec_key = secret_key(keygen)
-  rel_keys = relin_keys_local(keygen)
+  public_key_ = public_key(keygen)
+  secret_key_ = secret_key(keygen)
+  relin_keys_ = relin_keys_local(keygen)
+
+  encryptor = Encryptor(context, public_key_)
 
   return
 end
