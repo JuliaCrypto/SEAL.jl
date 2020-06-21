@@ -9,7 +9,7 @@ mutable struct EncryptionParameters
           scheme, handleref)
     x = new(handleref[])
     finalizer(x) do x
-      @async println("Finalizing $x at line $(@__LINE__).")
+      # @async println("Finalizing $x at line $(@__LINE__).")
       ccall((:EncParams_Destroy, seal_library_path), Clong,
             (Ptr{Cvoid},),
             x.handle)

@@ -9,7 +9,7 @@ mutable struct SEALContext
           enc_param.handle, expand_mod_chain, sec_level, handleref)
     x = new(handleref[])
     finalizer(x) do x
-      @async println("Finalizing $x at line $(@__LINE__).")
+      # @async println("Finalizing $x at line $(@__LINE__).")
       ccall((:SEALContext_Destroy, seal_library_path), Clong,
             (Ptr{Cvoid},),
             x.handle)

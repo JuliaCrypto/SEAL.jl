@@ -13,7 +13,7 @@ mutable struct Evaluator
   function Evaluator(handle::Ptr{Cvoid})
     x = new(handle)
     finalizer(x) do x
-      @async println("Finalizing $x at line $(@__LINE__).")
+      # @async println("Finalizing $x at line $(@__LINE__).")
       ccall((:Evaluator_Destroy, seal_library_path), Clong,
             (Ptr{Cvoid},),
             x.handle)

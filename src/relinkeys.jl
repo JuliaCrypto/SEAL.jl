@@ -14,7 +14,7 @@ mutable struct RelinKeys
   function RelinKeys(handle::Ptr{Cvoid})
     x = new(handle)
     finalizer(x) do x
-      @async println("Finalizing $x at line $(@__LINE__).")
+      # @async println("Finalizing $x at line $(@__LINE__).")
       ccall((:KSwitchKeys_Destroy, seal_library_path), Clong,
             (Ptr{Cvoid},),
             x.handle)
