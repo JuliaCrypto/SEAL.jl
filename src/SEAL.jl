@@ -14,6 +14,7 @@ export KeyGenerator, public_key, secret_key, relin_keys_local, relin_keys
 export Encryptor
 export Evaluator
 export Decryptor
+export CKKSEncoder, slot_count
 
 include("version.jl")
 include("encryptionparams.jl")
@@ -26,5 +27,6 @@ include("keygenerator.jl")
 include("encryptor.jl")
 include("evaluator.jl")
 include("decryptor.jl")
+include("ckks.jl")
 
 end
