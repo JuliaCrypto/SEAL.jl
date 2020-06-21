@@ -11,6 +11,6 @@ who is also the principal developer of SEAL.jl.
 
 
 ## License and contributing
-SEAL.jl is licensed under the MIT license (see [LICENSE.md](LICENSE.md)). Since SEAL.jl is
+SEAL.jl is licensed under the MIT license (see [License](@ref)). Since SEAL.jl is
 an open-source project, we are very happy to accept contributions from the
-community. Please refer to [CONTRIBUTING.md](CONTRIBUTING.md) for more details.
+community. Please refer to [Contributing](@ref) for more details.
