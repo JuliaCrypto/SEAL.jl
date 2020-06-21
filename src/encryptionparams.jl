@@ -32,7 +32,7 @@ function set_poly_modulus_degree!(enc_param, degree)
   ccall((:EncParams_SetPolyModulusDegree, seal_library_path), Clong,
         (Ptr{Cvoid}, UInt64),
         enc_param.handle, degree)
-  return nothing
+  return enc_param
 end
 
 function set_coeff_modulus!(enc_param, coeff_modulus)
@@ -40,7 +40,7 @@ function set_coeff_modulus!(enc_param, coeff_modulus)
   ccall((:EncParams_SetCoeffModulus, seal_library_path), Clong,
         (Ptr{Cvoid}, UInt64, Ptr{Ptr{Cvoid}}),
         enc_param.handle, length(coeff_modulus), coeff_modulus_ptrs)
-  return nothing
+  return enc_param
 end
 
 function coeff_modulus(enc_param)
