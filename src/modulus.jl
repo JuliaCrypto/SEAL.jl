@@ -7,14 +7,7 @@ mutable struct Modulus
     ccall((:Modulus_Create1, seal_library_path), Clong,
           (UInt8, Ref{Ptr{Cvoid}}),
           scheme, handleref)
-    x = new(handleref[])
-    finalizer(x) do x
-      @async println("Finalizing $x at line $(@__LINE__).")
-      ccall((:Modulus_Destroy, seal_library_path), Clong,
-            (Ptr{Cvoid},),
-            x.handle)
-    end
-    return x
+    return Modulus(handleref[])
   end
 
   function Modulus(handle::Ptr{Cvoid})
@@ -33,7 +26,7 @@ module SecLevelType
 @enum SecLevelTypeEnum::Int32 none=0 tc128=128 tc192=192 tc256=256
 end
 
-function bit_count(modulus)
+function bit_count(modulus::Modulus)
   bit_count = Ref{Int32}(0)
   ccall((:Modulus_BitCount, seal_library_path), Clong,
         (Ptr{Cvoid}, Ref{Int32}),
@@ -41,7 +34,7 @@ function bit_count(modulus)
   return Int(bit_count[])
 end
 
-function value(modulus)
+function value(modulus::Modulus)
   value = Ref{UInt64}(0)
   ccall((:Modulus_Value, seal_library_path), Clong,
         (Ptr{Cvoid}, Ref{UInt64}),

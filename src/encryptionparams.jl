@@ -22,7 +22,7 @@ module SchemeType
 @enum SchemeTypeEnum::UInt8 none=0 bfv=1 ckks=2
 end
 
-function get_poly_modulus_degree(enc_param)
+function get_poly_modulus_degree(enc_param::EncryptionParameters)
   degree = Ref{UInt64}(0)
   ccall((:EncParams_GetPolyModulusDegree, seal_library_path), Clong,
         (Ptr{Cvoid}, Ref{UInt64}),
@@ -30,14 +30,14 @@ function get_poly_modulus_degree(enc_param)
   return Int(degree[])
 end
 
-function set_poly_modulus_degree!(enc_param, degree)
+function set_poly_modulus_degree!(enc_param::EncryptionParameters, degree)
   ccall((:EncParams_SetPolyModulusDegree, seal_library_path), Clong,
         (Ptr{Cvoid}, UInt64),
         enc_param.handle, degree)
   return enc_param
 end
 
-function set_coeff_modulus!(enc_param, coeff_modulus)
+function set_coeff_modulus!(enc_param::EncryptionParameters, coeff_modulus)
   coeff_modulus_ptrs = Ptr{Cvoid}[cm.handle for cm in coeff_modulus]
   ccall((:EncParams_SetCoeffModulus, seal_library_path), Clong,
         (Ptr{Cvoid}, UInt64, Ptr{Ptr{Cvoid}}),
@@ -45,7 +45,7 @@ function set_coeff_modulus!(enc_param, coeff_modulus)
   return enc_param
 end
 
-function coeff_modulus(enc_param)
+function coeff_modulus(enc_param::EncryptionParameters)
   len = Ref{UInt64}(0)
 
   # First call to obtain length
