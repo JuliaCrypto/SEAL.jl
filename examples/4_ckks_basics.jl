@@ -23,5 +23,12 @@ function example_ckks_basics()
   slot_count_ = slot_count(encoder)
   println("Number of slots: ", slot_count_)
 
+  input = collect(range(0.0, 1.0, length=slot_count_))
+  println("Input vector:")
+  show(IOContext(stdout, :limit => true, :displaysize => (6, 1)), input)
+  println()
+
+  println("Evaluating polynomial PI*x^3 + 0.4x + 1 ...")
+
   return
 end
