@@ -33,6 +33,9 @@ function example_ckks_basics()
   plain_coeff3 = Plaintext()
   plain_coeff1 = Plaintext()
   plain_coeff0 = Plaintext()
+  encode!(plain_coeff3, 3.14159265, scale, encoder)
+  encode!(plain_coeff1, 0.4, scale, encoder)
+  encode!(plain_coeff0, 1.0, scale, encoder)
 
   return
 end

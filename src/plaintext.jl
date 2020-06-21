@@ -9,11 +9,11 @@ mutable struct Plaintext
     ccall((:Plaintext_Create1, seal_library_path), Clong,
           (Ptr{Cvoid}, Ref{Ptr{Cvoid}}),
           memory_pool_handle.handle, handleref)
-    return Plaintext(handleref[])
+    return Plaintext(handleref[], memory_pool_handle)
   end
 
-  function Plaintext(handle::Ptr{Cvoid})
-    x = new(handle)
+  function Plaintext(handle::Ptr{Cvoid}, memory_pool_handle)
+    x = new(handle, memory_pool_handle)
     finalizer(x) do x
       # @async println("Finalizing $x at line $(@__LINE__).")
       ccall((:Plaintext_Destroy, seal_library_path), Clong,

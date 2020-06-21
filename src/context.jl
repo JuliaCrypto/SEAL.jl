@@ -18,3 +18,10 @@ mutable struct SEALContext
   end
 end
 
+function first_parms_id(context::SEALContext)
+  parms_id = Ref{UInt64}(0)
+  ccall((:SEALContext_FirstParmsId, seal_library_path), Clong,
+        (Ptr{Cvoid}, Ref{UInt64}),
+        context.handle, parms_id)
+  return Int(parms_id[])
+end
