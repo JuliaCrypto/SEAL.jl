@@ -44,14 +44,20 @@ function set_coeff_modulus!(enc_param, coeff_modulus)
 end
 
 function coeff_modulus(enc_param)
-  length = Ref{UInt64}(0)
-  modulusptr = Ref{Ptr{Cvoid}}(0)
+  len = Ref{UInt64}(0)
+
+  # First call to obtain length
   ccall((:EncParams_GetCoeffModulus, seal_library_path), Clong,
         (Ptr{Cvoid}, Ref{UInt64}, Ref{Ptr{Cvoid}}),
-        enc_param.handle, length, modulusptr)
-  @show modulusptr
-  @show modulusptr[]
-  modulus = Modulus[Modulus(unsafe_load(modulusptr[], i)) for i in 1:length[]]
+        enc_param.handle, len, Ref{Ptr{Cvoid}}(0))
+
+  # Second call to obtain modulus
+  modulusptrs = Vector{Ptr{Cvoid}}(undef, len[])
+  ccall((:EncParams_GetCoeffModulus, seal_library_path), Clong,
+        (Ptr{Cvoid}, Ref{UInt64}, Ref{Ptr{Cvoid}}),
+        enc_param.handle, len, modulusptrs)
+
+  modulus = Modulus[Modulus(ptr) for ptr in modulusptrs]
   return modulus
 end
 
