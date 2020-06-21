@@ -20,6 +20,8 @@ function example_ckks_basics()
   relin_keys_ = relin_keys_local(keygen)
 
   encryptor = Encryptor(context, public_key_)
+  evaluator = Evaluator(context)
+  decryptor = Decryptor(context, secret_key_)
 
   return
 end
