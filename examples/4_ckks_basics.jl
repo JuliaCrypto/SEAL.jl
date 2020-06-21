@@ -11,5 +11,13 @@ function example_ckks_basics()
 
   b = coeff_modulus(parms)
 
+  context = SEALContext(parms)
+
+  keygen = KeyGenerator(context)
+
+  pub_key = public_key(keygen)
+  sec_key = secret_key(keygen)
+  rel_keys = relin_keys_local(keygen)
+
   return
 end

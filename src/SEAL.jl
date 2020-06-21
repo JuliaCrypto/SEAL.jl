@@ -9,7 +9,8 @@ export Modulus, SecLevelType, bit_count, value, coeff_modulus_create
 export SEALContext
 export PublicKey
 export SecretKey
-export KeyGenerator, public_key, secret_key
+export RelinKeys
+export KeyGenerator, public_key, secret_key, relin_keys_local, relin_keys
 
 include("version.jl")
 include("encryptionparams.jl")
@@ -17,6 +18,7 @@ include("modulus.jl")
 include("context.jl")
 include("publickey.jl")
 include("secretkey.jl")
+include("relinkeys.jl")
 include("keygenerator.jl")
 
 end

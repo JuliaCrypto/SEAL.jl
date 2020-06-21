@@ -37,3 +37,19 @@ function secret_key(keygen::KeyGenerator)
         keygen.handle, keyptr)
   return SecretKey(keyptr[])
 end
+
+function relin_keys_local(keygen::KeyGenerator)
+  keyptr = Ref{Ptr{Cvoid}}(C_NULL)
+  ccall((:KeyGenerator_RelinKeys, seal_library_path), Clong,
+        (Ptr{Cvoid}, UInt8, Ref{Ptr{Cvoid}}),
+        keygen.handle, false, keyptr)
+  return RelinKeys(keyptr[])
+end
+
+function relin_keys(keygen::KeyGenerator)
+  keyptr = Ref{Ptr{Cvoid}}(C_NULL)
+  ccall((:KeyGenerator_RelinKeys, seal_library_path), Clong,
+        (Ptr{Cvoid}, UInt8, Ref{Ptr{Cvoid}}),
+        keygen.handle, true, keyptr)
+  return RelinKeys(keyptr[])
+end
