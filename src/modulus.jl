@@ -3,7 +3,7 @@ mutable struct Modulus
   handle::Ptr{Cvoid}
 
   function Modulus(value::Integer)
-    handleref = Ref{Ptr{Cvoid}}(0)
+    handleref = Ref{Ptr{Cvoid}}(C_NULL)
     ccall((:Modulus_Create1, seal_library_path), Clong,
           (UInt8, Ref{Ptr{Cvoid}}),
           scheme, handleref)
@@ -28,6 +28,8 @@ mutable struct Modulus
     return x
   end
 end
+
+#=@enum SecLevelType::Int32 none=0 tc128=128 tc192=192 tc256=256=#
 
 function bit_count(modulus)
   bit_count = Ref{Int32}(0)

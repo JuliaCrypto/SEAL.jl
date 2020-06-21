@@ -3,7 +3,7 @@ mutable struct EncryptionParameters
   handle::Ptr{Cvoid}
 
   function EncryptionParameters(scheme)
-    handleref = Ref{Ptr{Cvoid}}(0)
+    handleref = Ref{Ptr{Cvoid}}(C_NULL)
     ccall((:EncParams_Create1, seal_library_path), Clong,
           (UInt8, Ref{Ptr{Cvoid}}),
           scheme, handleref)
@@ -49,7 +49,7 @@ function coeff_modulus(enc_param)
   # First call to obtain length
   ccall((:EncParams_GetCoeffModulus, seal_library_path), Clong,
         (Ptr{Cvoid}, Ref{UInt64}, Ref{Ptr{Cvoid}}),
-        enc_param.handle, len, Ref{Ptr{Cvoid}}(0))
+        enc_param.handle, len, Ref{Ptr{Cvoid}}(C_NULL))
 
   # Second call to obtain modulus
   modulusptrs = Vector{Ptr{Cvoid}}(undef, len[])
