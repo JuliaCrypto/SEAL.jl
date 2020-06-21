@@ -30,5 +30,9 @@ function example_ckks_basics()
 
   println("Evaluating polynomial PI*x^3 + 0.4x + 1 ...")
 
+  plain_coeff3 = Plaintext()
+  plain_coeff1 = Plaintext()
+  plain_coeff0 = Plaintext()
+
   return
 end

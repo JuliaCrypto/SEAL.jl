@@ -15,6 +15,8 @@ export Encryptor
 export Evaluator
 export Decryptor
 export CKKSEncoder, slot_count
+export MemoryPoolHandle, memory_manager_get_pool
+export Plaintext
 
 include("version.jl")
 include("encryptionparams.jl")
@@ -28,5 +30,7 @@ include("encryptor.jl")
 include("evaluator.jl")
 include("decryptor.jl")
 include("ckks.jl")
+include("memorymanager.jl")
+include("plaintext.jl")
 
 end
