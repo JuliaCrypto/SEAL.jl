@@ -18,7 +18,9 @@ mutable struct EncryptionParameters
   end
 end
 
-@enum SchemeType::UInt8 none=0 bfv=1 ckks=2
+module SchemeType
+@enum SchemeTypeEnum::UInt8 none=0 bfv=1 ckks=2
+end
 
 function get_poly_modulus_degree(enc_param)
   degree = Ref{UInt64}(0)

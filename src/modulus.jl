@@ -29,7 +29,9 @@ mutable struct Modulus
   end
 end
 
-#=@enum SecLevelType::Int32 none=0 tc128=128 tc192=192 tc256=256=#
+module SecLevelType
+@enum SecLevelTypeEnum::Int32 none=0 tc128=128 tc192=192 tc256=256
+end
 
 function bit_count(modulus)
   bit_count = Ref{Int32}(0)

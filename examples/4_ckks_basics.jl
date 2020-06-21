@@ -1,7 +1,7 @@
 using SEAL
 
 function example_ckks_basics()
-  parms = EncryptionParameters(ckks)
+  parms = EncryptionParameters(SchemeType.ckks)
 
   poly_modulus_degree = 8192
 
