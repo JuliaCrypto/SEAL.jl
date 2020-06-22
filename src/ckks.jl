@@ -31,6 +31,16 @@ function slot_count(encoder::CKKSEncoder)
   return Int(count[])
 end
 
+function encode!(destination, values::DenseVector{Float64}, scale, encoder::CKKSEncoder)
+  value_count = UInt64(length(values))
+  parms_id = Ref{UInt64}(first_parms_id(encoder.context))
+  ccall((:CKKSEncoder_Encode1, seal_library_path), Clong,
+        (Ptr{Cvoid}, UInt64, Ptr{Float64}, Ref{UInt64}, Float64, Ptr{Cvoid}, Ptr{Cvoid}),
+        encoder.handle, value_count, values, parms_id, scale, destination.handle,
+        destination.memory_pool_handle.handle)
+  return destination
+end
+
 function encode!(destination, value::Float64, scale, encoder::CKKSEncoder)
   parms_id = Ref{UInt64}(first_parms_id(encoder.context))
   ccall((:CKKSEncoder_Encode3, seal_library_path), Clong,

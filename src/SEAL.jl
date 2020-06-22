@@ -11,12 +11,13 @@ export PublicKey
 export SecretKey
 export RelinKeys
 export KeyGenerator, public_key, secret_key, relin_keys_local, relin_keys
-export Encryptor
+export Encryptor, encrypt!
 export Evaluator
 export Decryptor
 export CKKSEncoder, slot_count, encode!
 export MemoryPoolHandle, memory_manager_get_pool
 export Plaintext
+export Ciphertext
 
 include("version.jl")
 include("encryptionparams.jl")
@@ -32,5 +33,6 @@ include("decryptor.jl")
 include("ckks.jl")
 include("memorymanager.jl")
 include("plaintext.jl")
+include("ciphertext.jl")
 
 end

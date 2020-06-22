@@ -37,5 +37,12 @@ function example_ckks_basics()
   encode!(plain_coeff1, 0.4, scale, encoder)
   encode!(plain_coeff0, 1.0, scale, encoder)
 
+  x_plain = Plaintext()
+  println("Encode input vectors.")
+  encode!(x_plain, input, scale, encoder)
+  x1_encrypted = Ciphertext()
+  #=encrypt!(x1_encrypted, x_plain)=#
+  #=encrypt!(x1_encrypted, plain_coeff0)=#
+
   return
 end

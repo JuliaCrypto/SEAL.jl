@@ -38,3 +38,10 @@ mutable struct Encryptor
   end
 end
 
+function encrypt!(destination, plain, encryptor::Encryptor)
+  ccall((:Encryptor_Encrypt, seal_library_path), Clong,
+        (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}),
+        encryptor.handle, plaintext.handle, destination.handle, destination.memory_pool_handle.handle)
+  return destination
+end
+
