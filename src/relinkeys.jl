@@ -5,7 +5,7 @@ mutable struct RelinKeys
   function RelinKeys()
     handleref = Ref{Ptr{Cvoid}}(C_NULL)
     # RelinKeys are created as KSwitchKeys since they share the same data
-    ccall((:KSwitchKeys_Create1, seal_library_path), Clong,
+    ccall((:KSwitchKeys_Create1, libsealc), Clong,
           (Ref{Ptr{Cvoid}},),
           handleref)
     return RelinKeys(handleref[])
@@ -15,7 +15,7 @@ mutable struct RelinKeys
     x = new(handle)
     finalizer(x) do x
       # @async println("Finalizing $x at line $(@__LINE__).")
-      ccall((:KSwitchKeys_Destroy, seal_library_path), Clong,
+      ccall((:KSwitchKeys_Destroy, libsealc), Clong,
             (Ptr{Cvoid},),
             x.handle)
     end

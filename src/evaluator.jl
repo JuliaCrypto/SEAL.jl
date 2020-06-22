@@ -4,7 +4,7 @@ mutable struct Evaluator
 
   function Evaluator(context)
     handleref = Ref{Ptr{Cvoid}}(C_NULL)
-    ccall((:Evaluator_Create, seal_library_path), Clong,
+    ccall((:Evaluator_Create, libsealc), Clong,
           (Ptr{Cvoid}, Ref{Ptr{Cvoid}}),
           context.handle, handleref)
     return Evaluator(handleref[])
@@ -14,7 +14,7 @@ mutable struct Evaluator
     x = new(handle)
     finalizer(x) do x
       # @async println("Finalizing $x at line $(@__LINE__).")
-      ccall((:Evaluator_Destroy, seal_library_path), Clong,
+      ccall((:Evaluator_Destroy, libsealc), Clong,
             (Ptr{Cvoid},),
             x.handle)
     end

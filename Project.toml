@@ -3,6 +3,9 @@ uuid = "bac81e26-86e4-4b48-8696-7d0406d5dbc1"
 authors = ["Michael Schlottke-Lakemper <michael@sloede.com>"]
 version = "0.1.0"
 
+[deps]
+SEAL_jll = "cdf55027-1209-57fc-8789-28745714751d"
+
 [compat]
 julia = "1.5"
 

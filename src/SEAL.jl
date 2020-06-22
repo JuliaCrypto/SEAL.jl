@@ -1,6 +1,6 @@
 module SEAL
 
-const seal_library_path = "/home/mschlott/.pool/seal/3.5.4/lib/libsealc.so"
+using SEAL_jll
 
 export version_major, version_minor, version_patch, version
 export EncryptionParameters, SchemeType, get_poly_modulus_degree,

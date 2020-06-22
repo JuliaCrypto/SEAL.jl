@@ -4,7 +4,7 @@ mutable struct SecretKey
 
   function SecretKey()
     handleref = Ref{Ptr{Cvoid}}(C_NULL)
-    ccall((:SecretKey_Create, seal_library_path), Clong,
+    ccall((:SecretKey_Create, libsealc), Clong,
           (Ref{Ptr{Cvoid}},),
           handleref)
     return SecretKey(handleref[])
@@ -14,7 +14,7 @@ mutable struct SecretKey
     x = new(handle)
     finalizer(x) do x
       # @async println("Finalizing $x at line $(@__LINE__).")
-      ccall((:SecretKey_Destroy, seal_library_path), Clong,
+      ccall((:SecretKey_Destroy, libsealc), Clong,
             (Ptr{Cvoid},),
             x.handle)
     end

@@ -1,19 +1,19 @@
 
 function version_major()
   val = Ref{UInt8}(0)
-  ccall((:Version_Major, seal_library_path), Clong, (Ref{UInt8},), val)
+  ccall((:Version_Major, libsealc), Clong, (Ref{UInt8},), val)
   return convert(Int, val[])
 end
 
 function version_minor()
   val = Ref{UInt8}(0)
-  ccall((:Version_Minor, seal_library_path), Clong, (Ref{UInt8},), val)
+  ccall((:Version_Minor, libsealc), Clong, (Ref{UInt8},), val)
   return convert(Int, val[])
 end
 
 function version_patch()
   val = Ref{UInt8}(0)
-  ccall((:Version_Patch, seal_library_path), Clong, (Ref{UInt8},), val)
+  ccall((:Version_Patch, libsealc), Clong, (Ref{UInt8},), val)
   return convert(Int, val[])
 end
 
