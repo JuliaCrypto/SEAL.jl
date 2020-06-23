@@ -50,8 +50,8 @@ function coeff_modulus(enc_param::EncryptionParameters)
 
   # First call to obtain length
   ccall((:EncParams_GetCoeffModulus, libsealc), Clong,
-        (Ptr{Cvoid}, Ref{UInt64}, Ref{Ptr{Cvoid}}),
-        enc_param.handle, len, Ref{Ptr{Cvoid}}(C_NULL))
+        (Ptr{Cvoid}, Ref{UInt64}, Ptr{Cvoid}),
+        enc_param.handle, len, C_NULL)
 
   # Second call to obtain modulus
   modulusptrs = Vector{Ptr{Cvoid}}(undef, len[])

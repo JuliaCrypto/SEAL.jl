@@ -3,7 +3,7 @@ mutable struct Encryptor
   handle::Ptr{Cvoid}
 
   function Encryptor(context::SEALContext, public_key::PublicKey, secret_key::SecretKey)
-    handleref = Ref{Ptr{Cvoid}}(C_NULL)
+    handleref = Ref{Ptr{Cvoid}}(0)
     ccall((:Encryptor_Create, libsealc), Clong,
           (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ref{Ptr{Cvoid}}),
           context.handle, public_key.handle, secret_key.handle, handleref)
@@ -14,7 +14,7 @@ mutable struct Encryptor
     handleref = Ref{Ptr{Cvoid}}(C_NULL)
     ccall((:Encryptor_Create, libsealc), Clong,
           (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ref{Ptr{Cvoid}}),
-          context.handle, public_key.handle, Ptr{Cvoid}(C_NULL), handleref)
+          context.handle, public_key.handle, C_NULL, handleref)
     return Encryptor(handleref[])
   end
 
@@ -22,7 +22,7 @@ mutable struct Encryptor
     handleref = Ref{Ptr{Cvoid}}(C_NULL)
     ccall((:Encryptor_Create, libsealc), Clong,
           (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ref{Ptr{Cvoid}}),
-          context.handle, Ptr{Cvoid}(C_NULL), secret_key.handle, handleref)
+          context.handle, C_NULL, secret_key.handle, handleref)
     return Encryptor(handleref[])
   end
 
