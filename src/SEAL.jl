@@ -3,10 +3,11 @@ module SEAL
 using SEAL_jll
 
 abstract type SEALObject end
-export SEALObject
+handle(x::SEALObject) = x.handle
+export SEALObject, handle
 
 import Base.unsafe_convert
-unsafe_convert(::Type{Ptr{Cvoid}}, x::SEALObject) = x.handle
+unsafe_convert(::Type{Ptr{Cvoid}}, x::SEALObject) = handle(x)
 
 include("utilities.jl")
 export check_return_value

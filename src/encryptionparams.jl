@@ -39,7 +39,7 @@ function set_poly_modulus_degree!(enc_param::EncryptionParameters, degree)
 end
 
 function set_coeff_modulus!(enc_param::EncryptionParameters, coeff_modulus)
-  coeff_modulus_ptrs = Ptr{Cvoid}[cm.handle for cm in coeff_modulus]
+  coeff_modulus_ptrs = Ptr{Cvoid}[handle(c) for c in coeff_modulus]
   retval = ccall((:EncParams_SetCoeffModulus, libsealc), Clong,
                  (Ptr{Cvoid}, UInt64, Ref{Ptr{Cvoid}}),
                  enc_param, length(coeff_modulus), coeff_modulus_ptrs)
