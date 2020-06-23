@@ -7,7 +7,7 @@ mutable struct Evaluator
     retval = ccall((:Evaluator_Create, libsealc), Clong,
                    (Ptr{Cvoid}, Ref{Ptr{Cvoid}}),
                    context.handle, handleref)
-    check_return_value(retval)
+    @check_return_value retval
     return Evaluator(handleref[])
   end
 
@@ -27,7 +27,7 @@ function square!(destination::Ciphertext, encrypted::Ciphertext, evaluator::Eval
   retval = ccall((:Evaluator_Square, libsealc), Clong,
                  (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}),
                  evaluator.handle, encrypted.handle, destination.handle, C_NULL)
-  check_return_value(retval)
+  @check_return_value retval
   return destination
 end
 
@@ -36,7 +36,7 @@ function relinearize!(destination::Ciphertext, encrypted::Ciphertext, relinkeys:
   retval = ccall((:Evaluator_Relinearize, libsealc), Clong,
                  (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}),
                  evaluator.handle, encrypted.handle, relinkeys.handle, destination.handle, C_NULL)
-  check_return_value(retval)
+  @check_return_value retval
   return destination
 end
 
@@ -48,7 +48,7 @@ function rescale_to_next!(destination::Ciphertext, encrypted::Ciphertext, evalua
   retval = ccall((:Evaluator_RescaleToNext, libsealc), Clong,
                  (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}),
                  evaluator.handle, encrypted.handle, destination.handle, C_NULL)
-  check_return_value(retval)
+  @check_return_value retval
   return destination
 end
 

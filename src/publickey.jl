@@ -7,7 +7,7 @@ mutable struct PublicKey
     retval = ccall((:PublicKey_Create, libsealc), Clong,
                    (Ref{Ptr{Cvoid}},),
                    handleref)
-    check_return_value(retval)
+    @check_return_value retval
     return PublicKey(handleref[])
   end
 

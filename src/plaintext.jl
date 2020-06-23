@@ -7,7 +7,7 @@ mutable struct Plaintext
     retval = ccall((:Plaintext_Create1, libsealc), Clong,
                    (Ptr{Cvoid}, Ref{Ptr{Cvoid}}),
                    C_NULL, handleref)
-    check_return_value(retval)
+    @check_return_value retval
     return Plaintext(handleref[])
   end
 

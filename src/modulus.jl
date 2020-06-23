@@ -7,7 +7,7 @@ mutable struct Modulus
     retval = ccall((:Modulus_Create1, libsealc), Clong,
                    (UInt8, Ref{Ptr{Cvoid}}),
                    scheme, handleref)
-    check_return_value(retval)
+    @check_return_value retval
     return Modulus(handleref[])
   end
 
@@ -32,7 +32,7 @@ function bit_count(modulus::Modulus)
   retval = ccall((:Modulus_BitCount, libsealc), Clong,
                  (Ptr{Cvoid}, Ref{Cint}),
                  modulus.handle, bit_count)
-  check_return_value(retval)
+  @check_return_value retval
   return Int(bit_count[])
 end
 
@@ -41,7 +41,7 @@ function value(modulus::Modulus)
   retval = ccall((:Modulus_Value, libsealc), Clong,
                  (Ptr{Cvoid}, Ref{UInt64}),
                  modulus.handle, value)
-  check_return_value(retval)
+  @check_return_value retval
   return Int(value[])
 end
 
@@ -50,7 +50,7 @@ function coeff_modulus_create(poly_modulus_degree, bit_sizes)
   retval = ccall((:CoeffModulus_Create, libsealc), Clong,
                  (UInt64, UInt64, Ref{Cint}, Ref{Ptr{Cvoid}}),
                  poly_modulus_degree, length(bit_sizes), collect(Cint, bit_sizes), modulusptrs)
-  check_return_value(retval)
+  @check_return_value retval
   modulus = Modulus[Modulus(modulusptrs[i]) for i in 1:length(bit_sizes)]
   return modulus
 end

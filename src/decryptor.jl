@@ -7,7 +7,7 @@ mutable struct Decryptor
     retval = ccall((:Decryptor_Create, libsealc), Clong,
                    (Ptr{Cvoid}, Ptr{Cvoid}, Ref{Ptr{Cvoid}}),
                    context.handle, secret_key.handle, handleref)
-    check_return_value(retval)
+    @check_return_value retval
     return Decryptor(handleref[])
   end
 

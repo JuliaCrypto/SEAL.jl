@@ -7,7 +7,7 @@ mutable struct SEALContext
     retval = ccall((:SEALContext_Create, libsealc), Clong,
                    (Ptr{Cvoid}, UInt8, Cint, Ref{Ptr{Cvoid}}),
                    enc_param.handle, expand_mod_chain, sec_level, handleref)
-    check_return_value(retval)
+    @check_return_value retval
     x = new(handleref[])
     finalizer(x) do x
       # @async println("Finalizing $x at line $(@__LINE__).")
@@ -24,6 +24,6 @@ function first_parms_id(context::SEALContext)
   retval = ccall((:SEALContext_FirstParmsId, libsealc), Clong,
                  (Ptr{Cvoid}, Ref{UInt64}),
                  context.handle, parms_id)
-  check_return_value(retval)
+  @check_return_value retval
   return Int(parms_id[])
 end

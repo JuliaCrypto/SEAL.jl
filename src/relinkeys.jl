@@ -8,7 +8,7 @@ mutable struct RelinKeys
     retval = ccall((:KSwitchKeys_Create1, libsealc), Clong,
                    (Ref{Ptr{Cvoid}},),
                    handleref)
-    check_return_value(retval)
+    @check_return_value retval
     return RelinKeys(handleref[])
   end
 

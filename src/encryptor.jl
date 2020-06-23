@@ -7,7 +7,7 @@ mutable struct Encryptor
     retval = ccall((:Encryptor_Create, libsealc), Clong,
                    (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ref{Ptr{Cvoid}}),
                    context.handle, public_key.handle, secret_key.handle, handleref)
-    check_return_value(retval)
+    @check_return_value retval
     return Encryptor(handleref[])
   end
 
@@ -16,7 +16,7 @@ mutable struct Encryptor
     retval = ccall((:Encryptor_Create, libsealc), Clong,
                    (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ref{Ptr{Cvoid}}),
                    context.handle, public_key.handle, C_NULL, handleref)
-    check_return_value(retval)
+    @check_return_value retval
     return Encryptor(handleref[])
   end
 
@@ -25,7 +25,7 @@ mutable struct Encryptor
     retval = ccall((:Encryptor_Create, libsealc), Clong,
                    (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ref{Ptr{Cvoid}}),
                    context.handle, C_NULL, secret_key.handle, handleref)
-    check_return_value(retval)
+    @check_return_value retval
     return Encryptor(handleref[])
   end
 
@@ -45,7 +45,7 @@ function encrypt!(destination::Ciphertext, plain::Plaintext, encryptor::Encrypto
   retval = ccall((:Encryptor_Encrypt, libsealc), Clong,
                  (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}),
                  encryptor.handle, plain.handle, destination.handle, C_NULL)
-  check_return_value(retval)
+  @check_return_value retval
   return destination
 end
 
