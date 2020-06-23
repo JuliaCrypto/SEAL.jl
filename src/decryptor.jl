@@ -22,3 +22,11 @@ mutable struct Decryptor
     return x
   end
 end
+
+function decrypt!(destination::Plaintext, encrypted::Ciphertext, decryptor::Decryptor)
+  retval = ccall((:Decryptor_Decrypt, libsealc), Clong,
+                 (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}),
+                 decryptor.handle, encrypted.handle, destination.handle)
+  @check_return_value retval
+  return destination
+end

@@ -43,11 +43,20 @@ function encode!(destination, values::DenseVector{Float64}, scale, encoder::CKKS
   return destination
 end
 
-function encode!(destination, value::Float64, scale, encoder::CKKSEncoder)
+function encode!(destination::Plaintext, value::Float64, scale, encoder::CKKSEncoder)
   parms_id = first_parms_id(encoder.context)
   retval = ccall((:CKKSEncoder_Encode3, libsealc), Clong,
                  (Ptr{Cvoid}, Float64, Ref{UInt64}, Float64, Ptr{Cvoid}, Ptr{Cvoid}),
                  encoder.handle, value, parms_id, scale, destination.handle, C_NULL)
+  @check_return_value retval
+  return destination
+end
+
+function decode!(destination::DenseVector{Float64}, plain::Plaintext, encoder::CKKSEncoder)
+  value_count = UInt64(length(destination))
+  retval = ccall((:CKKSEncoder_Decode1, libsealc), Clong,
+                 (Ptr{Cvoid}, Ptr{Cvoid}, Ref{UInt64}, Ref{Cdouble}, Ptr{Cvoid}),
+                 encoder.handle, plain.handle, value_count, destination, C_NULL)
   @check_return_value retval
   return destination
 end

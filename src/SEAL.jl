@@ -42,13 +42,14 @@ export Encryptor, encrypt!
 include("evaluator.jl")
 export Evaluator, square!, relinearize!, relinearize_inplace!, rescale_to_next!,
        rescale_to_next_inplace!, multiply_plain!, multiply_plain_inplace!, multiply!,
-       multiply_inplace!, mod_switch_to!, mod_switch_to_inplace!
+       multiply_inplace!, mod_switch_to!, mod_switch_to_inplace!, add!, add_inplace!,
+       add_plain!, add_plain_inplace!
 
 include("decryptor.jl")
-export Decryptor
+export Decryptor, decrypt!
 
 include("ckks.jl")
-export CKKSEncoder, slot_count, encode!
+export CKKSEncoder, slot_count, encode!, decode!
 
 include("memorymanager.jl")
 export MemoryPoolHandle, memory_manager_get_pool

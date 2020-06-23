@@ -107,3 +107,29 @@ end
 function mod_switch_to_inplace!(plain::Plaintext, parms_id, evaluator::Evaluator)
   return mod_switch_to!(plain, plain, parms_id, evaluator)
 end
+
+function add!(destination::Ciphertext, encrypted1::Ciphertext, encrypted2::Ciphertext,
+              evaluator::Evaluator)
+  retval = ccall((:Evaluator_Add, libsealc), Clong,
+                 (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}),
+                 evaluator.handle, encrypted1.handle, encrypted1.handle, destination.handle)
+  @check_return_value retval
+  return destination
+end
+
+function add_inplace!(encrypted1::Ciphertext, encrypted2::Ciphertext, evaluator::Evaluator)
+  return add!(encrypted1, encrypted1, encrypted2, evaluator)
+end
+
+function add_plain!(destination::Ciphertext, encrypted::Ciphertext, plain::Plaintext,
+                    evaluator::Evaluator)
+  retval = ccall((:Evaluator_AddPlain, libsealc), Clong,
+                 (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}),
+                 evaluator.handle, encrypted.handle, plain.handle, destination.handle)
+  @check_return_value retval
+  return destination
+end
+
+function add_plain_inplace!(encrypted::Ciphertext, plain::Plaintext, evaluator::Evaluator)
+  return add_plain!(encrypted, encrypted, plain, evaluator)
+end

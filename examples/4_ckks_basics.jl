@@ -29,10 +29,7 @@ function example_ckks_basics()
   input = collect(range(0.0, 1.0, length=slot_count_))
   println()
   println("Input vector:")
-  print("  ")
-  show(IOContext(stdout, :limit => true, :displaysize => (6, 1)), input)
-  println()
-  println()
+  print_vector(input)
 
   println("Evaluating polynomial PI*x^3 + 0.4x + 1 ...")
 
@@ -113,6 +110,28 @@ function example_ckks_basics()
   last_parms_id = parms_id(x3_encrypted)
   mod_switch_to_inplace!(x1_encrypted, last_parms_id, evaluator)
   mod_switch_to_inplace!(plain_coeff0, last_parms_id, evaluator)
+
+  print_line(@__LINE__)
+  println("Compute PI*x^3 + 0.4*x + 1.")
+  encrypted_result = Ciphertext()
+  add!(encrypted_result, x3_encrypted, x1_encrypted, evaluator)
+  add_plain_inplace!(encrypted_result, plain_coeff0, evaluator)
+
+  plain_result = Plaintext()
+  print_line(@__LINE__)
+  println("Decrypt and decode PI*x^3 + 0.4x + 1.")
+  println("    + Expected result:")
+  true_result = similar(input)
+  for (i, x) in enumerate(input)
+    true_result[i] = (3.14159265 * x * x + 0.4) * x + 1
+  end
+  print_vector(true_result)
+
+  decrypt!(plain_result, encrypted_result, decryptor)
+  result = similar(input)
+  decode!(result, plain_result, encoder)
+  println("    + Computed result ...... Correct.")
+  print_vector(result)
 
   return
 end
