@@ -1,5 +1,5 @@
 
-mutable struct Modulus
+mutable struct Modulus <: SEALObject
   handle::Ptr{Cvoid}
 
   function Modulus(value::Integer)
@@ -15,9 +15,7 @@ mutable struct Modulus
     x = new(handle)
     finalizer(x) do x
       # @async println("Finalizing $x at line $(@__LINE__).")
-      ccall((:Modulus_Destroy, libsealc), Clong,
-            (Ptr{Cvoid},),
-            x.handle)
+      ccall((:Modulus_Destroy, libsealc), Clong, (Ptr{Cvoid},), x)
     end
     return x
   end
@@ -31,7 +29,7 @@ function bit_count(modulus::Modulus)
   bit_count = Ref{Cint}(0)
   retval = ccall((:Modulus_BitCount, libsealc), Clong,
                  (Ptr{Cvoid}, Ref{Cint}),
-                 modulus.handle, bit_count)
+                 modulus, bit_count)
   @check_return_value retval
   return Int(bit_count[])
 end
@@ -40,7 +38,7 @@ function value(modulus::Modulus)
   value = Ref{UInt64}(0)
   retval = ccall((:Modulus_Value, libsealc), Clong,
                  (Ptr{Cvoid}, Ref{UInt64}),
-                 modulus.handle, value)
+                 modulus, value)
   @check_return_value retval
   return Int(value[])
 end

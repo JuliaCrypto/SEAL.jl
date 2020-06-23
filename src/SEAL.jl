@@ -2,6 +2,12 @@ module SEAL
 
 using SEAL_jll
 
+abstract type SEALObject end
+export SEALObject
+
+import Base.unsafe_convert
+unsafe_convert(::Type{Ptr{Cvoid}}, x::SEALObject) = x.handle
+
 include("utilities.jl")
 export check_return_value
 

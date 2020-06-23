@@ -1,12 +1,12 @@
 
-mutable struct Encryptor
+mutable struct Encryptor <: SEALObject
   handle::Ptr{Cvoid}
 
   function Encryptor(context::SEALContext, public_key::PublicKey, secret_key::SecretKey)
     handleref = Ref{Ptr{Cvoid}}(0)
     retval = ccall((:Encryptor_Create, libsealc), Clong,
                    (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ref{Ptr{Cvoid}}),
-                   context.handle, public_key.handle, secret_key.handle, handleref)
+                   context, public_key, secret_key, handleref)
     @check_return_value retval
     return Encryptor(handleref[])
   end
@@ -15,7 +15,7 @@ mutable struct Encryptor
     handleref = Ref{Ptr{Cvoid}}(C_NULL)
     retval = ccall((:Encryptor_Create, libsealc), Clong,
                    (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ref{Ptr{Cvoid}}),
-                   context.handle, public_key.handle, C_NULL, handleref)
+                   context, public_key, C_NULL, handleref)
     @check_return_value retval
     return Encryptor(handleref[])
   end
@@ -24,7 +24,7 @@ mutable struct Encryptor
     handleref = Ref{Ptr{Cvoid}}(C_NULL)
     retval = ccall((:Encryptor_Create, libsealc), Clong,
                    (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ref{Ptr{Cvoid}}),
-                   context.handle, C_NULL, secret_key.handle, handleref)
+                   context, C_NULL, secret_key, handleref)
     @check_return_value retval
     return Encryptor(handleref[])
   end
@@ -33,9 +33,7 @@ mutable struct Encryptor
     x = new(handle)
     finalizer(x) do x
       # @async println("Finalizing $x at line $(@__LINE__).")
-      ccall((:Encryptor_Destroy, libsealc), Clong,
-            (Ptr{Cvoid},),
-            x.handle)
+      ccall((:Encryptor_Destroy, libsealc), Clong, (Ptr{Cvoid},), x)
     end
     return x
   end
@@ -44,7 +42,7 @@ end
 function encrypt!(destination::Ciphertext, plain::Plaintext, encryptor::Encryptor)
   retval = ccall((:Encryptor_Encrypt, libsealc), Clong,
                  (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}),
-                 encryptor.handle, plain.handle, destination.handle, C_NULL)
+                 encryptor, plain, destination, C_NULL)
   @check_return_value retval
   return destination
 end

@@ -1,5 +1,5 @@
 
-mutable struct RelinKeys
+mutable struct RelinKeys <: SEALObject
   handle::Ptr{Cvoid}
 
   function RelinKeys()
@@ -16,9 +16,7 @@ mutable struct RelinKeys
     x = new(handle)
     finalizer(x) do x
       # @async println("Finalizing $x at line $(@__LINE__).")
-      ccall((:KSwitchKeys_Destroy, libsealc), Clong,
-            (Ptr{Cvoid},),
-            x.handle)
+      ccall((:KSwitchKeys_Destroy, libsealc), Clong, (Ptr{Cvoid},), x)
     end
     return x
   end

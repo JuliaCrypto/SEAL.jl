@@ -1,12 +1,12 @@
 
-mutable struct Evaluator
+mutable struct Evaluator <: SEALObject
   handle::Ptr{Cvoid}
 
   function Evaluator(context::SEALContext)
     handleref = Ref{Ptr{Cvoid}}(C_NULL)
     retval = ccall((:Evaluator_Create, libsealc), Clong,
                    (Ptr{Cvoid}, Ref{Ptr{Cvoid}}),
-                   context.handle, handleref)
+                   context, handleref)
     @check_return_value retval
     return Evaluator(handleref[])
   end
@@ -15,9 +15,7 @@ mutable struct Evaluator
     x = new(handle)
     finalizer(x) do x
       # @async println("Finalizing $x at line $(@__LINE__).")
-      ccall((:Evaluator_Destroy, libsealc), Clong,
-            (Ptr{Cvoid},),
-            x.handle)
+      ccall((:Evaluator_Destroy, libsealc), Clong, (Ptr{Cvoid},), x)
     end
     return x
   end
@@ -26,7 +24,7 @@ end
 function square!(destination::Ciphertext, encrypted::Ciphertext, evaluator::Evaluator)
   retval = ccall((:Evaluator_Square, libsealc), Clong,
                  (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}),
-                 evaluator.handle, encrypted.handle, destination.handle, C_NULL)
+                 evaluator, encrypted, destination, C_NULL)
   @check_return_value retval
   return destination
 end
@@ -35,7 +33,7 @@ function relinearize!(destination::Ciphertext, encrypted::Ciphertext, relinkeys:
                       evaluator::Evaluator)
   retval = ccall((:Evaluator_Relinearize, libsealc), Clong,
                  (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}),
-                 evaluator.handle, encrypted.handle, relinkeys.handle, destination.handle, C_NULL)
+                 evaluator, encrypted, relinkeys, destination, C_NULL)
   @check_return_value retval
   return destination
 end
@@ -47,7 +45,7 @@ end
 function rescale_to_next!(destination::Ciphertext, encrypted::Ciphertext, evaluator::Evaluator)
   retval = ccall((:Evaluator_RescaleToNext, libsealc), Clong,
                  (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}),
-                 evaluator.handle, encrypted.handle, destination.handle, C_NULL)
+                 evaluator, encrypted, destination, C_NULL)
   @check_return_value retval
   return destination
 end
@@ -60,7 +58,7 @@ function multiply_plain!(destination::Ciphertext, encrypted::Ciphertext, plain::
                          evaluator::Evaluator)
   retval = ccall((:Evaluator_MultiplyPlain, libsealc), Clong,
                  (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}),
-                 evaluator.handle, encrypted.handle, plain.handle, destination.handle, C_NULL)
+                 evaluator, encrypted, plain, destination, C_NULL)
   @check_return_value retval
   return destination
 end
@@ -74,7 +72,7 @@ function multiply!(destination::Ciphertext, encrypted1::Ciphertext, encrypted2::
                    evaluator::Evaluator)
   retval = ccall((:Evaluator_Multiply, libsealc), Clong,
                  (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}),
-                 evaluator.handle, encrypted1.handle, encrypted2.handle, destination.handle, C_NULL)
+                 evaluator, encrypted1, encrypted2, destination, C_NULL)
   @check_return_value retval
   return destination
 end
@@ -87,7 +85,7 @@ function mod_switch_to!(destination::Ciphertext, encrypted::Ciphertext, parms_id
                         evaluator::Evaluator)
   retval = ccall((:Evaluator_ModSwitchTo1, libsealc), Clong,
                  (Ptr{Cvoid}, Ptr{Cvoid}, Ref{UInt64}, Ptr{Cvoid}, Ptr{Cvoid}),
-                 evaluator.handle, encrypted.handle, parms_id, destination.handle, C_NULL)
+                 evaluator, encrypted, parms_id, destination, C_NULL)
   @check_return_value retval
   return destination
 end
@@ -99,7 +97,7 @@ end
 function mod_switch_to!(destination::Plaintext, plain::Plaintext, parms_id, evaluator::Evaluator)
   retval = ccall((:Evaluator_ModSwitchTo2, libsealc), Clong,
                  (Ptr{Cvoid}, Ptr{Cvoid}, Ref{UInt64}, Ptr{Cvoid}),
-                 evaluator.handle, plain.handle, parms_id, destination.handle)
+                 evaluator, plain, parms_id, destination)
   @check_return_value retval
   return destination
 end
@@ -112,7 +110,7 @@ function add!(destination::Ciphertext, encrypted1::Ciphertext, encrypted2::Ciphe
               evaluator::Evaluator)
   retval = ccall((:Evaluator_Add, libsealc), Clong,
                  (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}),
-                 evaluator.handle, encrypted1.handle, encrypted2.handle, destination.handle)
+                 evaluator, encrypted1, encrypted2, destination)
   @check_return_value retval
   return destination
 end
@@ -125,7 +123,7 @@ function add_plain!(destination::Ciphertext, encrypted::Ciphertext, plain::Plain
                     evaluator::Evaluator)
   retval = ccall((:Evaluator_AddPlain, libsealc), Clong,
                  (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}),
-                 evaluator.handle, encrypted.handle, plain.handle, destination.handle)
+                 evaluator, encrypted, plain, destination)
   @check_return_value retval
   return destination
 end

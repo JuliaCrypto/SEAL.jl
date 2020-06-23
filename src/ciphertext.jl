@@ -1,5 +1,5 @@
 
-mutable struct Ciphertext
+mutable struct Ciphertext <: SEALObject
   handle::Ptr{Cvoid}
 
   function Ciphertext()
@@ -15,9 +15,7 @@ mutable struct Ciphertext
     x = new(handle)
     finalizer(x) do x
       # @async println("Finalizing $x at line $(@__LINE__).")
-      ccall((:Ciphertext_Destroy, libsealc), Clong,
-            (Ptr{Cvoid},),
-            x.handle)
+      ccall((:Ciphertext_Destroy, libsealc), Clong, (Ptr{Cvoid},), x)
     end
     return x
   end
@@ -27,7 +25,7 @@ function scale(encrypted::Ciphertext)
   value = Ref{Cdouble}(0)
   retval = ccall((:Ciphertext_Scale, libsealc), Clong,
                  (Ptr{Cvoid}, Ref{Cdouble}),
-                 encrypted.handle, value)
+                 encrypted, value)
   @check_return_value retval
   return Float64(value[])
 end
@@ -35,7 +33,7 @@ end
 function scale!(encrypted::Ciphertext, value)
   retval = ccall((:Ciphertext_SetScale, libsealc), Clong,
                  (Ptr{Cvoid}, Ref{Cdouble}),
-                 encrypted.handle, value)
+                 encrypted, value)
   @check_return_value retval
   return encrypted
 end
@@ -44,7 +42,7 @@ function parms_id(encrypted::Ciphertext)
   parms_id_ = zeros(UInt64, 4)
   retval = ccall((:Ciphertext_ParmsId, libsealc), Clong,
                  (Ptr{Cvoid}, Ref{UInt64}),
-                 encrypted.handle, parms_id_)
+                 encrypted, parms_id_)
   @check_return_value retval
   return parms_id_
 end

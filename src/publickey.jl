@@ -1,5 +1,5 @@
 
-mutable struct PublicKey
+mutable struct PublicKey <: SEALObject
   handle::Ptr{Cvoid}
 
   function PublicKey()
@@ -15,9 +15,7 @@ mutable struct PublicKey
     x = new(handle)
     finalizer(x) do x
       # @async println("Finalizing $x at line $(@__LINE__).")
-      ccall((:PublicKey_Destroy, libsealc), Clong,
-            (Ptr{Cvoid},),
-            x.handle)
+      ccall((:PublicKey_Destroy, libsealc), Clong, (Ptr{Cvoid},), x)
     end
     return x
   end

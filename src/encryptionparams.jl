@@ -3,7 +3,7 @@ module SchemeType
 @enum SchemeTypeEnum::UInt8 none=0 bfv=1 ckks=2
 end
 
-mutable struct EncryptionParameters
+mutable struct EncryptionParameters <: SEALObject
   handle::Ptr{Cvoid}
 
   function EncryptionParameters(scheme::SchemeType.SchemeTypeEnum)
@@ -15,9 +15,7 @@ mutable struct EncryptionParameters
     x = new(handleref[])
     finalizer(x) do x
       # @async println("Finalizing $x at line $(@__LINE__).")
-      ccall((:EncParams_Destroy, libsealc), Clong,
-            (Ptr{Cvoid},),
-            x.handle)
+      ccall((:EncParams_Destroy, libsealc), Clong, (Ptr{Cvoid},), x)
     end
     return x
   end
@@ -27,7 +25,7 @@ function get_poly_modulus_degree(enc_param::EncryptionParameters)
   degree = Ref{UInt64}(0)
   retval = ccall((:EncParams_GetPolyModulusDegree, libsealc), Clong,
                  (Ptr{Cvoid}, Ref{UInt64}),
-                 enc_param.handle, degree)
+                 enc_param, degree)
   @check_return_value retval
   return Int(degree[])
 end
@@ -35,7 +33,7 @@ end
 function set_poly_modulus_degree!(enc_param::EncryptionParameters, degree)
   retval = ccall((:EncParams_SetPolyModulusDegree, libsealc), Clong,
                  (Ptr{Cvoid}, UInt64),
-                 enc_param.handle, degree)
+                 enc_param, degree)
   @check_return_value retval
   return enc_param
 end
@@ -44,7 +42,7 @@ function set_coeff_modulus!(enc_param::EncryptionParameters, coeff_modulus)
   coeff_modulus_ptrs = Ptr{Cvoid}[cm.handle for cm in coeff_modulus]
   retval = ccall((:EncParams_SetCoeffModulus, libsealc), Clong,
                  (Ptr{Cvoid}, UInt64, Ref{Ptr{Cvoid}}),
-                 enc_param.handle, length(coeff_modulus), coeff_modulus_ptrs)
+                 enc_param, length(coeff_modulus), coeff_modulus_ptrs)
   @check_return_value retval
   return enc_param
 end
@@ -55,14 +53,14 @@ function coeff_modulus(enc_param::EncryptionParameters)
   # First call to obtain length
   retval = ccall((:EncParams_GetCoeffModulus, libsealc), Clong,
                  (Ptr{Cvoid}, Ref{UInt64}, Ptr{Cvoid}),
-                 enc_param.handle, len, C_NULL)
+                 enc_param, len, C_NULL)
   @check_return_value retval
 
   # Second call to obtain modulus
   modulusptrs = Vector{Ptr{Cvoid}}(undef, len[])
   retval = ccall((:EncParams_GetCoeffModulus, libsealc), Clong,
                  (Ptr{Cvoid}, Ref{UInt64}, Ref{Ptr{Cvoid}}),
-                 enc_param.handle, len, modulusptrs)
+                 enc_param, len, modulusptrs)
   @check_return_value retval
 
   modulus = Modulus[Modulus(ptr) for ptr in modulusptrs]
