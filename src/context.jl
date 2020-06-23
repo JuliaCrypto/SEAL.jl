@@ -4,9 +4,10 @@ mutable struct SEALContext
 
   function SEALContext(enc_param::EncryptionParameters; expand_mod_chain=true, sec_level=SecLevelType.tc128)
     handleref = Ref{Ptr{Cvoid}}(C_NULL)
-    ccall((:SEALContext_Create, libsealc), Clong,
-          (Ptr{Cvoid}, UInt8, Cint, Ref{Ptr{Cvoid}}),
-          enc_param.handle, expand_mod_chain, sec_level, handleref)
+    retval = ccall((:SEALContext_Create, libsealc), Clong,
+                   (Ptr{Cvoid}, UInt8, Cint, Ref{Ptr{Cvoid}}),
+                   enc_param.handle, expand_mod_chain, sec_level, handleref)
+    check_return_value(retval)
     x = new(handleref[])
     finalizer(x) do x
       # @async println("Finalizing $x at line $(@__LINE__).")
@@ -20,8 +21,9 @@ end
 
 function first_parms_id(context::SEALContext)
   parms_id = Ref{UInt64}(0)
-  ccall((:SEALContext_FirstParmsId, libsealc), Clong,
-        (Ptr{Cvoid}, Ref{UInt64}),
-        context.handle, parms_id)
+  retval = ccall((:SEALContext_FirstParmsId, libsealc), Clong,
+                 (Ptr{Cvoid}, Ref{UInt64}),
+                 context.handle, parms_id)
+  check_return_value(retval)
   return Int(parms_id[])
 end

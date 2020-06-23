@@ -4,9 +4,10 @@ mutable struct Plaintext
 
   function Plaintext()
     handleref = Ref{Ptr{Cvoid}}(C_NULL)
-    ccall((:Plaintext_Create1, libsealc), Clong,
-          (Ptr{Cvoid}, Ref{Ptr{Cvoid}}),
-          C_NULL, handleref)
+    retval = ccall((:Plaintext_Create1, libsealc), Clong,
+                   (Ptr{Cvoid}, Ref{Ptr{Cvoid}}),
+                   C_NULL, handleref)
+    check_return_value(retval)
     return Plaintext(handleref[])
   end
 

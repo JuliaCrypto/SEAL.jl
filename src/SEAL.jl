@@ -2,6 +2,9 @@ module SEAL
 
 using SEAL_jll
 
+include("utilities.jl")
+export check_return_value
+
 include("version.jl")
 export version_major, version_minor, version_patch, version
 

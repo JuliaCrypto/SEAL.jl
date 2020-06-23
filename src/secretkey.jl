@@ -4,9 +4,10 @@ mutable struct SecretKey
 
   function SecretKey()
     handleref = Ref{Ptr{Cvoid}}(C_NULL)
-    ccall((:SecretKey_Create, libsealc), Clong,
-          (Ref{Ptr{Cvoid}},),
-          handleref)
+    retval = ccall((:SecretKey_Create, libsealc), Clong,
+                   (Ref{Ptr{Cvoid}},),
+                   handleref)
+    check_return_value(retval)
     return SecretKey(handleref[])
   end
 

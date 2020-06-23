@@ -5,9 +5,10 @@ mutable struct RelinKeys
   function RelinKeys()
     handleref = Ref{Ptr{Cvoid}}(C_NULL)
     # RelinKeys are created as KSwitchKeys since they share the same data
-    ccall((:KSwitchKeys_Create1, libsealc), Clong,
-          (Ref{Ptr{Cvoid}},),
-          handleref)
+    retval = ccall((:KSwitchKeys_Create1, libsealc), Clong,
+                   (Ref{Ptr{Cvoid}},),
+                   handleref)
+    check_return_value(retval)
     return RelinKeys(handleref[])
   end
 

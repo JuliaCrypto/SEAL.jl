@@ -4,9 +4,10 @@ mutable struct Evaluator
 
   function Evaluator(context::SEALContext)
     handleref = Ref{Ptr{Cvoid}}(C_NULL)
-    ccall((:Evaluator_Create, libsealc), Clong,
-          (Ptr{Cvoid}, Ref{Ptr{Cvoid}}),
-          context.handle, handleref)
+    retval = ccall((:Evaluator_Create, libsealc), Clong,
+                   (Ptr{Cvoid}, Ref{Ptr{Cvoid}}),
+                   context.handle, handleref)
+    check_return_value(retval)
     return Evaluator(handleref[])
   end
 
@@ -23,17 +24,19 @@ mutable struct Evaluator
 end
 
 function square!(destination::Ciphertext, encrypted::Ciphertext, evaluator::Evaluator)
-  ccall((:Evaluator_Square, libsealc), Clong,
-        (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}),
-        evaluator.handle, encrypted.handle, destination.handle, C_NULL)
+  retval = ccall((:Evaluator_Square, libsealc), Clong,
+                 (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}),
+                 evaluator.handle, encrypted.handle, destination.handle, C_NULL)
+  check_return_value(retval)
   return destination
 end
 
 function relinearize!(destination::Ciphertext, encrypted::Ciphertext, relinkeys::RelinKeys,
                       evaluator::Evaluator)
-  ccall((:Evaluator_Relinearize, libsealc), Clong,
-        (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}),
-        evaluator.handle, encrypted.handle, relinkeys.handle, destination.handle, C_NULL)
+  retval = ccall((:Evaluator_Relinearize, libsealc), Clong,
+                 (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}),
+                 evaluator.handle, encrypted.handle, relinkeys.handle, destination.handle, C_NULL)
+  check_return_value(retval)
   return destination
 end
 
@@ -42,9 +45,10 @@ function relinearize_inplace!(encrypted::Ciphertext, relinkeys::RelinKeys, evalu
 end
 
 function rescale_to_next!(destination::Ciphertext, encrypted::Ciphertext, evaluator::Evaluator)
-  ccall((:Evaluator_RescaleToNext, libsealc), Clong,
-        (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}),
-        evaluator.handle, encrypted.handle, destination.handle, C_NULL)
+  retval = ccall((:Evaluator_RescaleToNext, libsealc), Clong,
+                 (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}),
+                 evaluator.handle, encrypted.handle, destination.handle, C_NULL)
+  check_return_value(retval)
   return destination
 end
 

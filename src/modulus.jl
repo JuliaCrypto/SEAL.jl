@@ -4,9 +4,10 @@ mutable struct Modulus
 
   function Modulus(value::Integer)
     handleref = Ref{Ptr{Cvoid}}(C_NULL)
-    ccall((:Modulus_Create1, libsealc), Clong,
-          (UInt8, Ref{Ptr{Cvoid}}),
-          scheme, handleref)
+    retval = ccall((:Modulus_Create1, libsealc), Clong,
+                   (UInt8, Ref{Ptr{Cvoid}}),
+                   scheme, handleref)
+    check_return_value(retval)
     return Modulus(handleref[])
   end
 
@@ -28,25 +29,28 @@ end
 
 function bit_count(modulus::Modulus)
   bit_count = Ref{Cint}(0)
-  ccall((:Modulus_BitCount, libsealc), Clong,
-        (Ptr{Cvoid}, Ref{Cint}),
-        modulus.handle, bit_count)
+  retval = ccall((:Modulus_BitCount, libsealc), Clong,
+                 (Ptr{Cvoid}, Ref{Cint}),
+                 modulus.handle, bit_count)
+  check_return_value(retval)
   return Int(bit_count[])
 end
 
 function value(modulus::Modulus)
   value = Ref{UInt64}(0)
-  ccall((:Modulus_Value, libsealc), Clong,
-        (Ptr{Cvoid}, Ref{UInt64}),
-        modulus.handle, value)
+  retval = ccall((:Modulus_Value, libsealc), Clong,
+                 (Ptr{Cvoid}, Ref{UInt64}),
+                 modulus.handle, value)
+  check_return_value(retval)
   return Int(value[])
 end
 
 function coeff_modulus_create(poly_modulus_degree, bit_sizes)
   modulusptrs = Vector{Ptr{Cvoid}}(undef, length(bit_sizes))
-  ccall((:CoeffModulus_Create, libsealc), Clong,
-        (UInt64, UInt64, Ref{Cint}, Ref{Ptr{Cvoid}}),
-        poly_modulus_degree, length(bit_sizes), collect(Cint, bit_sizes), modulusptrs)
+  retval = ccall((:CoeffModulus_Create, libsealc), Clong,
+                 (UInt64, UInt64, Ref{Cint}, Ref{Ptr{Cvoid}}),
+                 poly_modulus_degree, length(bit_sizes), collect(Cint, bit_sizes), modulusptrs)
+  check_return_value(retval)
   modulus = Modulus[Modulus(modulusptrs[i]) for i in 1:length(bit_sizes)]
   return modulus
 end

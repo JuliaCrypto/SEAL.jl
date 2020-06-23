@@ -4,9 +4,10 @@ mutable struct Ciphertext
 
   function Ciphertext()
     handleref = Ref{Ptr{Cvoid}}(C_NULL)
-    ccall((:Ciphertext_Create1, libsealc), Clong,
-          (Ptr{Cvoid}, Ref{Ptr{Cvoid}}),
-          C_NULL, handleref)
+    retval = ccall((:Ciphertext_Create1, libsealc), Clong,
+                   (Ptr{Cvoid}, Ref{Ptr{Cvoid}}),
+                   C_NULL, handleref)
+    check_return_value(retval)
     return Ciphertext(handleref[])
   end
 
@@ -24,9 +25,10 @@ end
 
 function scale(encrypted::Ciphertext)
   scale_ = Ref{Cdouble}(0)
-  ccall((:Ciphertext_Scale, libsealc), Clong,
-        (Ptr{Cvoid}, Ref{Cdouble}),
-        encrypted.handle, scale_)
+  retval = ccall((:Ciphertext_Scale, libsealc), Clong,
+                 (Ptr{Cvoid}, Ref{Cdouble}),
+                 encrypted.handle, scale_)
+  check_return_value(retval)
   return Float64(scale_[])
 end
 

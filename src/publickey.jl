@@ -4,9 +4,10 @@ mutable struct PublicKey
 
   function PublicKey()
     handleref = Ref{Ptr{Cvoid}}(C_NULL)
-    ccall((:PublicKey_Create, libsealc), Clong,
-          (Ref{Ptr{Cvoid}},),
-          handleref)
+    retval = ccall((:PublicKey_Create, libsealc), Clong,
+                   (Ref{Ptr{Cvoid}},),
+                   handleref)
+    check_return_value(retval)
     return PublicKey(handleref[])
   end
 

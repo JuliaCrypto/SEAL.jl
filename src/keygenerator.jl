@@ -4,9 +4,10 @@ mutable struct KeyGenerator
 
   function KeyGenerator(context::SEALContext)
     handleref = Ref{Ptr{Cvoid}}(C_NULL)
-    ccall((:KeyGenerator_Create1, libsealc), Clong,
-          (Ptr{Cvoid}, Ref{Ptr{Cvoid}}),
-          context.handle, handleref)
+    retval = ccall((:KeyGenerator_Create1, libsealc), Clong,
+                   (Ptr{Cvoid}, Ref{Ptr{Cvoid}}),
+                   context.handle, handleref)
+    check_return_value(retval)
     return KeyGenerator(handleref[])
   end
 
@@ -24,32 +25,36 @@ end
 
 function public_key(keygen::KeyGenerator)
   keyptr = Ref{Ptr{Cvoid}}(C_NULL)
-  ccall((:KeyGenerator_PublicKey, libsealc), Clong,
-        (Ptr{Cvoid}, Ref{Ptr{Cvoid}}),
-        keygen.handle, keyptr)
+  retval = ccall((:KeyGenerator_PublicKey, libsealc), Clong,
+                 (Ptr{Cvoid}, Ref{Ptr{Cvoid}}),
+                 keygen.handle, keyptr)
+  check_return_value(retval)
   return PublicKey(keyptr[])
 end
 
 function secret_key(keygen::KeyGenerator)
   keyptr = Ref{Ptr{Cvoid}}(C_NULL)
-  ccall((:KeyGenerator_SecretKey, libsealc), Clong,
-        (Ptr{Cvoid}, Ref{Ptr{Cvoid}}),
-        keygen.handle, keyptr)
+  retval = ccall((:KeyGenerator_SecretKey, libsealc), Clong,
+                 (Ptr{Cvoid}, Ref{Ptr{Cvoid}}),
+                 keygen.handle, keyptr)
+  check_return_value(retval)
   return SecretKey(keyptr[])
 end
 
 function relin_keys_local(keygen::KeyGenerator)
   keyptr = Ref{Ptr{Cvoid}}(C_NULL)
-  ccall((:KeyGenerator_RelinKeys, libsealc), Clong,
-        (Ptr{Cvoid}, UInt8, Ref{Ptr{Cvoid}}),
-        keygen.handle, false, keyptr)
+  retval = ccall((:KeyGenerator_RelinKeys, libsealc), Clong,
+                 (Ptr{Cvoid}, UInt8, Ref{Ptr{Cvoid}}),
+                 keygen.handle, false, keyptr)
+  check_return_value(retval)
   return RelinKeys(keyptr[])
 end
 
 function relin_keys(keygen::KeyGenerator)
   keyptr = Ref{Ptr{Cvoid}}(C_NULL)
-  ccall((:KeyGenerator_RelinKeys, libsealc), Clong,
-        (Ptr{Cvoid}, UInt8, Ref{Ptr{Cvoid}}),
-        keygen.handle, true, keyptr)
+  retval = ccall((:KeyGenerator_RelinKeys, libsealc), Clong,
+                 (Ptr{Cvoid}, UInt8, Ref{Ptr{Cvoid}}),
+                 keygen.handle, true, keyptr)
+  check_return_value(retval)
   return RelinKeys(keyptr[])
 end

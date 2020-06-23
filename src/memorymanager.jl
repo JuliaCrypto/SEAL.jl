@@ -16,8 +16,9 @@ end
 
 function memory_manager_get_pool()
   poolhandleref = Ref{Ptr{Cvoid}}(C_NULL)
-  ccall((:MemoryManager_GetPool2, libsealc), Clong,
-        (Ref{Ptr{Cvoid}},),
-        poolhandleref)
+  retval = ccall((:MemoryManager_GetPool2, libsealc), Clong,
+                 (Ref{Ptr{Cvoid}},),
+                 poolhandleref)
+  check_return_value(retval)
   return MemoryPoolHandle(poolhandleref[])
 end
