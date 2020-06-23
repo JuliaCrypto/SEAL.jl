@@ -1,4 +1,5 @@
 using SEAL
+using Printf
 
 include("utilities.jl")
 
@@ -76,6 +77,31 @@ function example_ckks_basics()
   println("    + Scale of PI*x^3 before rescale: ", log2(scale(x3_encrypted)), " bits")
   rescale_to_next_inplace!(x3_encrypted, evaluator)
   println("    + Scale of PI*x^3 after rescale: ", log2(scale(x3_encrypted)), " bits")
+
+  print_line(@__LINE__)
+  println("Compute and rescale 0.4*x.")
+  multiply_plain_inplace!(x1_encrypted, plain_coeff1, evaluator)
+  println("    + Scale of 0.4*x before rescale: ", log2(scale(x1_encrypted)), " bits")
+  rescale_to_next_inplace!(x1_encrypted, evaluator)
+  println("    + Scale of 0.4*x after rescale: ", log2(scale(x1_encrypted)), " bits")
+
+  println()
+  print_line(@__LINE__)
+  println("Parameters used by all three terms are different.")
+    #=cout << "    + Modulus chain index for x3_encrypted: "=#
+    #=     << context->get_context_data(x3_encrypted.parms_id())->chain_index() << endl;=#
+    #=cout << "    + Modulus chain index for x1_encrypted: "=#
+    #=     << context->get_context_data(x1_encrypted.parms_id())->chain_index() << endl;=#
+    #=cout << "    + Modulus chain index for plain_coeff0: "=#
+    #=     << context->get_context_data(plain_coeff0.parms_id())->chain_index() << endl;=#
+    #=cout << endl;=#
+
+  print_line(@__LINE__)
+  println("The exact scales of all three terms are different:")
+  @printf("    + Exact scale in PI*x^3: %.10f\n", scale(x3_encrypted))
+  @printf("    + Exact scale in  0.4*x: %.10f\n", scale(x1_encrypted))
+  @printf("    + Exact scale in      1: %.10f\n", scale(plain_coeff0))
+  println()
 
   return
 end

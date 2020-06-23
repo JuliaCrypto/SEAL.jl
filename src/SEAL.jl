@@ -31,7 +31,7 @@ include("keygenerator.jl")
 export KeyGenerator, public_key, secret_key, relin_keys_local, relin_keys
 
 include("plaintext.jl")
-export Plaintext
+export Plaintext, scale
 
 include("ciphertext.jl")
 export Ciphertext, scale

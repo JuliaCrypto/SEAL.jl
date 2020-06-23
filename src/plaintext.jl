@@ -22,3 +22,12 @@ mutable struct Plaintext
     return x
   end
 end
+
+function scale(plain::Plaintext)
+  scale_ = Ref{Cdouble}(0)
+  retval = ccall((:Plaintext_Scale, libsealc), Clong,
+                 (Ptr{Cvoid}, Ref{Cdouble}),
+                 plain.handle, scale_)
+  @check_return_value retval
+  return Float64(scale_[])
+end

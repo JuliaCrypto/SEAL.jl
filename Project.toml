@@ -4,6 +4,7 @@ authors = ["Michael Schlottke-Lakemper <michael@sloede.com>"]
 version = "0.1.0"
 
 [deps]
+Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"
 SEAL_jll = "cdf55027-1209-57fc-8789-28745714751d"
 
 [compat]
