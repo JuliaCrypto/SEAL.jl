@@ -65,7 +65,20 @@ function multiply_plain!(destination::Ciphertext, encrypted::Ciphertext, plain::
   return destination
 end
 
-function multiply_plain_in_place!(encrypted::Ciphertext, plain::Plaintext,
+function multiply_plain_inplace!(encrypted::Ciphertext, plain::Plaintext,
                                   evaluator::Evaluator)
   return multiply_plain!(encrypted, encrypted, plain, evaluator)
+end
+
+function multiply!(destination::Ciphertext, encrypted1::Ciphertext, encrypted2::Ciphertext,
+                   evaluator::Evaluator)
+  retval = ccall((:Evaluator_Multiply, libsealc), Clong,
+                 (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}),
+                 evaluator.handle, encrypted1.handle, encrypted1.handle, destination.handle, C_NULL)
+  @check_return_value retval
+  return destination
+end
+
+function multiply_inplace!(encrypted1::Ciphertext, encrypted2::Ciphertext, evaluator::Evaluator)
+  return multiply!(encrypted1, encrypted1, encrypted2, evaluator)
 end

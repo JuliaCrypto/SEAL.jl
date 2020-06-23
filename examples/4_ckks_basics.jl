@@ -69,5 +69,13 @@ function example_ckks_basics()
   rescale_to_next_inplace!(x1_encrypted_coeff3, evaluator)
   println("    + Scale of PI*x after rescale: ", log2(scale(x1_encrypted_coeff3)), " bits")
 
+  print_line(@__LINE__)
+  println("Compute, relinearize, and rescale (PI*x)*x^2.")
+  multiply_inplace!(x3_encrypted, x1_encrypted_coeff3, evaluator)
+  relinearize_inplace!(x3_encrypted, relin_keys_, evaluator)
+  println("    + Scale of PI*x^3 before rescale: ", log2(scale(x3_encrypted)), " bits")
+  rescale_to_next_inplace!(x3_encrypted, evaluator)
+  println("    + Scale of PI*x^3 after rescale: ", log2(scale(x3_encrypted)), " bits")
+
   return
 end
