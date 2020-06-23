@@ -74,7 +74,7 @@ function multiply!(destination::Ciphertext, encrypted1::Ciphertext, encrypted2::
                    evaluator::Evaluator)
   retval = ccall((:Evaluator_Multiply, libsealc), Clong,
                  (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}),
-                 evaluator.handle, encrypted1.handle, encrypted1.handle, destination.handle, C_NULL)
+                 evaluator.handle, encrypted1.handle, encrypted2.handle, destination.handle, C_NULL)
   @check_return_value retval
   return destination
 end
@@ -112,7 +112,7 @@ function add!(destination::Ciphertext, encrypted1::Ciphertext, encrypted2::Ciphe
               evaluator::Evaluator)
   retval = ccall((:Evaluator_Add, libsealc), Clong,
                  (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}),
-                 evaluator.handle, encrypted1.handle, encrypted1.handle, destination.handle)
+                 evaluator.handle, encrypted1.handle, encrypted2.handle, destination.handle)
   @check_return_value retval
   return destination
 end
