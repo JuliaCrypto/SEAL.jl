@@ -103,5 +103,13 @@ function example_ckks_basics()
   @printf("    + Exact scale in      1: %.10f\n", scale(plain_coeff0))
   println()
 
+  print_line(@__LINE__)
+  println("Normalize scales to 2^40.")
+  scale!(x3_encrypted, 2.0^40)
+  scale!(x1_encrypted, 2.0^40)
+
+  print_line(@__LINE__)
+  println("Normalize encryption parameters to the lowest level.")
+
   return
 end

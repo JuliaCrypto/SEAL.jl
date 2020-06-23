@@ -4,6 +4,8 @@ function print_line(line_number)
     padding = "  "
   elseif line_number < 100
     padding = " "
+  else
+    padding = ""
   end
   print("Line ", padding, line_number, " --> ")
 end

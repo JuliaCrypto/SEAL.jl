@@ -34,7 +34,7 @@ include("plaintext.jl")
 export Plaintext, scale
 
 include("ciphertext.jl")
-export Ciphertext, scale
+export Ciphertext, scale, scale!
 
 include("encryptor.jl")
 export Encryptor, encrypt!

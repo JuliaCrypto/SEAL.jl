@@ -32,3 +32,11 @@ function scale(encrypted::Ciphertext)
   return Float64(scale_[])
 end
 
+function scale!(encrypted::Ciphertext, value)
+  retval = ccall((:Ciphertext_SetScale, libsealc), Clong,
+                 (Ptr{Cvoid}, Ref{Cdouble}),
+                 encrypted.handle, value)
+  @check_return_value retval
+  return encrypted
+end
+
