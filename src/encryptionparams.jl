@@ -50,7 +50,7 @@ end
 function coeff_modulus(enc_param::EncryptionParameters)
   len = Ref{UInt64}(0)
 
-  # First call to obtain length
+  # First call to obtain length (modulus result pointer is null)
   retval = ccall((:EncParams_GetCoeffModulus, libsealc), Clong,
                  (Ptr{Cvoid}, Ref{UInt64}, Ptr{Cvoid}),
                  enc_param, len, C_NULL)
