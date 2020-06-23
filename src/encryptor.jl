@@ -38,10 +38,10 @@ mutable struct Encryptor
   end
 end
 
-function encrypt!(destination, plain, encryptor::Encryptor)
+function encrypt!(destination::Ciphertext, plain::Plaintext, encryptor::Encryptor)
   ccall((:Encryptor_Encrypt, libsealc), Clong,
         (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}),
-        encryptor.handle, plain.handle, destination.handle, destination.memory_pool_handle.handle)
+        encryptor.handle, plain.handle, destination.handle, C_NULL)
   return destination
 end
 
