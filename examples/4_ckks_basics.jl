@@ -61,5 +61,13 @@ function example_ckks_basics()
   rescale_to_next_inplace!(x3_encrypted, evaluator)
   println("    + Scale of x^2 after rescale: ", log2(scale(x3_encrypted)), " bits")
 
+  print_line(@__LINE__)
+  println("Compute and rescale PI*x.")
+  x1_encrypted_coeff3 = Ciphertext()
+  multiply_plain!(x1_encrypted_coeff3, x1_encrypted, plain_coeff3, evaluator)
+  println("    + Scale of PI*x before rescale: ", log2(scale(x1_encrypted_coeff3)), " bits")
+  rescale_to_next_inplace!(x1_encrypted_coeff3, evaluator)
+  println("    + Scale of PI*x after rescale: ", log2(scale(x1_encrypted_coeff3)), " bits")
+
   return
 end

@@ -55,3 +55,17 @@ end
 function rescale_to_next_inplace!(encrypted::Ciphertext, evaluator::Evaluator)
   return rescale_to_next!(encrypted, encrypted, evaluator)
 end
+
+function multiply_plain!(destination::Ciphertext, encrypted::Ciphertext, plain::Plaintext,
+                         evaluator::Evaluator)
+  retval = ccall((:Evaluator_MultiplyPlain, libsealc), Clong,
+                 (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}),
+                 evaluator.handle, encrypted.handle, plain.handle, destination.handle, C_NULL)
+  @check_return_value retval
+  return destination
+end
+
+function multiply_plain_in_place!(encrypted::Ciphertext, plain::Plaintext,
+                                  evaluator::Evaluator)
+  return multiply_plain!(encrypted, encrypted, plain, evaluator)
+end

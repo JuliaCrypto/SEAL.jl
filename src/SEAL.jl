@@ -41,7 +41,7 @@ export Encryptor, encrypt!
 
 include("evaluator.jl")
 export Evaluator, square!, relinearize!, relinearize_inplace!, rescale_to_next!,
-       rescale_to_next_inplace!
+       rescale_to_next_inplace!, multiply_plain!, multiply_plain_inplace!
 
 include("decryptor.jl")
 export Decryptor
