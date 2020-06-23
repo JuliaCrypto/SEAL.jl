@@ -2,10 +2,10 @@
 mutable struct SEALContext
   handle::Ptr{Cvoid}
 
-  function SEALContext(enc_param; expand_mod_chain=true, sec_level=SecLevelType.tc128)
+  function SEALContext(enc_param::EncryptionParameters; expand_mod_chain=true, sec_level=SecLevelType.tc128)
     handleref = Ref{Ptr{Cvoid}}(C_NULL)
     ccall((:SEALContext_Create, libsealc), Clong,
-          (Ptr{Cvoid}, UInt8, Int32, Ref{Ptr{Cvoid}}),
+          (Ptr{Cvoid}, UInt8, Cint, Ref{Ptr{Cvoid}}),
           enc_param.handle, expand_mod_chain, sec_level, handleref)
     x = new(handleref[])
     finalizer(x) do x

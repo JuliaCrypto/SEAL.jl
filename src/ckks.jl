@@ -35,7 +35,7 @@ function encode!(destination, values::DenseVector{Float64}, scale, encoder::CKKS
   value_count = UInt64(length(values))
   parms_id = Ref{UInt64}(first_parms_id(encoder.context))
   ccall((:CKKSEncoder_Encode1, libsealc), Clong,
-        (Ptr{Cvoid}, UInt64, Ptr{Float64}, Ref{UInt64}, Float64, Ptr{Cvoid}, Ptr{Cvoid}),
+        (Ptr{Cvoid}, UInt64, Ref{Cdouble}, Ref{UInt64}, Float64, Ptr{Cvoid}, Ptr{Cvoid}),
         encoder.handle, value_count, values, parms_id, scale, destination.handle,
         destination.memory_pool_handle.handle)
   return destination

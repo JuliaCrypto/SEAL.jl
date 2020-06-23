@@ -1,6 +1,7 @@
 using SEAL
 
 function example_ckks_basics()
+  GC.enable(false)
   parms = EncryptionParameters(SchemeType.ckks)
 
   poly_modulus_degree = 8192
@@ -41,8 +42,7 @@ function example_ckks_basics()
   println("Encode input vectors.")
   encode!(x_plain, input, scale, encoder)
   x1_encrypted = Ciphertext()
-  encrypt!(x1_encrypted, x_plain)
-  #=encrypt!(x1_encrypted, plain_coeff0)=#
+  encrypt!(x1_encrypted, x_plain, encryptor)
 
   return
 end

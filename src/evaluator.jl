@@ -2,7 +2,7 @@
 mutable struct Evaluator
   handle::Ptr{Cvoid}
 
-  function Evaluator(context)
+  function Evaluator(context::SEALContext)
     handleref = Ref{Ptr{Cvoid}}(C_NULL)
     ccall((:Evaluator_Create, libsealc), Clong,
           (Ptr{Cvoid}, Ref{Ptr{Cvoid}}),

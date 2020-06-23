@@ -2,7 +2,7 @@
 mutable struct KeyGenerator
   handle::Ptr{Cvoid}
 
-  function KeyGenerator(context)
+  function KeyGenerator(context::SEALContext)
     handleref = Ref{Ptr{Cvoid}}(C_NULL)
     ccall((:KeyGenerator_Create1, libsealc), Clong,
           (Ptr{Cvoid}, Ref{Ptr{Cvoid}}),

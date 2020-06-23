@@ -23,13 +23,13 @@ mutable struct Modulus
 end
 
 module SecLevelType
-@enum SecLevelTypeEnum::Int32 none=0 tc128=128 tc192=192 tc256=256
+@enum SecLevelTypeEnum::Cint none=0 tc128=128 tc192=192 tc256=256
 end
 
 function bit_count(modulus::Modulus)
-  bit_count = Ref{Int32}(0)
+  bit_count = Ref{Cint}(0)
   ccall((:Modulus_BitCount, libsealc), Clong,
-        (Ptr{Cvoid}, Ref{Int32}),
+        (Ptr{Cvoid}, Ref{Cint}),
         modulus.handle, bit_count)
   return Int(bit_count[])
 end
@@ -45,8 +45,8 @@ end
 function coeff_modulus_create(poly_modulus_degree, bit_sizes)
   modulusptrs = Vector{Ptr{Cvoid}}(undef, length(bit_sizes))
   ccall((:CoeffModulus_Create, libsealc), Clong,
-        (UInt64, UInt64, Ptr{Int32}, Ptr{Ptr{Cvoid}}),
-        poly_modulus_degree, length(bit_sizes), collect(Int32, bit_sizes), modulusptrs)
+        (UInt64, UInt64, Ref{Cint}, Ref{Ptr{Cvoid}}),
+        poly_modulus_degree, length(bit_sizes), collect(Cint, bit_sizes), modulusptrs)
   modulus = Modulus[Modulus(modulusptrs[i]) for i in 1:length(bit_sizes)]
   return modulus
 end

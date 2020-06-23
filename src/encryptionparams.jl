@@ -1,8 +1,12 @@
 
+module SchemeType
+@enum SchemeTypeEnum::UInt8 none=0 bfv=1 ckks=2
+end
+
 mutable struct EncryptionParameters
   handle::Ptr{Cvoid}
 
-  function EncryptionParameters(scheme)
+  function EncryptionParameters(scheme::SchemeType.SchemeTypeEnum)
     handleref = Ref{Ptr{Cvoid}}(C_NULL)
     ccall((:EncParams_Create1, libsealc), Clong,
           (UInt8, Ref{Ptr{Cvoid}}),
@@ -16,10 +20,6 @@ mutable struct EncryptionParameters
     end
     return x
   end
-end
-
-module SchemeType
-@enum SchemeTypeEnum::UInt8 none=0 bfv=1 ckks=2
 end
 
 function get_poly_modulus_degree(enc_param::EncryptionParameters)
@@ -40,7 +40,7 @@ end
 function set_coeff_modulus!(enc_param::EncryptionParameters, coeff_modulus)
   coeff_modulus_ptrs = Ptr{Cvoid}[cm.handle for cm in coeff_modulus]
   ccall((:EncParams_SetCoeffModulus, libsealc), Clong,
-        (Ptr{Cvoid}, UInt64, Ptr{Ptr{Cvoid}}),
+        (Ptr{Cvoid}, UInt64, Ref{Ptr{Cvoid}}),
         enc_param.handle, length(coeff_modulus), coeff_modulus_ptrs)
   return enc_param
 end

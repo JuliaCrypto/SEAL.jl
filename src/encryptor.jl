@@ -2,7 +2,7 @@
 mutable struct Encryptor
   handle::Ptr{Cvoid}
 
-  function Encryptor(context, public_key::PublicKey, secret_key::SecretKey)
+  function Encryptor(context::SEALContext, public_key::PublicKey, secret_key::SecretKey)
     handleref = Ref{Ptr{Cvoid}}(C_NULL)
     ccall((:Encryptor_Create, libsealc), Clong,
           (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ref{Ptr{Cvoid}}),
@@ -10,7 +10,7 @@ mutable struct Encryptor
     return Encryptor(handleref[])
   end
 
-  function Encryptor(context, public_key::PublicKey)
+  function Encryptor(context::SEALContext, public_key::PublicKey)
     handleref = Ref{Ptr{Cvoid}}(C_NULL)
     ccall((:Encryptor_Create, libsealc), Clong,
           (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ref{Ptr{Cvoid}}),
@@ -18,7 +18,7 @@ mutable struct Encryptor
     return Encryptor(handleref[])
   end
 
-  function Encryptor(context, secret_key::SecretKey)
+  function Encryptor(context::SEALContext, secret_key::SecretKey)
     handleref = Ref{Ptr{Cvoid}}(C_NULL)
     ccall((:Encryptor_Create, libsealc), Clong,
           (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ref{Ptr{Cvoid}}),
@@ -41,7 +41,7 @@ end
 function encrypt!(destination, plain, encryptor::Encryptor)
   ccall((:Encryptor_Encrypt, libsealc), Clong,
         (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}),
-        encryptor.handle, plaintext.handle, destination.handle, destination.memory_pool_handle.handle)
+        encryptor.handle, plain.handle, destination.handle, destination.memory_pool_handle.handle)
   return destination
 end
 

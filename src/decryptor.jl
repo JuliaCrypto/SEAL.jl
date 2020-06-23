@@ -2,7 +2,7 @@
 mutable struct Decryptor
   handle::Ptr{Cvoid}
 
-  function Decryptor(context, secret_key::SecretKey)
+  function Decryptor(context::SEALContext, secret_key::SecretKey)
     handleref = Ref{Ptr{Cvoid}}(C_NULL)
     ccall((:Decryptor_Create, libsealc), Clong,
           (Ptr{Cvoid}, Ptr{Cvoid}, Ref{Ptr{Cvoid}}),
