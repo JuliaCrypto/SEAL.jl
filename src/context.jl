@@ -20,10 +20,10 @@ mutable struct SEALContext
 end
 
 function first_parms_id(context::SEALContext)
-  parms_id = Ref{UInt64}(0)
+  parms_id = zeros(UInt64, 4)
   retval = ccall((:SEALContext_FirstParmsId, libsealc), Clong,
                  (Ptr{Cvoid}, Ref{UInt64}),
                  context.handle, parms_id)
   @check_return_value retval
-  return Int(parms_id[])
+  return parms_id
 end

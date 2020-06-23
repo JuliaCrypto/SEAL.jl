@@ -3,7 +3,6 @@ using SEAL
 include("utilities.jl")
 
 function example_ckks_basics()
-  GC.enable(false)
   parms = EncryptionParameters(SchemeType.ckks)
 
   poly_modulus_degree = 8192
@@ -48,9 +47,7 @@ function example_ckks_basics()
   println("Encode input vectors.")
   encode!(x_plain, input, initial_scale, encoder)
   x1_encrypted = Ciphertext()
-  println("scale of x1_encrypted: ", scale(x1_encrypted))
   encrypt!(x1_encrypted, x_plain, encryptor)
-  println("scale of x1_encrypted: ", scale(x1_encrypted))
 
   x3_encrypted = Ciphertext()
   print_line(@__LINE__)
