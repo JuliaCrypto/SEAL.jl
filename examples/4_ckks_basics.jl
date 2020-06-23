@@ -1,5 +1,7 @@
 using SEAL
 
+include("utilities.jl")
+
 function example_ckks_basics()
   GC.enable(false)
   parms = EncryptionParameters(SchemeType.ckks)
@@ -25,8 +27,11 @@ function example_ckks_basics()
   println("Number of slots: ", slot_count_)
 
   input = collect(range(0.0, 1.0, length=slot_count_))
+  println()
   println("Input vector:")
+  print("  ")
   show(IOContext(stdout, :limit => true, :displaysize => (6, 1)), input)
+  println()
   println()
 
   println("Evaluating polynomial PI*x^3 + 0.4x + 1 ...")
@@ -39,17 +44,20 @@ function example_ckks_basics()
   encode!(plain_coeff0, 1.0, initial_scale, encoder)
 
   x_plain = Plaintext()
+  print_line(@__LINE__)
   println("Encode input vectors.")
   encode!(x_plain, input, initial_scale, encoder)
   x1_encrypted = Ciphertext()
   encrypt!(x1_encrypted, x_plain, encryptor)
 
   x3_encrypted = Ciphertext()
+  print_line(@__LINE__)
   println("Compute x^2 and relinearize:")
   square!(x3_encrypted, x1_encrypted, evaluator)
   relinearize_inplace!(x3_encrypted, relin_keys_, evaluator)
   println("    + Scale of x^2 before rescale: ", log2(scale(x3_encrypted)), " bits")
 
+  print_line(@__LINE__)
   println("Rescale x^2.")
   rescale_to_next_inplace!(x3_encrypted, evaluator)
   println("    + Scale of x^2 after rescale: ", log2(scale(x3_encrypted)), " bits")
