@@ -24,12 +24,12 @@ mutable struct Ciphertext
 end
 
 function scale(encrypted::Ciphertext)
-  scale_ = Ref{Cdouble}(0)
+  value = Ref{Cdouble}(0)
   retval = ccall((:Ciphertext_Scale, libsealc), Clong,
                  (Ptr{Cvoid}, Ref{Cdouble}),
-                 encrypted.handle, scale_)
+                 encrypted.handle, value)
   @check_return_value retval
-  return Float64(scale_[])
+  return Float64(value[])
 end
 
 function scale!(encrypted::Ciphertext, value)
@@ -38,5 +38,14 @@ function scale!(encrypted::Ciphertext, value)
                  encrypted.handle, value)
   @check_return_value retval
   return encrypted
+end
+
+function parms_id(encrypted::Ciphertext)
+  parms_id_ = zeros(UInt64, 4)
+  retval = ccall((:Ciphertext_ParmsId, libsealc), Clong,
+                 (Ptr{Cvoid}, Ref{UInt64}),
+                 encrypted.handle, parms_id_)
+  @check_return_value retval
+  return parms_id_
 end
 

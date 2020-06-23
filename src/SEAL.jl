@@ -34,7 +34,7 @@ include("plaintext.jl")
 export Plaintext, scale
 
 include("ciphertext.jl")
-export Ciphertext, scale, scale!
+export Ciphertext, scale, scale!, parms_id
 
 include("encryptor.jl")
 export Encryptor, encrypt!
@@ -42,7 +42,7 @@ export Encryptor, encrypt!
 include("evaluator.jl")
 export Evaluator, square!, relinearize!, relinearize_inplace!, rescale_to_next!,
        rescale_to_next_inplace!, multiply_plain!, multiply_plain_inplace!, multiply!,
-       multiply_inplace!
+       multiply_inplace!, mod_switch_to!, mod_switch_to_inplace!
 
 include("decryptor.jl")
 export Decryptor

@@ -110,6 +110,9 @@ function example_ckks_basics()
 
   print_line(@__LINE__)
   println("Normalize encryption parameters to the lowest level.")
+  last_parms_id = parms_id(x3_encrypted)
+  mod_switch_to_inplace!(x1_encrypted, last_parms_id, evaluator)
+  mod_switch_to_inplace!(plain_coeff0, last_parms_id, evaluator)
 
   return
 end
