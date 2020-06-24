@@ -37,6 +37,10 @@ function square!(destination::Ciphertext, encrypted::Ciphertext, evaluator::Eval
   return destination
 end
 
+function square_inplace!(encrypted::Ciphertext, evaluator::Evaluator)
+  return square!(encrypted, encrypted, evaluator)
+end
+
 function relinearize!(destination::Ciphertext, encrypted::Ciphertext, relinkeys::RelinKeys,
                       evaluator::Evaluator)
   retval = ccall((:Evaluator_Relinearize, libsealc), Clong,

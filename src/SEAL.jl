@@ -64,7 +64,7 @@ include("encryptor.jl")
 export Encryptor, encrypt!
 
 include("evaluator.jl")
-export Evaluator, square!, relinearize!, relinearize_inplace!, rescale_to_next!,
+export Evaluator, square!, square_inplace!, relinearize!, relinearize_inplace!, rescale_to_next!,
        rescale_to_next_inplace!, multiply_plain!, multiply_plain_inplace!, multiply!,
        multiply_inplace!, mod_switch_to!, mod_switch_to_inplace!, add!, add_inplace!,
        add_plain!, add_plain_inplace!, rotate_vector!, rotate_vector_inplace!
