@@ -1,5 +1,6 @@
 module SEAL
 
+# SEAL_jll provides `libsealc`, which we will use in this package
 using SEAL_jll
 
 abstract type SEALObject end
