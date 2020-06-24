@@ -1,4 +1,12 @@
 
+"""
+    Modulus
+
+Represents a non-negative integer modulus of up to 61 bits, e.g., for the plain modulus and the
+coefficient modulus in instances of `EncryptionParameters`.
+
+See also: [`EncryptionParameters`](@ref)
+"""
 mutable struct Modulus <: SEALObject
   handle::Ptr{Cvoid}
 

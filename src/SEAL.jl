@@ -3,8 +3,20 @@ module SEAL
 # SEAL_jll provides `libsealc`, which we will use in this package
 using SEAL_jll
 
+"""
+    SEALObject
+
+Abstract parent type for all types based on SEAL classes.
+"""
 abstract type SEALObject end
+
+"""
+    handle(x::SEALObject)
+
+Return the raw C pointer to where `x` resides in memory.
+"""
 handle(x::SEALObject) = x.handle
+
 export SEALObject, handle
 
 Base.unsafe_convert(::Type{Ptr{Cvoid}}, x::SEALObject) = handle(x)

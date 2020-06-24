@@ -1,4 +1,15 @@
 
+"""
+    Ciphertext
+
+A ciphertext element, consisting of two or more polynomials. It can be created from a `Plaintext`
+element by encrypting it with an appropriate `Encryptor` instance. `Ciphertext` instances should
+usually not be modified directly by the user but only through the corresponding functions of
+`Evaluator`. Decryption is performed via a `Decryptor` instance, which converts a `Ciphertext` back
+to a `Plaintext` instance.
+
+See also: [`Plaintext`](@ref), [`Encryptor`](@ref), [`Decryptor`](@ref), [`Evaluator`](@ref)
+"""
 mutable struct Ciphertext <: SEALObject
   handle::Ptr{Cvoid}
 

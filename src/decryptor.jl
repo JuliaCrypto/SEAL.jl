@@ -1,4 +1,11 @@
 
+"""
+    Decryptor
+
+A `Decryptor` can be used to decrypt a `Ciphertext` instance back into a `Plaintext` instance.
+
+See also: [`Plaintext`](@ref), [`Ciphertext`](@ref)
+"""
 mutable struct Decryptor <: SEALObject
   handle::Ptr{Cvoid}
 

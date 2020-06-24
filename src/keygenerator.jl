@@ -1,4 +1,13 @@
 
+"""
+    KeyGenerator
+
+Can be used to generate a pair of matching secret and public keys. In addition, the `KeyGenerator`
+provides functions to obtain relinearization keys (required after multiplication) and Galois keys
+(needed for rotation).
+
+See also: [`SecretKey`](@ref), [`PublicKey`](@ref), [`RelinKeys`](@ref)
+"""
 mutable struct KeyGenerator <: SEALObject
   handle::Ptr{Cvoid}
 

@@ -1,4 +1,12 @@
 
+"""
+    SEALContext
+
+Heavyweight class that does validates encryption parameters of type `EncryptionParameters` and
+pre-computes and stores several costly pre-computations.
+
+See also: [`EncryptionParameters`](@ref)
+"""
 mutable struct SEALContext <: SEALObject
   handle::Ptr{Cvoid}
 

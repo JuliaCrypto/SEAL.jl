@@ -1,4 +1,13 @@
 
+"""
+    check_return_value(value, location="")
+
+Check the return value `value` of calls to C bindings of the SEAL library and throw an exception if
+there were errors. `location` can be used to pass information about were the error occurred and will
+be printed as well.
+
+See also: [`@check_return_value`](@ref)
+"""
 function check_return_value(value, location="")
   if isempty(location)
     loc = ""
@@ -25,6 +34,14 @@ function check_return_value(value, location="")
   end
 end
 
+"""
+    @check_return_value value
+
+Call `check_return_value(value, location)` with `location` being a string of the format
+`<filename>:<line_number>`.
+
+See also: [`check_return_value`](@ref)
+"""
 macro check_return_value(value)
   return quote
     check_return_value($(esc(value)),

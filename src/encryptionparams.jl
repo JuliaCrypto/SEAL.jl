@@ -1,8 +1,25 @@
 
+"""
+    SchemeType
+
+A module that only wraps the enum `SchemeTypeEnum` with values `none`, `BFV`, and `CKKS`, which
+indicate the type of encryption scheme. `BFV` refers to the Brakerski/Fan-Vercauteren scheme, `CKKS`
+refers to the Cheon-Kim-Kim-Song scheme (sometimes also called `HEAAN` in the literature), and
+`none` indicates that no encryption should be used.
+"""
 module SchemeType
 @enum SchemeTypeEnum::UInt8 none=0 BFV=1 CKKS=2
 end
 
+"""
+    EncryptionParameters
+
+Stores settings for use by the encryption schemes, most importantly the polynomial modulus, the
+coefficient modulus, and the plaintext modulus. An `EncryptionParameters` object is required to
+create a `SEALContext` instance.
+
+See also: [`SEALContext`](@ref)
+"""
 mutable struct EncryptionParameters <: SEALObject
   handle::Ptr{Cvoid}
 

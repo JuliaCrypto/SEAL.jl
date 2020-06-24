@@ -1,4 +1,11 @@
 
+"""
+    Encryptor
+
+An `Encryptor` can be used to encrypt a `Plaintext` instance, yielding a `Ciphertext` instance.
+
+See also: [`Plaintext`](@ref), [`Ciphertext`](@ref)
+"""
 mutable struct Encryptor <: SEALObject
   handle::Ptr{Cvoid}
 

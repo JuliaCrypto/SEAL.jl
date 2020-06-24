@@ -1,4 +1,12 @@
 
+"""
+    Evaluator
+
+An `Evaluator` is used to perform arithmetic and other operations on `Ciphertext` instances. These
+include addition, multiplication, relinearization, and modulus switching.
+
+See also: [`Ciphertext`](@ref)
+"""
 mutable struct Evaluator <: SEALObject
   handle::Ptr{Cvoid}
 

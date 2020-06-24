@@ -1,4 +1,13 @@
 
+"""
+    Plaintext
+
+A plaintext element, storing data as a polynomial modulo the plaintext modulus. It can be used to
+create a `Ciphertext` element by encrypting it with an appropriate `Encryptor` instance. Decrypting
+a `Ciphertext` with a `Decryptor` instance will again return a `Plaintext` instance.
+
+See also: [`Ciphertext`](@ref), [`Encryptor`](@ref), [`Decryptor`](@ref)
+"""
 mutable struct Plaintext <: SEALObject
   handle::Ptr{Cvoid}
 
