@@ -65,3 +65,12 @@ function relin_keys(keygen::KeyGenerator)
   @check_return_value retval
   return RelinKeys(keyptr[])
 end
+
+function galois_keys_local(keygen::KeyGenerator)
+  keyptr = Ref{Ptr{Cvoid}}(C_NULL)
+  retval = ccall((:KeyGenerator_GaloisKeysAll, libsealc), Clong,
+                 (Ptr{Cvoid}, UInt8, Ref{Ptr{Cvoid}}),
+                 keygen, false, keyptr)
+  @check_return_value retval
+  return GaloisKeys(keyptr[])
+end

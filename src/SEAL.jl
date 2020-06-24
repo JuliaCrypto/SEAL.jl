@@ -45,11 +45,14 @@ export PublicKey
 include("secretkey.jl")
 export SecretKey
 
+include("galoiskeys.jl")
+export GaloisKeys
+
 include("relinkeys.jl")
 export RelinKeys
 
 include("keygenerator.jl")
-export KeyGenerator, public_key, secret_key, relin_keys_local, relin_keys
+export KeyGenerator, public_key, secret_key, relin_keys_local, relin_keys, galois_keys_local
 
 include("plaintext.jl")
 export Plaintext, scale, scale!, parms_id
@@ -64,7 +67,7 @@ include("evaluator.jl")
 export Evaluator, square!, relinearize!, relinearize_inplace!, rescale_to_next!,
        rescale_to_next_inplace!, multiply_plain!, multiply_plain_inplace!, multiply!,
        multiply_inplace!, mod_switch_to!, mod_switch_to_inplace!, add!, add_inplace!,
-       add_plain!, add_plain_inplace!
+       add_plain!, add_plain_inplace!, rotate_vector!, rotate_vector_inplace!
 
 include("decryptor.jl")
 export Decryptor, decrypt!

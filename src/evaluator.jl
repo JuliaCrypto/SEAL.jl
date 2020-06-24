@@ -142,3 +142,17 @@ end
 function add_plain_inplace!(encrypted::Ciphertext, plain::Plaintext, evaluator::Evaluator)
   return add_plain!(encrypted, encrypted, plain, evaluator)
 end
+
+function rotate_vector!(destination::Ciphertext, encrypted::Ciphertext, steps,
+                        galois_keys::GaloisKeys, evaluator::Evaluator)
+  retval = ccall((:Evaluator_RotateVector, libsealc), Clong,
+                 (Ptr{Cvoid}, Ptr{Cvoid}, Cint, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}),
+                 evaluator, encrypted, steps, galois_keys, destination, C_NULL)
+  @check_return_value retval
+  return destination
+end
+
+function rotate_vector_inplace!(encrypted::Ciphertext, steps, galois_keys::GaloisKeys,
+                                evaluator::Evaluator)
+  return rotate_vector!(encrypted, encrypted, steps, galois_keys, evaluator)
+end
