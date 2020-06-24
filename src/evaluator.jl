@@ -81,8 +81,8 @@ function multiply_inplace!(encrypted1::Ciphertext, encrypted2::Ciphertext, evalu
   return multiply!(encrypted1, encrypted1, encrypted2, evaluator)
 end
 
-function mod_switch_to!(destination::Ciphertext, encrypted::Ciphertext, parms_id,
-                        evaluator::Evaluator)
+function mod_switch_to!(destination::Ciphertext, encrypted::Ciphertext,
+                        parms_id::DenseVector{UInt64}, evaluator::Evaluator)
   retval = ccall((:Evaluator_ModSwitchTo1, libsealc), Clong,
                  (Ptr{Cvoid}, Ptr{Cvoid}, Ref{UInt64}, Ptr{Cvoid}, Ptr{Cvoid}),
                  evaluator, encrypted, parms_id, destination, C_NULL)
@@ -90,11 +90,13 @@ function mod_switch_to!(destination::Ciphertext, encrypted::Ciphertext, parms_id
   return destination
 end
 
-function mod_switch_to_inplace!(encrypted::Ciphertext, parms_id, evaluator::Evaluator)
+function mod_switch_to_inplace!(encrypted::Ciphertext, parms_id::DenseVector{UInt64},
+                                evaluator::Evaluator)
   return mod_switch_to!(encrypted, encrypted, parms_id, evaluator)
 end
 
-function mod_switch_to!(destination::Plaintext, plain::Plaintext, parms_id, evaluator::Evaluator)
+function mod_switch_to!(destination::Plaintext, plain::Plaintext, parms_id::DenseVector{UInt64},
+                        evaluator::Evaluator)
   retval = ccall((:Evaluator_ModSwitchTo2, libsealc), Clong,
                  (Ptr{Cvoid}, Ptr{Cvoid}, Ref{UInt64}, Ptr{Cvoid}),
                  evaluator, plain, parms_id, destination)
@@ -102,7 +104,8 @@ function mod_switch_to!(destination::Plaintext, plain::Plaintext, parms_id, eval
   return destination
 end
 
-function mod_switch_to_inplace!(plain::Plaintext, parms_id, evaluator::Evaluator)
+function mod_switch_to_inplace!(plain::Plaintext, parms_id::DenseVector{UInt64},
+                                evaluator::Evaluator)
   return mod_switch_to!(plain, plain, parms_id, evaluator)
 end
 

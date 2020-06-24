@@ -30,7 +30,7 @@ function scale(encrypted::Ciphertext)
   return Float64(value[])
 end
 
-function scale!(encrypted::Ciphertext, value)
+function scale!(encrypted::Ciphertext, value::Float64)
   retval = ccall((:Ciphertext_SetScale, libsealc), Clong,
                  (Ptr{Cvoid}, Ref{Cdouble}),
                  encrypted, value)

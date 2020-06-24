@@ -22,10 +22,28 @@ mutable struct Plaintext <: SEALObject
 end
 
 function scale(plain::Plaintext)
-  scale_ = Ref{Cdouble}(0)
+  value = Ref{Cdouble}(0)
   retval = ccall((:Plaintext_Scale, libsealc), Clong,
                  (Ptr{Cvoid}, Ref{Cdouble}),
-                 plain, scale_)
+                 plain, value)
   @check_return_value retval
-  return Float64(scale_[])
+  return Float64(value[])
 end
+
+function scale!(plain::Plaintext, value::Float64)
+  retval = ccall((:Plaintext_SetScale, libsealc), Clong,
+                 (Ptr{Cvoid}, Ref{Cdouble}),
+                 plain, value)
+  @check_return_value retval
+  return plain
+end
+
+function parms_id(plain::Plaintext)
+  parms_id_ = zeros(UInt64, 4)
+  retval = ccall((:Plaintext_GetParmsId, libsealc), Clong,
+                 (Ptr{Cvoid}, Ref{UInt64}),
+                 plain, parms_id_)
+  @check_return_value retval
+  return parms_id_
+end
+

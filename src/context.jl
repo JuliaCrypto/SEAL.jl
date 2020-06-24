@@ -25,3 +25,36 @@ function first_parms_id(context::SEALContext)
   @check_return_value retval
   return parms_id
 end
+
+function get_context_data(context::SEALContext, parms_id::DenseVector{UInt64})
+  handleref = Ref{Ptr{Cvoid}}(C_NULL)
+  retval = ccall((:SEALContext_GetContextData, libsealc), Clong,
+                 (Ptr{Cvoid}, Ref{UInt64}, Ref{Ptr{Cvoid}}),
+                 context, parms_id, handleref)
+  @check_return_value retval
+  return ContextData(handleref[], destroy_on_gc=false)
+end
+
+mutable struct ContextData <: SEALObject
+  handle::Ptr{Cvoid}
+
+  function ContextData(handle::Ptr{Cvoid}; destroy_on_gc=true)
+    x = new(handle)
+    if destroy_on_gc
+      finalizer(x) do x
+        # @async println("Finalizing $x at line $(@__LINE__).")
+        ccall((:ContextData_Destroy, libsealc), Clong, (Ptr{Cvoid},), x)
+      end
+    end
+    return x
+  end
+end
+
+function chain_index(context_data::ContextData)
+  index = Ref{UInt64}(0)
+  retval = ccall((:ContextData_ChainIndex, libsealc), Clong,
+                 (Ptr{Cvoid}, Ref{UInt64}),
+                 context_data, index)
+  @check_return_value retval
+  return Int(index[])
+end

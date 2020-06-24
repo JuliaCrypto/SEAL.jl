@@ -1,5 +1,5 @@
 
-mutable struct MemoryPoolHandle
+mutable struct MemoryPoolHandle <: SEALObject
   handle::Ptr{Cvoid}
 
   function MemoryPoolHandle(handle::Ptr{Cvoid})
@@ -13,10 +13,10 @@ mutable struct MemoryPoolHandle
 end
 
 function memory_manager_get_pool()
-  poolhandleref = Ref{Ptr{Cvoid}}(C_NULL)
+  handleref = Ref{Ptr{Cvoid}}(C_NULL)
   retval = ccall((:MemoryManager_GetPool2, libsealc), Clong,
                  (Ref{Ptr{Cvoid}},),
-                 poolhandleref)
+                 handleref)
   @check_return_value retval
-  return MemoryPoolHandle(poolhandleref[])
+  return MemoryPoolHandle(handleref[])
 end

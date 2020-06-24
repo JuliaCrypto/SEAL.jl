@@ -23,7 +23,8 @@ include("modulus.jl")
 export Modulus, SecLevelType, bit_count, value, coeff_modulus_create
 
 include("context.jl")
-export SEALContext, first_parms_id
+export SEALContext, first_parms_id, get_context_data
+export ContextData, chain_index
 
 include("publickey.jl")
 export PublicKey
@@ -38,7 +39,7 @@ include("keygenerator.jl")
 export KeyGenerator, public_key, secret_key, relin_keys_local, relin_keys
 
 include("plaintext.jl")
-export Plaintext, scale
+export Plaintext, scale, scale!, parms_id
 
 include("ciphertext.jl")
 export Ciphertext, scale, scale!, parms_id

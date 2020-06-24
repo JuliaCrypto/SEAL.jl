@@ -85,13 +85,13 @@ function example_ckks_basics()
   println()
   print_line(@__LINE__)
   println("Parameters used by all three terms are different.")
-    #=cout << "    + Modulus chain index for x3_encrypted: "=#
-    #=     << context->get_context_data(x3_encrypted.parms_id())->chain_index() << endl;=#
-    #=cout << "    + Modulus chain index for x1_encrypted: "=#
-    #=     << context->get_context_data(x1_encrypted.parms_id())->chain_index() << endl;=#
-    #=cout << "    + Modulus chain index for plain_coeff0: "=#
-    #=     << context->get_context_data(plain_coeff0.parms_id())->chain_index() << endl;=#
-    #=cout << endl;=#
+  ci_x3 = chain_index(get_context_data(context, parms_id(x3_encrypted)))
+  println("    + Modulus chain index for x3_encrypted: ", ci_x3)
+  ci_x1 = chain_index(get_context_data(context, parms_id(x1_encrypted)))
+  println("    + Modulus chain index for x1_encrypted: ", ci_x1)
+  ci_c0 = chain_index(get_context_data(context, parms_id(plain_coeff0)))
+  println("    + Modulus chain index for plain_coeff0: ", ci_c0)
+  println()
 
   print_line(@__LINE__)
   println("The exact scales of all three terms are different:")
