@@ -1,5 +1,8 @@
 # SEAL.jl
 
+[![Build Status](https://travis-ci.com/sloede/SEAL.jl.svg?branch=master)](https://travis-ci.com/sloede/SEAL.jl)
+[![codecov](https://codecov.io/gh/sloede/SEAL.jl/branch/master/graph/badge.svg?token=CCJ4EO3HW8)](https://codecov.io/gh/sloede/SEAL.jl)
+
 *SEAL.jl* is a Julia package that wraps the Microsoft
 [SEAL](https://github.com/microsoft/SEAL) library. It exposes the homomorphic
 encryption capabilitites of SEAL in an intuitive and Julian way.
