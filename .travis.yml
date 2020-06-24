@@ -1,0 +1,21 @@
+# Documentation: http://docs.travis-ci.com/user/languages/julia/
+language: julia
+
+julia:
+  - 1.4
+  - 1
+
+os:
+  - linux
+  # - osx
+
+notifications:
+  email: false
+
+script:
+  - julia --color=yes --project=. -e "import Pkg; Pkg.build(verbose=true)"
+  - julia --color=yes --project=. -e "import Pkg; Pkg.test(coverage=true)"
+
+after_success:
+  - julia --color=yes --project=test/coverage -e 'import Pkg; Pkg.instantiate()'
+  - julia --color=yes --project=test/coverage test/coverage/coverage.jl
