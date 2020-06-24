@@ -35,3 +35,12 @@ function decrypt!(destination::Plaintext, encrypted::Ciphertext, decryptor::Decr
   @check_return_value retval
   return destination
 end
+
+function invariant_noise_budget(encrypted::Ciphertext, decryptor::Decryptor)
+  budgetref = Ref{Cint}(0)
+  retval = ccall((:Decryptor_InvariantNoiseBudget, libsealc), Clong,
+                 (Ptr{Cvoid}, Ptr{Cvoid}, Ref{Cint}),
+                 decryptor, encrypted, budgetref)
+  @check_return_value retval
+  return Int(budgetref[])
+end

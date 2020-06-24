@@ -58,3 +58,13 @@ function parms_id(encrypted::Ciphertext)
   return parms_id_
 end
 
+function Base.size(encrypted::Ciphertext)
+  sizeref = Ref{UInt64}(0)
+  retval = ccall((:Ciphertext_Size, libsealc), Clong,
+                 (Ptr{Cvoid}, Ref{UInt64}),
+                 encrypted, sizeref)
+  @check_return_value retval
+  return (Int(sizeref[]),)
+end
+Base.length(encrypted::Ciphertext) = size(encrypted)[1]
+

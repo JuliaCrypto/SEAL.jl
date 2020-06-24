@@ -57,6 +57,26 @@ function key_context_data(context::SEALContext)
   return ContextData(handleref[], destroy_on_gc=false)
 end
 
+function parameter_error_message(context::SEALContext)
+  len = Ref{UInt64}(0)
+
+  # First call to obtain length (message pointer is null)
+  retval = ccall((:SEALContext_ParameterErrorMessage, libsealc), Clong,
+                 (Ptr{Cvoid}, Ptr{UInt8}, Ptr{UInt64}),
+                 context, C_NULL, len)
+  @check_return_value retval
+
+  # Second call to obtain message
+  message = Vector{UInt8}(undef, len[])
+  retval = ccall((:SEALContext_ParameterErrorMessage, libsealc), Clong,
+                 (Ptr{Cvoid}, Ptr{UInt8}, Ptr{UInt64}),
+                 context, message, len)
+  @check_return_value retval
+
+  return String(message)
+end
+
+
 mutable struct ContextData <: SEALObject
   handle::Ptr{Cvoid}
 

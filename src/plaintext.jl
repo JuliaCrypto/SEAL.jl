@@ -20,6 +20,15 @@ mutable struct Plaintext <: SEALObject
     return Plaintext(handleref[])
   end
 
+  function Plaintext(hex_poly)
+    handleref = Ref{Ptr{Cvoid}}(C_NULL)
+    retval = ccall((:Plaintext_Create4, libsealc), Clong,
+                   (Cstring, Ptr{Cvoid}, Ref{Ptr{Cvoid}}),
+                   hex_poly, C_NULL, handleref)
+    @check_return_value retval
+    return Plaintext(handleref[])
+  end
+
   function Plaintext(handle::Ptr{Cvoid})
     x = new(handle)
     finalizer(x) do x
@@ -54,5 +63,27 @@ function parms_id(plain::Plaintext)
                  plain, parms_id_)
   @check_return_value retval
   return parms_id_
+end
+
+function to_string(plain::Plaintext)
+  len = Ref{UInt64}(0)
+
+  # First call to obtain length (message pointer is null)
+  retval = ccall((:Plaintext_ToString, libsealc), Clong,
+                 (Ptr{Cvoid}, Ptr{UInt8}, Ref{UInt64}),
+                 plain, C_NULL, len)
+  @check_return_value retval
+
+  # Second call to obtain message
+  # Note: The "+1" is needed since the terminating NULL byte is included in the *copy* operation in
+  # SEAL, but *not* in the returned length.
+  message = Vector{UInt8}(undef, len[] + 1)
+  retval = ccall((:Plaintext_ToString, libsealc), Clong,
+                 (Ptr{Cvoid}, Ptr{UInt8}, Ref{UInt64}),
+                 plain, message, len)
+  @check_return_value retval
+
+  # Return as String but without terminating NULL byte
+  return String(message[1:end-1])
 end
 

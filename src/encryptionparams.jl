@@ -106,3 +106,11 @@ function plain_modulus(enc_param::EncryptionParameters)
   return Modulus(handleref[], destroy_on_gc=false)
 end
 
+function set_plain_modulus!(enc_param::EncryptionParameters, plain_modulus::Integer)
+  retval = ccall((:EncParams_SetPlainModulus2, libsealc), Clong,
+                 (Ptr{Cvoid}, UInt64),
+                 enc_param, plain_modulus)
+  @check_return_value retval
+  return enc_param
+end
+

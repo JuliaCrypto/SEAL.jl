@@ -30,13 +30,13 @@ export version_major, version_minor, version_patch, version
 include("encryptionparams.jl")
 export EncryptionParameters, SchemeType, get_poly_modulus_degree,
        set_poly_modulus_degree!, set_coeff_modulus!, coeff_modulus,
-       scheme, plain_modulus
+       scheme, plain_modulus, set_plain_modulus!
 
 include("modulus.jl")
-export Modulus, SecLevelType, bit_count, value, coeff_modulus_create
+export Modulus, SecLevelType, bit_count, value, coeff_modulus_create, coeff_modulus_bfv_default
 
 include("context.jl")
-export SEALContext, first_parms_id, get_context_data, key_context_data
+export SEALContext, first_parms_id, get_context_data, key_context_data, parameter_error_message
 export ContextData, chain_index, parms, total_coeff_modulus_bit_count
 
 include("publickey.jl")
@@ -55,10 +55,10 @@ include("keygenerator.jl")
 export KeyGenerator, public_key, secret_key, relin_keys_local, relin_keys, galois_keys_local
 
 include("plaintext.jl")
-export Plaintext, scale, scale!, parms_id
+export Plaintext, scale, scale!, parms_id, to_string
 
 include("ciphertext.jl")
-export Ciphertext, scale, scale!, parms_id
+export Ciphertext, scale, scale!, parms_id, size, length
 
 include("encryptor.jl")
 export Encryptor, encrypt!
@@ -70,7 +70,7 @@ export Evaluator, square!, relinearize!, relinearize_inplace!, rescale_to_next!,
        add_plain!, add_plain_inplace!, rotate_vector!, rotate_vector_inplace!
 
 include("decryptor.jl")
-export Decryptor, decrypt!
+export Decryptor, decrypt!, invariant_noise_budget
 
 include("ckks.jl")
 export CKKSEncoder, slot_count, encode!, decode!

@@ -62,3 +62,23 @@ function coeff_modulus_create(poly_modulus_degree, bit_sizes)
   modulus = Modulus[Modulus(modulusptrs[i]) for i in 1:length(bit_sizes)]
   return modulus
 end
+
+function coeff_modulus_bfv_default(poly_modulus_degree, sec_level=SecLevelType.tc128)
+  len = Ref{UInt64}(0)
+
+  # First call to obtain length (modulus result pointer is null)
+  retval = ccall((:CoeffModulus_BFVDefault, libsealc), Clong,
+                 (UInt64, Cint, Ref{UInt64}, Ptr{Ptr{Cvoid}}),
+                 poly_modulus_degree, sec_level, len, C_NULL)
+  @check_return_value retval
+
+  # Second call to obtain modulus
+  modulusptrs = Vector{Ptr{Cvoid}}(undef, len[])
+  retval = ccall((:CoeffModulus_BFVDefault, libsealc), Clong,
+                 (UInt64, Cint, Ref{UInt64}, Ref{Ptr{Cvoid}}),
+                 poly_modulus_degree, sec_level, len, modulusptrs)
+  @check_return_value retval
+
+  modulus = Modulus[Modulus(ptr) for ptr in modulusptrs]
+  return modulus
+end
