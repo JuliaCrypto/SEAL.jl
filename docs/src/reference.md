@@ -1,7 +1,11 @@
-# SEAL.jl API
+# Reference
 
 ```@meta
 CurrentModule = SEAL
+```
+
+```@index
+Modules = [SEAL]
 ```
 
 ```@autodocs

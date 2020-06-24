@@ -37,9 +37,7 @@ makedocs(
     # Explicitly specify documentation structure
     pages = [
         "Home" => "index.md",
-        "Reference" => [
-            "SEAL" => "reference.md",
-        ],
+        "Reference" => "reference.md",
         "Contributing" => "contributing.md",
         "License" => "license.md"
     ],
