@@ -1,10 +1,13 @@
+include("utilities.jl")
+
 using SEAL
 using Printf
 
-include("utilities.jl")
 
 function example_ckks_basics()
-  parms = EncryptionParameters(SchemeType.ckks)
+  print_example_banner("Example: CKKS Basics")
+
+  parms = EncryptionParameters(SchemeType.CKKS)
 
   poly_modulus_degree = 8192
   set_poly_modulus_degree!(parms, poly_modulus_degree)
@@ -13,6 +16,8 @@ function example_ckks_basics()
   initial_scale = 2.0^40
 
   context = SEALContext(parms)
+  print_parameters(context)
+  println()
 
   keygen = KeyGenerator(context)
   public_key_ = public_key(keygen)
@@ -27,7 +32,6 @@ function example_ckks_basics()
   println("Number of slots: ", slot_count_)
 
   input = collect(range(0.0, 1.0, length=slot_count_))
-  println()
   println("Input vector:")
   print_vector(input)
 

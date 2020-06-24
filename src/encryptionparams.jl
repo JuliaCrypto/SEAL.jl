@@ -1,6 +1,6 @@
 
 module SchemeType
-@enum SchemeTypeEnum::UInt8 none=0 bfv=1 ckks=2
+@enum SchemeTypeEnum::UInt8 none=0 BFV=1 CKKS=2
 end
 
 mutable struct EncryptionParameters <: SEALObject
@@ -12,7 +12,11 @@ mutable struct EncryptionParameters <: SEALObject
                    (UInt8, Ref{Ptr{Cvoid}}),
                    scheme, handleref)
     @check_return_value retval
-    x = new(handleref[])
+    return EncryptionParameters(handleref[])
+  end
+
+  function EncryptionParameters(handle::Ptr{Cvoid})
+    x = new(handle)
     finalizer(x) do x
       # @async println("Finalizing $x at line $(@__LINE__).")
       ccall((:EncParams_Destroy, libsealc), Clong, (Ptr{Cvoid},), x)
@@ -65,5 +69,23 @@ function coeff_modulus(enc_param::EncryptionParameters)
 
   modulus = Modulus[Modulus(ptr) for ptr in modulusptrs]
   return modulus
+end
+
+function scheme(enc_param::EncryptionParameters)
+  scheme = Ref{UInt8}(0)
+  retval = ccall((:EncParams_GetScheme, libsealc), Clong,
+                 (Ptr{Cvoid}, Ref{UInt8}),
+                 enc_param, scheme)
+  @check_return_value retval
+  return SchemeType.SchemeTypeEnum(scheme[])
+end
+
+function plain_modulus(enc_param::EncryptionParameters)
+  handleref = Ref{Ptr{Cvoid}}(C_NULL)
+  retval = ccall((:EncParams_GetPlainModulus, libsealc), Clong,
+                 (Ptr{Cvoid}, Ref{Ptr{Cvoid}}),
+                 enc_param, handleref)
+  @check_return_value retval
+  return Modulus(handleref[], destroy_on_gc=false)
 end
 

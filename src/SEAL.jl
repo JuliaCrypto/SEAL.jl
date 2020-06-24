@@ -6,8 +6,7 @@ abstract type SEALObject end
 handle(x::SEALObject) = x.handle
 export SEALObject, handle
 
-import Base.unsafe_convert
-unsafe_convert(::Type{Ptr{Cvoid}}, x::SEALObject) = handle(x)
+Base.unsafe_convert(::Type{Ptr{Cvoid}}, x::SEALObject) = handle(x)
 
 include("utilities.jl")
 export check_return_value
@@ -17,14 +16,15 @@ export version_major, version_minor, version_patch, version
 
 include("encryptionparams.jl")
 export EncryptionParameters, SchemeType, get_poly_modulus_degree,
-       set_poly_modulus_degree!, set_coeff_modulus!, coeff_modulus
+       set_poly_modulus_degree!, set_coeff_modulus!, coeff_modulus,
+       scheme, plain_modulus
 
 include("modulus.jl")
 export Modulus, SecLevelType, bit_count, value, coeff_modulus_create
 
 include("context.jl")
-export SEALContext, first_parms_id, get_context_data
-export ContextData, chain_index
+export SEALContext, first_parms_id, get_context_data, key_context_data
+export ContextData, chain_index, parms, total_coeff_modulus_bit_count
 
 include("publickey.jl")
 export PublicKey

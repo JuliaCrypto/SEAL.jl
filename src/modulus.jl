@@ -11,11 +11,13 @@ mutable struct Modulus <: SEALObject
     return Modulus(handleref[])
   end
 
-  function Modulus(handle::Ptr{Cvoid})
+  function Modulus(handle::Ptr{Cvoid}; destroy_on_gc=true)
     x = new(handle)
-    finalizer(x) do x
-      # @async println("Finalizing $x at line $(@__LINE__).")
-      ccall((:Modulus_Destroy, libsealc), Clong, (Ptr{Cvoid},), x)
+    if destroy_on_gc
+      finalizer(x) do x
+        # @async println("Finalizing $x at line $(@__LINE__).")
+        ccall((:Modulus_Destroy, libsealc), Clong, (Ptr{Cvoid},), x)
+      end
     end
     return x
   end

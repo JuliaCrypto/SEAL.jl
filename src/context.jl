@@ -2,13 +2,18 @@
 mutable struct SEALContext <: SEALObject
   handle::Ptr{Cvoid}
 
-  function SEALContext(enc_param::EncryptionParameters; expand_mod_chain=true, sec_level=SecLevelType.tc128)
+  function SEALContext(enc_param::EncryptionParameters;
+                       expand_mod_chain=true, sec_level=SecLevelType.tc128)
     handleref = Ref{Ptr{Cvoid}}(C_NULL)
     retval = ccall((:SEALContext_Create, libsealc), Clong,
                    (Ptr{Cvoid}, UInt8, Cint, Ref{Ptr{Cvoid}}),
                    enc_param, expand_mod_chain, sec_level, handleref)
     @check_return_value retval
-    x = new(handleref[])
+    return SEALContext(handleref[])
+  end
+
+  function SEALContext(handle::Ptr{Cvoid})
+    x = new(handle)
     finalizer(x) do x
       # @async println("Finalizing $x at line $(@__LINE__).")
       ccall((:SEALContext_Destroy, libsealc), Clong, (Ptr{Cvoid},), x)
@@ -35,6 +40,15 @@ function get_context_data(context::SEALContext, parms_id::DenseVector{UInt64})
   return ContextData(handleref[], destroy_on_gc=false)
 end
 
+function key_context_data(context::SEALContext)
+  handleref = Ref{Ptr{Cvoid}}(C_NULL)
+  retval = ccall((:SEALContext_KeyContextData, libsealc), Clong,
+                 (Ptr{Cvoid}, Ref{Ptr{Cvoid}}),
+                 context, handleref)
+  @check_return_value retval
+  return ContextData(handleref[], destroy_on_gc=false)
+end
+
 mutable struct ContextData <: SEALObject
   handle::Ptr{Cvoid}
 
@@ -57,4 +71,22 @@ function chain_index(context_data::ContextData)
                  context_data, index)
   @check_return_value retval
   return Int(index[])
+end
+
+function parms(context_data::ContextData)
+  handleref = Ref{Ptr{Cvoid}}(C_NULL)
+  retval = ccall((:ContextData_Parms, libsealc), Clong,
+                 (Ptr{Cvoid}, Ref{Ptr{Cvoid}}),
+                 context_data, handleref)
+  @check_return_value retval
+  return EncryptionParameters(handleref[])
+end
+
+function total_coeff_modulus_bit_count(context_data::ContextData)
+  bit_count = Ref{Cint}(0)
+  retval = ccall((:ContextData_TotalCoeffModulusBitCount, libsealc), Clong,
+                 (Ptr{Cvoid}, Ref{Cint}),
+                 context_data, bit_count)
+  @check_return_value retval
+  return Int(bit_count[])
 end
