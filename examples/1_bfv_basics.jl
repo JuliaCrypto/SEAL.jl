@@ -4,6 +4,18 @@ using SEAL
 using Printf
 
 
+"""
+    example_bfv_basics()
+
+Perform some basic operations such as encryption/decryption, multiplication, addition etc. using the
+BFV scheme. This routine is based on the file `native/examples/1_bfv_basics.cpp` of the original
+SEAL library and should yield the exact same output.
+
+* [SEAL](https://github.com/microsoft/SEAL)
+* [native/examples/1_bfv_basics.cpp](https://github.com/microsoft/SEAL/blob/master/native/examples/1_bfv_basics.cpp)
+
+See also: [`example_ckks_basics`](@ref)
+"""
 function example_bfv_basics()
   print_example_banner("Example: BFV Basics")
 

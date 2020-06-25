@@ -4,6 +4,16 @@ using SEAL
 using Printf
 
 
+"""
+    example_rotation_ckks()
+
+Perform some rotation on data encryped with the CKKS scheme. This routine is based on the file
+`native/examples/5_rotation.cpp` of the original SEAL library and should yield the exact same
+output.
+
+* [SEAL](https://github.com/microsoft/SEAL)
+* [native/examples/5_rotation.cpp](https://github.com/microsoft/SEAL/blob/master/native/examples/5_rotation.cpp)
+"""
 function example_rotation_ckks()
   print_example_banner("Example: Rotation / Rotation in CKKS")
 
