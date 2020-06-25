@@ -31,6 +31,12 @@ mutable struct CKKSEncoder <: SEALObject
   end
 end
 
+"""
+    slot_count(encoder)
+
+Return the number of available slots for a given encoder, i.e., how many raw data values can be
+stored and processed simultaneously with the given encryption setup.
+"""
 function slot_count(encoder::CKKSEncoder)
   count = Ref{UInt64}(0)
   retval = ccall((:CKKSEncoder_SlotCount, libsealc), Clong,
