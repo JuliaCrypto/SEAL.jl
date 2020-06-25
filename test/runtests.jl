@@ -4,7 +4,7 @@ using Test
 # Include files with example-specific tests
 include("test_1_bfv_basics.jl")
 include("test_4_ckks_basics.jl")
-#=include("test_5_rotation.jl")=#
+include("test_5_rotation.jl")
 
 # Additional tests to cover missing pieces
 @testset "additional tests" begin
