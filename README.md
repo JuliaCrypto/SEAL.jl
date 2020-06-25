@@ -1,5 +1,6 @@
 # SEAL.jl
 
+[![Documentation](https://img.shields.io/badge/docs-stable-blue.svg)](https://sloede.github.io/SEAL.jl/stable)
 [![Build Status](https://travis-ci.com/sloede/SEAL.jl.svg?branch=master)](https://travis-ci.com/sloede/SEAL.jl)
 [![codecov](https://codecov.io/gh/sloede/SEAL.jl/branch/master/graph/badge.svg?token=CCJ4EO3HW8)](https://codecov.io/gh/sloede/SEAL.jl)
 [![Coverage Status](https://coveralls.io/repos/github/sloede/SEAL.jl/badge.svg)](https://coveralls.io/github/sloede/SEAL.jl)
