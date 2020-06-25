@@ -14,7 +14,7 @@ mutable struct Modulus <: SEALObject
     handleref = Ref{Ptr{Cvoid}}(C_NULL)
     retval = ccall((:Modulus_Create1, libsealc), Clong,
                    (UInt8, Ref{Ptr{Cvoid}}),
-                   scheme, handleref)
+                   value, handleref)
     @check_return_value retval
     return Modulus(handleref[])
   end

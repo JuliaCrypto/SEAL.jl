@@ -11,7 +11,7 @@ mutable struct PublicKey <: SEALObject
 
   function PublicKey()
     handleref = Ref{Ptr{Cvoid}}(C_NULL)
-    retval = ccall((:PublicKey_Create, libsealc), Clong,
+    retval = ccall((:PublicKey_Create1, libsealc), Clong,
                    (Ref{Ptr{Cvoid}},),
                    handleref)
     @check_return_value retval

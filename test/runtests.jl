@@ -32,7 +32,8 @@ include("test_4_ckks_basics.jl")
   end
 
   @testset "Modulus" begin
-    @test_nowarn Modulus(1)
+    @test_nowarn Modulus(0)
+    @test_throws ErrorException Modulus(1)
   end
 
   @testset "memory_manager_get_pool" begin

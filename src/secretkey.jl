@@ -11,7 +11,7 @@ mutable struct SecretKey <: SEALObject
 
   function SecretKey()
     handleref = Ref{Ptr{Cvoid}}(C_NULL)
-    retval = ccall((:SecretKey_Create, libsealc), Clong,
+    retval = ccall((:SecretKey_Create1, libsealc), Clong,
                    (Ref{Ptr{Cvoid}},),
                    handleref)
     @check_return_value retval
