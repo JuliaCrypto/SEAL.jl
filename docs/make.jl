@@ -26,7 +26,7 @@ makedocs(
     # Set sitename to SEAL
     sitename = "SEAL.jl",
     # Set authors
-    authors = "Michael Schlottke-Lakemper"
+    authors = "Michael Schlottke-Lakemper",
     # Provide additional formatting options
     format = Documenter.HTML(
         # Disable pretty URLs during manual testing
@@ -34,7 +34,7 @@ makedocs(
         # Explicitly add favicon as asset
         # assets = ["assets/favicon.ico"],
         # Set canonical URL to GitLab pages URL
-        canonical = canonical
+        # canonical = canonical
     ),
     # Explicitly specify documentation structure
     pages = [
