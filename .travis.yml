@@ -11,10 +11,6 @@ os:
   - linux
   # - osx
 
-# Enable coverage reported by Coverage.io and Coveralls.io
-codecov: true
-coveralls: true
-
 # Disable email notifications
 notifications:
   email: false
@@ -23,3 +19,12 @@ notifications:
 script:
   - julia --color=yes --project=. -e "import Pkg; Pkg.build(verbose=true)"
   - julia --color=yes --project=. -e "import Pkg; Pkg.test(coverage=true)"
+
+# Enable coverage reported by Coverage.io and Coveralls.io
+# Note: Although documented as such, it does not seem to work with just these two lines!?!
+# codecov: true
+# coveralls: true
+
+after_success:
+  - julia -e 'using Pkg; Pkg.add("Coverage"); using Coverage; Codecov.submit(process_folder())'
+  - julia -e 'using Pkg; Pkg.add("Coverage"); using Coverage; Coveralls.submit(process_folder())'
