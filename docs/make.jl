@@ -7,11 +7,11 @@ root_dir = dirname(@__DIR__)
 # Install dependencies and import modules...
 Pkg.activate(root_dir)
 Pkg.instantiate()
-import SEAL
+using SEAL
 
 # Set paths based on availability of CI variables
-canonical = get(ENV, "CI_PAGES_URL", "https://numsim.gitlab-pages.sloede.com/personal/mschlott/SEAL.jl/")
-repo_url = get(ENV, "CI_PROJECT_URL", "https://gitlab.mi.uni-koeln.de/numsim/personal/mschlott/SEAL.jl")
+#=canonical = get(ENV, "CI_PAGES_URL", "https://numsim.gitlab-pages.sloede.com/personal/mschlott/SEAL.jl/")=#
+#=repo_url = get(ENV, "CI_PROJECT_URL", "https://gitlab.mi.uni-koeln.de/numsim/personal/mschlott/SEAL.jl")=#
 
 # Define module-wide setups such that the respective modules are available in doctests
 DocMeta.setdocmeta!(SEAL,
@@ -24,7 +24,9 @@ makedocs(
     # Specify modules for which docstrings should be shown
     modules = [SEAL],
     # Set sitename to SEAL
-    sitename="SEAL.jl",
+    sitename = "SEAL.jl",
+    # Set authors
+    authors = "Michael Schlottke-Lakemper"
     # Provide additional formatting options
     format = Documenter.HTML(
         # Disable pretty URLs during manual testing
@@ -41,6 +43,4 @@ makedocs(
         "Contributing" => "contributing.md",
         "License" => "license.md"
     ],
-    # Set repo to GitLab
-    repo = "$(repo_url)/blob/{commit}{path}#{line}"
 )

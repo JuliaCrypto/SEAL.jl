@@ -20,6 +20,17 @@ script:
   - julia --color=yes --project=. -e "import Pkg; Pkg.build(verbose=true)"
   - julia --color=yes --project=. -e "import Pkg; Pkg.test(coverage=true)"
 
+jobs:
+  include:
+    - stage: "Documentation"
+      julia: 1.4
+      os: linux
+      script:
+        - julia --project=docs/ -e 'using Pkg; Pkg.develop(PackageSpec(path=pwd()));
+                                               Pkg.instantiate()'
+        - julia --project=docs/ docs/make.jl
+      after_success: skip
+
 # Enable coverage reported by Coverage.io and Coveralls.io
 # Note: Although documented as such, it does not seem to work with just these two lines!?!
 # codecov: true
