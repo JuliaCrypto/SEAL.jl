@@ -50,8 +50,9 @@ argument.
 
 ## Authors
 SEAL.jl was initiated by
-[Michael Schlottke-Lakemper](https://www.mi.uni-koeln.de/NumSim/schlottke-lakemper),
-who is also the principal developer of SEAL.jl.
+[Michael Schlottke-Lakemper](https://www.mi.uni-koeln.de/NumSim/schlottke-lakemper)
+(University of Cologne, Germany), who is also the principal developer of
+SEAL.jl.
 
 
 ## License and contributing
