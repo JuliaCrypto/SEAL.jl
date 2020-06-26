@@ -83,3 +83,39 @@ function print_vector(vector, print_size=3)
   end
   println()
 end
+
+function print_matrix(matrix, row_size)
+  print_size = 5
+
+  println()
+
+  # First row
+  print("    [")
+  for i in 1:print_size
+    @printf("%3d,", matrix[i])
+  end
+  print(" ...,")
+  for i in (row_size - print_size + 1):row_size
+    if i != row_size
+      @printf("%3d,", matrix[i])
+    else
+      @printf("%3d ]\n", matrix[i])
+    end
+  end
+
+  # Second row
+  print("    [")
+  for i in (row_size + 1):(row_size + print_size)
+    @printf("%3d,", matrix[i])
+  end
+  print(" ...,")
+  for i in (2 * row_size - print_size + 1):(2 * row_size)
+    if i != 2 * row_size
+      @printf("%3d,", matrix[i])
+    else
+      @printf("%3d ]\n", matrix[i])
+    end
+  end
+
+  println()
+end

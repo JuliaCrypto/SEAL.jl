@@ -27,17 +27,19 @@ include("auxiliary.jl")
 include("version.jl")
 export version_major, version_minor, version_patch, version
 
-include("encryptionparams.jl")
-export EncryptionParameters, SchemeType, get_poly_modulus_degree,
-       set_poly_modulus_degree!, set_coeff_modulus!, coeff_modulus,
-       scheme, plain_modulus, set_plain_modulus!
-
 include("modulus.jl")
 export Modulus, SecLevelType, bit_count, value, coeff_modulus_create, coeff_modulus_bfv_default
 
+include("encryptionparams.jl")
+export EncryptionParameters, SchemeType, get_poly_modulus_degree,
+       set_poly_modulus_degree!, set_coeff_modulus!, coeff_modulus,
+       scheme, plain_modulus, set_plain_modulus!, plain_modulus_batching
+
 include("context.jl")
-export SEALContext, first_parms_id, get_context_data, key_context_data, parameter_error_message
-export ContextData, chain_index, parms, total_coeff_modulus_bit_count
+export SEALContext, first_parms_id, get_context_data, key_context_data, first_context_data,
+       parameter_error_message
+export ContextData, chain_index, parms, total_coeff_modulus_bit_count, qualifiers
+export EncryptionParameterQualifiers, using_batching
 
 include("publickey.jl")
 export PublicKey
@@ -77,6 +79,9 @@ export CKKSEncoder, slot_count, encode!, decode!
 
 include("intencoder.jl")
 export IntegerEncoder, encode!, encode, decode_int32, plain_modulus
+
+include("batchencoder.jl")
+export BatchEncoder, slot_count
 
 include("memorymanager.jl")
 export MemoryPoolHandle, memory_manager_get_pool
