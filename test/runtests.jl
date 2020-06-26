@@ -50,13 +50,13 @@ include("test_5_rotation.jl")
   end
 
   @testset "check_return_value" begin
-    @test_throws ErrorException check_return_value(0x80004003)
-    @test_throws ErrorException check_return_value(0x80070057)
-    @test_throws ErrorException check_return_value(0x8007000E)
-    @test_throws ErrorException check_return_value(0x8000FFFF)
-    @test_throws ErrorException check_return_value(0x80131620)
-    @test_throws ErrorException check_return_value(0x80131509)
-    @test_throws ErrorException check_return_value(0x11111111)
+    @test_throws ErrorException SEAL.check_return_value(0x80004003)
+    @test_throws ErrorException SEAL.check_return_value(0x80070057)
+    @test_throws ErrorException SEAL.check_return_value(0x8007000E)
+    @test_throws ErrorException SEAL.check_return_value(0x8000FFFF)
+    @test_throws ErrorException SEAL.check_return_value(0x80131620)
+    @test_throws ErrorException SEAL.check_return_value(0x80131509)
+    @test_throws ErrorException SEAL.check_return_value(0x11111111)
   end
 
   enc_parms = EncryptionParameters(SchemeType.CKKS)
