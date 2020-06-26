@@ -21,8 +21,8 @@ export SEALObject, handle
 
 Base.unsafe_convert(::Type{Ptr{Cvoid}}, x::SEALObject) = handle(x)
 
-include("utilities.jl")
-export check_return_value
+include("auxiliary.jl")
+# Julia-only auxiliary methods -> no exports
 
 include("version.jl")
 export version_major, version_minor, version_patch, version
@@ -67,13 +67,16 @@ include("evaluator.jl")
 export Evaluator, square!, square_inplace!, relinearize!, relinearize_inplace!, rescale_to_next!,
        rescale_to_next_inplace!, multiply_plain!, multiply_plain_inplace!, multiply!,
        multiply_inplace!, mod_switch_to!, mod_switch_to_inplace!, add!, add_inplace!,
-       add_plain!, add_plain_inplace!, rotate_vector!, rotate_vector_inplace!
+       add_plain!, add_plain_inplace!, rotate_vector!, rotate_vector_inplace!, negate!
 
 include("decryptor.jl")
 export Decryptor, decrypt!, invariant_noise_budget
 
 include("ckks.jl")
 export CKKSEncoder, slot_count, encode!, decode!
+
+include("intencoder.jl")
+export IntegerEncoder, encode!, encode, decode_int32, plain_modulus
 
 include("memorymanager.jl")
 export MemoryPoolHandle, memory_manager_get_pool
