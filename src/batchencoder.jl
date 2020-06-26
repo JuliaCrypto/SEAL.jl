@@ -46,3 +46,21 @@ function encode!(destination::Plaintext, values::DenseArray{Int64}, encoder::Bat
   @check_return_value retval
   return destination
 end
+
+function decode!(destination::DenseVector{UInt64}, plain::Plaintext, encoder::BatchEncoder)
+  count = Ref{UInt64}(0)
+  retval = ccall((:BatchEncoder_Decode1, libsealc), Clong,
+                 (Ptr{Cvoid}, Ptr{Cvoid}, Ref{UInt64}, Ref{UInt64}, Ptr{Cvoid}),
+                 encoder, plain, count, destination, C_NULL)
+  @check_return_value retval
+  return destination
+end
+
+function decode!(destination::DenseVector{Int64}, plain::Plaintext, encoder::BatchEncoder)
+  count = Ref{UInt64}(0)
+  retval = ccall((:BatchEncoder_Decode2, libsealc), Clong,
+                 (Ptr{Cvoid}, Ptr{Cvoid}, Ref{UInt64}, Ref{Int64}, Ptr{Cvoid}),
+                 encoder, plain, count, destination, C_NULL)
+  @check_return_value retval
+  return destination
+end

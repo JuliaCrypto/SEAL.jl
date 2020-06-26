@@ -81,7 +81,7 @@ include("intencoder.jl")
 export IntegerEncoder, encode!, encode, decode_int32, plain_modulus
 
 include("batchencoder.jl")
-export BatchEncoder, slot_count
+export BatchEncoder, slot_count, encode!, decode!
 
 include("memorymanager.jl")
 export MemoryPoolHandle, memory_manager_get_pool

@@ -117,8 +117,45 @@ function example_batch_encoder()
   plain_matrix = Plaintext()
   print_line(@__LINE__)
   println("Encode plaintext matrix:")
-  encode!(plain_matrix, pod_matrix, encoder)
+  encode!(plain_matrix, pod_matrix, batch_encoder)
 
+  println("    + Decode plaintext matrix ...... Correct.")
+  pod_result = similar(pod_matrix)
+  decode!(pod_result, plain_matrix, batch_encoder)
+  print_matrix(pod_result, row_size)
+
+  encrypted_matrix = Ciphertext()
+  print_line(@__LINE__)
+  println("Encrypt plain_matrix to encrypted_matrix.")
+  encrypt!(encrypted_matrix, plain_matrix, encryptor)
+  println("    + Noise budget in encrypted_matrix: ",
+          invariant_noise_budget(encrypted_matrix, decryptor),
+          " bits")
+
+  pod_matrix2 = ones(UInt64, slot_count_)
+  pod_matrix2[2:2:slot_count_] .= 2
+  plain_matrix2 = Plaintext()
+  encode!(plain_matrix2, pod_matrix2, batch_encoder)
+  println()
+  println("Second input plaintext matrix:")
+  print_matrix(pod_matrix2, row_size)
+
+  print_line(@__LINE__)
+  println("Sum, square, and relinearize.")
+  add_plain_inplace!(encrypted_matrix, plain_matrix2, evaluator)
+  square_inplace!(encrypted_matrix, evaluator)
+  relinearize_inplace!(encrypted_matrix, relin_keys_, evaluator)
+  println("    + Noise budget in result: ",
+          invariant_noise_budget(encrypted_matrix, decryptor),
+          " bits")
+
+  plain_result = Plaintext()
+  print_line(@__LINE__)
+  println("Decrypt and decode result.")
+  decrypt!(plain_result, encrypted_matrix, decryptor)
+  decode!(pod_result, plain_result, batch_encoder)
+  println("    + Result plaintext matrix ...... Correct.")
+  print_matrix(pod_result, row_size)
 end
 
 function example_encoders()
