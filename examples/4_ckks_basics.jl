@@ -45,7 +45,7 @@ function example_ckks_basics()
 
   input = collect(range(0.0, 1.0, length=slot_count_))
   println("Input vector:")
-  print_vector(input)
+  print_vector(input, 3, 7)
 
   println("Evaluating polynomial PI*x^3 + 0.4x + 1 ...")
 
@@ -141,13 +141,13 @@ function example_ckks_basics()
   for (i, x) in enumerate(input)
     true_result[i] = (3.14159265 * x * x + 0.4) * x + 1
   end
-  print_vector(true_result)
+  print_vector(true_result, 3, 7)
 
   decrypt!(plain_result, encrypted_result, decryptor)
   result = similar(input)
   decode!(result, plain_result, encoder)
   println("    + Computed result ...... Correct.")
-  print_vector(result)
+  print_vector(result, 3, 7)
 
   return
 end

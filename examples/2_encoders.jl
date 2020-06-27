@@ -158,10 +158,72 @@ function example_batch_encoder()
   print_matrix(pod_result, row_size)
 end
 
+function example_ckks_encoder()
+  print_example_banner("Example: Encoders / CKKS Encoder")
+
+  parms = EncryptionParameters(SchemeType.CKKS)
+
+  poly_modulus_degree = 8192
+  set_poly_modulus_degree!(parms, poly_modulus_degree)
+  set_coeff_modulus!(parms, coeff_modulus_create(poly_modulus_degree, [40, 40, 40, 40, 40]))
+
+  context = SEALContext(parms)
+  print_parameters(context)
+  println()
+
+  keygen = KeyGenerator(context)
+  public_key_ = public_key(keygen)
+  secret_key_ = secret_key(keygen)
+  relin_keys_ = relin_keys_local(keygen)
+
+  encryptor = Encryptor(context, public_key_)
+  evaluator = Evaluator(context)
+  decryptor = Decryptor(context, secret_key_)
+
+  encoder = CKKSEncoder(context)
+
+  slot_count_ = slot_count(encoder)
+  println("Number of slots: ", slot_count_)
+
+  input = Float64[0.0, 1.1, 2.2, 3.3]
+  println("Input vector: ")
+  print_vector(input)
+
+  plain = Plaintext()
+  initial_scale = 2.0^30
+  print_line(@__LINE__)
+  println("Encode input vectors.")
+  encode!(plain, input, initial_scale, encoder)
+
+  output = Vector{Float64}(undef, slot_count_)
+  println("    + Decode input vector ...... Correct.")
+  decode!(output, plain, encoder)
+  print_vector(output)
+
+  encrypted = Ciphertext()
+  print_line(@__LINE__)
+  println("Encrypt input vector, square, and relinearize.")
+  encrypt!(encrypted, plain, encryptor)
+
+  square_inplace!(encrypted, evaluator)
+  relinearize_inplace!(encrypted, relin_keys_, evaluator)
+
+  println("    + Scale in squared input: ", scale(encrypted),
+          " (", log2(scale(encrypted)), " bits)")
+
+  print_line(@__LINE__)
+  println("Decrypt and decode.")
+  decrypt!(plain, encrypted, decryptor)
+  decode!(output, plain, encoder)
+  println("    + Result vector ...... Correct.")
+  print_vector(output)
+
+end
+
 function example_encoders()
   print_example_banner("Example: Encoders")
 
   example_integer_encoder()
   example_batch_encoder()
-  # example_ckks_encoder()
+  example_ckks_encoder()
 end

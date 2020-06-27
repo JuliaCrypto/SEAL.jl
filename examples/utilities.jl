@@ -57,27 +57,47 @@ function print_line(line_number)
   print("Line ", padding, line_number, " --> ")
 end
 
-function print_vector(vector, print_size=3)
+function print_vector(vector, print_size=4, prec=3)
   slot_count = length(vector)
   println()
   if slot_count <= 2 * print_size
     print("    [ ")
-    @printf "%.7f" first(vector)
+    if prec == 7
+      @printf "%.7f" first(vector)
+    else
+      @printf "%.3f" first(vector)
+    end
     for i in 2:slot_count
-      @printf ", %.7f" vector[i]
+      if prec == 7
+        @printf ", %.7f" vector[i]
+      else
+        @printf ", %.3f" vector[i]
+      end
     end
     println(" ]")
   else
     print("    [ ")
-    @printf "%.7f" first(vector)
+    if prec == 7
+      @printf "%.7f" first(vector)
+    else
+      @printf "%.3f" first(vector)
+    end
     for i in 2:print_size
-      @printf ", %.7f" vector[i]
+      if prec == 7
+        @printf ", %.7f" vector[i]
+      else
+        @printf ", %.3f" vector[i]
+      end
     end
     if slot_count > 2 * print_size
       print(", ...")
     end
     for i in (slot_count - print_size + 1):slot_count
-      @printf ", %.7f" vector[i]
+      if prec == 7
+        @printf ", %.7f" vector[i]
+      else
+        @printf ", %.3f" vector[i]
+      end
     end
     println(" ]")
   end
