@@ -57,6 +57,15 @@ function key_context_data(context::SEALContext)
   return ContextData(handleref[], destroy_on_gc=false)
 end
 
+function first_context_data(context::SEALContext)
+  handleref = Ref{Ptr{Cvoid}}(C_NULL)
+  retval = ccall((:SEALContext_FirstContextData, libsealc), Clong,
+                 (Ptr{Cvoid}, Ref{Ptr{Cvoid}}),
+                 context, handleref)
+  @check_return_value retval
+  return ContextData(handleref[], destroy_on_gc=false)
+end
+
 function parameter_error_message(context::SEALContext)
   len = Ref{UInt64}(0)
 
@@ -117,4 +126,38 @@ function total_coeff_modulus_bit_count(context_data::ContextData)
                  context_data, bit_count)
   @check_return_value retval
   return Int(bit_count[])
+end
+
+function qualifiers(context_data::ContextData)
+  handleref = Ref{Ptr{Cvoid}}(C_NULL)
+  retval = ccall((:ContextData_Qualifiers, libsealc), Clong,
+                 (Ptr{Cvoid}, Ref{Ptr{Cvoid}}),
+                 context_data, handleref)
+  @check_return_value retval
+  return EncryptionParameterQualifiers(handleref[], destroy_on_gc=false)
+end
+
+
+mutable struct EncryptionParameterQualifiers <: SEALObject
+  handle::Ptr{Cvoid}
+
+  function EncryptionParameterQualifiers(handle::Ptr{Cvoid}; destroy_on_gc=true)
+    x = new(handle)
+    if destroy_on_gc
+      finalizer(x) do x
+        # @async println("Finalizing $x at line $(@__LINE__).")
+        ccall((:EncryptionParameterQualifiers_Destroy, libsealc), Clong, (Ptr{Cvoid},), x)
+      end
+    end
+    return x
+  end
+end
+
+function using_batching(epq::EncryptionParameterQualifiers)
+  valueref = Ref{UInt8}(0)
+  retval = ccall((:EPQ_UsingBatching, libsealc), Clong,
+                 (Ptr{Cvoid}, Ref{UInt8}),
+                 epq, valueref)
+  @check_return_value retval
+  return Bool(valueref[])
 end

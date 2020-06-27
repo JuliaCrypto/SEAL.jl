@@ -86,4 +86,3 @@ function to_string(plain::Plaintext)
   # Return as String but without terminating NULL byte
   return String(message[1:end-1])
 end
-

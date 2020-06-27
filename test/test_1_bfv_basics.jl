@@ -1,4 +1,4 @@
-@testset "1_ckks_basics" begin
+@testset "1_bfv_basics" begin
   @testset "EncryptionParameters" begin
     @test_nowarn EncryptionParameters(SchemeType.BFV)
   end

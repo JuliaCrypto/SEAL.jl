@@ -160,3 +160,11 @@ function rotate_vector_inplace!(encrypted::Ciphertext, steps, galois_keys::Galoi
                                 evaluator::Evaluator)
   return rotate_vector!(encrypted, encrypted, steps, galois_keys, evaluator)
 end
+
+function negate!(destination::Ciphertext, encrypted::Ciphertext, evaluator::Evaluator)
+  retval = ccall((:Evaluator_Negate, libsealc), Clong,
+                 (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}),
+                 evaluator, encrypted, destination)
+  @check_return_value retval
+  return destination
+end

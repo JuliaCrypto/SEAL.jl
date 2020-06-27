@@ -42,7 +42,7 @@ function example_rotation_ckks()
   println("Number of slots: ", slot_count_)
   input = collect(range(0.0, 1.0, length=slot_count_))
   println("Input vector:")
-  print_vector(input)
+  print_vector(input, 3, 7)
 
   initial_scale = 2.0^50
 
@@ -61,7 +61,7 @@ function example_rotation_ckks()
   decrypt!(plain, rotated, decryptor)
   result = similar(input)
   decode!(result, plain, encoder)
-  print_vector(result)
+  print_vector(result, 3, 7)
 
   return
 end

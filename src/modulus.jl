@@ -82,3 +82,7 @@ function coeff_modulus_bfv_default(poly_modulus_degree, sec_level=SecLevelType.t
   modulus = Modulus[Modulus(ptr) for ptr in modulusptrs]
   return modulus
 end
+
+function plain_modulus_batching(poly_modulus_degree, bit_size)
+  return coeff_modulus_create(poly_modulus_degree, [bit_size])[1]
+end
