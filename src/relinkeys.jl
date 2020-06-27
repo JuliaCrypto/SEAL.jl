@@ -29,3 +29,12 @@ mutable struct RelinKeys <: SEALObject
   end
 end
 
+function parms_id(key::RelinKeys)
+  parms_id = zeros(UInt64, 4)
+  retval = ccall((:KSwitchKeys_GetParmsId, libsealc), Clong,
+                 (Ptr{Cvoid}, Ref{UInt64}),
+                 key, parms_id)
+  @check_return_value retval
+  return parms_id
+end
+
