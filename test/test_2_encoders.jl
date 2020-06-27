@@ -31,6 +31,26 @@
     plain1 = encode(value1, encoder)
     plain2 = encode(value2, encoder)
 
+    # Extra: encode for other data types
+    value3 = UInt32(15)
+    @testset "encode (UInt32)" begin
+      @test_nowarn encode(value3, encoder)
+    end
+    value4 = Int64(-19)
+    @testset "encode (Int64)" begin
+      @test_nowarn encode(value4, encoder)
+    end
+    value5 = UInt64(15)
+    @testset "encode (UInt64)" begin
+      @test_nowarn encode(value5, encoder)
+    end
+
+    @testset "plain_modulus, value" begin
+      @test_nowarn plain_modulus(encoder)
+      m = plain_modulus(encoder)
+      @test value(m) == 512
+    end
+
     @testset "to_string" begin
       @test to_string(plain1) == "1x^2 + 1"
       @test to_string(plain2) == "1FFx^2 + 1FFx^1 + 1FF"
@@ -88,6 +108,10 @@
     end
     epq = qualifiers(context_data)
 
+    @testset "using_batches" begin
+      @test using_batching(epq) == true
+    end
+
     keygen = KeyGenerator(context)
     public_key_ = public_key(keygen)
     secret_key_ = secret_key(keygen)
@@ -125,6 +149,17 @@
     pod_result = similar(pod_matrix)
     @testset "decode!" begin
       @test_nowarn decode!(pod_result, plain_matrix, batch_encoder)
+    end
+
+    # Extra: encode/decode for Int64 data type
+    pod_matrix_int64 = Int64.(pod_matrix)
+    plain_matrix_int64 = Plaintext()
+    @testset "encode!" begin
+      @test_nowarn encode!(plain_matrix_int64, pod_matrix_int64, batch_encoder)
+    end
+    pod_result_int64 = similar(pod_matrix_int64)
+    @testset "decode!" begin
+      @test_nowarn decode!(pod_result_int64, plain_matrix_int64, batch_encoder)
     end
 
     encrypted_matrix = Ciphertext()
