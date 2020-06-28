@@ -112,7 +112,7 @@
     c6 = Ciphertext()
     encrypt!(c5, p, encryptor)
     encrypt!(c6, p, encryptor)
-    @test_nowarn add_inplace!(c5, c6, evaluator)
+    @test add_inplace!(c5, c6, evaluator) == c5
   end
 
   @testset "add_plain_inplace!" begin
@@ -125,7 +125,7 @@
   @testset "rotate_vector_inplace!" begin
     c8 = Ciphertext()
     encrypt!(c8, p, encryptor)
-    @test_nowarn rotate_vector_inplace!(c8, 5, galois_keys_, evaluator)
+    @test rotate_vector_inplace!(c8, 5, galois_keys_, evaluator) == c8
   end
 end
 

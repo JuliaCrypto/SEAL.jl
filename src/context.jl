@@ -100,11 +100,9 @@ mutable struct ContextData <: SEALObject
 
   function ContextData(handle::Ptr{Cvoid}; destroy_on_gc=true)
     x = new(handle)
-    if destroy_on_gc
-      finalizer(x) do x
-        # @async println("Finalizing $x at line $(@__LINE__).")
-        ccall((:ContextData_Destroy, libsealc), Clong, (Ptr{Cvoid},), x)
-      end
+    destroy_on_gc && finalizer(x) do x
+      # @async println("Finalizing $x at line $(@__LINE__).")
+      ccall((:ContextData_Destroy, libsealc), Clong, (Ptr{Cvoid},), x)
     end
     return x
   end
@@ -170,11 +168,9 @@ mutable struct EncryptionParameterQualifiers <: SEALObject
 
   function EncryptionParameterQualifiers(handle::Ptr{Cvoid}; destroy_on_gc=true)
     x = new(handle)
-    if destroy_on_gc
-      finalizer(x) do x
-        # @async println("Finalizing $x at line $(@__LINE__).")
-        ccall((:EncryptionParameterQualifiers_Destroy, libsealc), Clong, (Ptr{Cvoid},), x)
-      end
+    destroy_on_gc && finalizer(x) do x
+      # @async println("Finalizing $x at line $(@__LINE__).")
+      ccall((:EncryptionParameterQualifiers_Destroy, libsealc), Clong, (Ptr{Cvoid},), x)
     end
     return x
   end
