@@ -116,7 +116,7 @@
   end
 
   @testset "rescale_to_next_inplace!" begin
-    @test_nowarn rescale_to_next_inplace!(x3_encrypted, evaluator)
+    @test rescale_to_next_inplace!(x3_encrypted, evaluator) == x3_encrypted
   end
 
   @testset "scale (after rescaling)" begin
@@ -130,7 +130,7 @@
   end
 
   @testset "multiply_inplace!" begin
-    @test_nowarn multiply_inplace!(x3_encrypted, x1_encrypted_coeff3, evaluator)
+    @test multiply_inplace!(x3_encrypted, x1_encrypted_coeff3, evaluator) == x3_encrypted
   end
 
   @testset "relinearize_inplace! and rescale" begin
@@ -177,8 +177,8 @@
 
   last_parms_id = parms_id(x3_encrypted)
   @testset "mod_switch_to_inplace!" begin
-    @test_nowarn mod_switch_to_inplace!(x1_encrypted, last_parms_id, evaluator)
-    @test_nowarn mod_switch_to_inplace!(plain_coeff0, last_parms_id, evaluator)
+    @test mod_switch_to_inplace!(x1_encrypted, last_parms_id, evaluator) == x1_encrypted
+    @test mod_switch_to_inplace!(plain_coeff0, last_parms_id, evaluator) == plain_coeff0
   end
 
   encrypted_result = Ciphertext()

@@ -134,7 +134,7 @@
   end
 
   @testset "modulus switching on encrypted (level 2)" begin
-    @test_nowarn mod_switch_to_next_inplace!(encrypted, evaluator)
+    @test mod_switch_to_next_inplace!(encrypted, evaluator) == encrypted
     context_data = next_context_data(context_data)
     @test chain_index(context_data) == 2
     @test parms_id(context_data) == [0x85626ad91458073f,
@@ -145,7 +145,7 @@
   end
 
   @testset "modulus switching on encrypted (level 1)" begin
-    @test_nowarn mod_switch_to_next_inplace!(encrypted, evaluator)
+    @test mod_switch_to_next_inplace!(encrypted, evaluator) == encrypted
     context_data = next_context_data(context_data)
     @test chain_index(context_data) == 1
     @test parms_id(context_data) == [0x73b7dc26d10a15b9,
@@ -156,7 +156,7 @@
   end
 
   @testset "modulus switching on encrypted (level 3)" begin
-    @test_nowarn mod_switch_to_next_inplace!(encrypted, evaluator)
+    @test mod_switch_to_next_inplace!(encrypted, evaluator) == encrypted
     context_data = next_context_data(context_data)
     @test chain_index(context_data) == 0
     @test parms_id(context_data) == [0xaf7f6dac55528cf7,
@@ -175,19 +175,19 @@
     @test_nowarn encrypt!(encrypted, plain, encryptor)
     @test invariant_noise_budget(encrypted, decryptor) in (131, 132, 133)
 
-    @test_nowarn square_inplace!(encrypted, evaluator)
-    @test_nowarn relinearize_inplace!(encrypted, relin_keys_, evaluator)
+    @test square_inplace!(encrypted, evaluator) == encrypted
+    @test relinearize_inplace!(encrypted, relin_keys_, evaluator) == encrypted
     @test invariant_noise_budget(encrypted, decryptor) in (99, 100, 101)
 
-    @test_nowarn square_inplace!(encrypted, evaluator)
-    @test_nowarn relinearize_inplace!(encrypted, relin_keys_, evaluator)
+    @test square_inplace!(encrypted, evaluator) == encrypted
+    @test relinearize_inplace!(encrypted, relin_keys_, evaluator) == encrypted
     @test invariant_noise_budget(encrypted, decryptor) in (66, 67, 68)
 
     @test_nowarn mod_switch_to_next_inplace!(encrypted, evaluator)
     @test invariant_noise_budget(encrypted, decryptor) in (66, 67, 68)
 
-    @test_nowarn square_inplace!(encrypted, evaluator)
-    @test_nowarn relinearize_inplace!(encrypted, relin_keys_, evaluator)
+    @test square_inplace!(encrypted, evaluator) == encrypted
+    @test relinearize_inplace!(encrypted, relin_keys_, evaluator) == encrypted
     @test invariant_noise_budget(encrypted, decryptor) in (33, 34, 35)
 
     @test_nowarn mod_switch_to_next_inplace!(encrypted, evaluator)
