@@ -1,9 +1,9 @@
 # SEAL.jl
 
-[![Documentation](https://img.shields.io/badge/docs-dev-blue.svg)](https://sloede.github.io/SEAL.jl/dev)
-[![Build Status](https://travis-ci.com/sloede/SEAL.jl.svg?branch=master)](https://travis-ci.com/sloede/SEAL.jl)
-[![codecov](https://codecov.io/gh/sloede/SEAL.jl/branch/master/graph/badge.svg?token=CCJ4EO3HW8)](https://codecov.io/gh/sloede/SEAL.jl)
-[![Coverage Status](https://coveralls.io/repos/github/sloede/SEAL.jl/badge.svg?branch=master)](https://coveralls.io/github/sloede/SEAL.jl?branch=master)
+[![Documentation](https://img.shields.io/badge/docs-dev-blue.svg)](https://juliacrypto.github.io/SEAL.jl/dev)
+[![Build Status](https://travis-ci.com/JuliaCrypto/SEAL.jl.svg?branch=master)](https://travis-ci.com/JuliaCrypto/SEAL.jl)
+[![codecov](https://codecov.io/gh/JuliaCrypto/SEAL.jl/branch/master/graph/badge.svg?token=CCJ4EO3HW8)](https://codecov.io/gh/JuliaCrypto/SEAL.jl)
+[![Coverage Status](https://coveralls.io/repos/github/JuliaCrypto/SEAL.jl/badge.svg?branch=master)](https://coveralls.io/github/JuliaCrypto/SEAL.jl?branch=master)
 
 **SEAL.jl** is a Julia package that wraps the
 [SEAL](https://github.com/microsoft/SEAL) library for homomorphic encryption. It

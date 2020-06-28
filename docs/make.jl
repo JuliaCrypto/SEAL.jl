@@ -9,10 +9,6 @@ Pkg.activate(root_dir)
 Pkg.instantiate()
 using SEAL
 
-# Set paths based on availability of CI variables
-#=canonical = get(ENV, "CI_PAGES_URL", "https://numsim.gitlab-pages.sloede.com/personal/mschlott/SEAL.jl/")=#
-#=repo_url = get(ENV, "CI_PROJECT_URL", "https://gitlab.mi.uni-koeln.de/numsim/personal/mschlott/SEAL.jl")=#
-
 # Define module-wide setups such that the respective modules are available in doctests
 DocMeta.setdocmeta!(SEAL,
                     :DocTestSetup,
@@ -46,5 +42,5 @@ makedocs(
 )
 
 deploydocs(
-    repo = "github.com/sloede/SEAL.jl.git",
+    repo = "github.com/JuliaCrypto/SEAL.jl.git",
 )
