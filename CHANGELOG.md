@@ -5,6 +5,9 @@ This file only tracks changes at a very high, summarized level, omitting patch r
 ## SEAL dev
 * ...
 
+## SEAL v0.2.0
+* Full support for all functionality found in all SEAL examples.
+
 ## SEAL v0.1.0
 * Initial release
 * Support for most functionality found in `examples/1_bfv_basics.cpp`, `examples/4_ckks_basics.cpp`,
