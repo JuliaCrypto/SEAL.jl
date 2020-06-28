@@ -107,6 +107,18 @@ function mod_switch_to_inplace!(encrypted::Ciphertext, parms_id::DenseVector{UIn
   return mod_switch_to!(encrypted, encrypted, parms_id, evaluator)
 end
 
+function mod_switch_to_next!(destination::Ciphertext, encrypted::Ciphertext, evaluator::Evaluator)
+  retval = ccall((:Evaluator_ModSwitchToNext1, libsealc), Clong,
+                 (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}),
+                 evaluator, encrypted, destination, C_NULL)
+  @check_return_value retval
+  return destination
+end
+
+function mod_switch_to_next_inplace!(encrypted::Ciphertext, evaluator::Evaluator)
+  return mod_switch_to_next!(encrypted, encrypted, evaluator)
+end
+
 function mod_switch_to!(destination::Plaintext, plain::Plaintext, parms_id::DenseVector{UInt64},
                         evaluator::Evaluator)
   retval = ccall((:Evaluator_ModSwitchTo2, libsealc), Clong,

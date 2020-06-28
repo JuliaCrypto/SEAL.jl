@@ -122,3 +122,12 @@ function set_plain_modulus!(enc_param::EncryptionParameters, plain_modulus::Inte
   return enc_param
 end
 
+function parms_id(enc_param::EncryptionParameters)
+  parms_id_ = zeros(UInt64, 4)
+  retval = ccall((:EncParams_GetParmsId, libsealc), Clong,
+                 (Ptr{Cvoid}, Ref{UInt64}),
+                 enc_param, parms_id_)
+  @check_return_value retval
+  return parms_id_
+end
+

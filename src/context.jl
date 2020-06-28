@@ -39,6 +39,15 @@ function first_parms_id(context::SEALContext)
   return parms_id
 end
 
+function last_parms_id(context::SEALContext)
+  parms_id = zeros(UInt64, 4)
+  retval = ccall((:SEALContext_LastParmsId, libsealc), Clong,
+                 (Ptr{Cvoid}, Ref{UInt64}),
+                 context, parms_id)
+  @check_return_value retval
+  return parms_id
+end
+
 function get_context_data(context::SEALContext, parms_id::DenseVector{UInt64})
   handleref = Ref{Ptr{Cvoid}}(C_NULL)
   retval = ccall((:SEALContext_GetContextData, libsealc), Clong,
@@ -119,6 +128,11 @@ function parms(context_data::ContextData)
   return EncryptionParameters(handleref[])
 end
 
+function parms_id(context_data::ContextData)
+  enc_parms = parms(context_data)
+  return parms_id(enc_parms)
+end
+
 function total_coeff_modulus_bit_count(context_data::ContextData)
   bit_count = Ref{Cint}(0)
   retval = ccall((:ContextData_TotalCoeffModulusBitCount, libsealc), Clong,
@@ -135,6 +149,19 @@ function qualifiers(context_data::ContextData)
                  context_data, handleref)
   @check_return_value retval
   return EncryptionParameterQualifiers(handleref[], destroy_on_gc=false)
+end
+
+function next_context_data(context_data::ContextData)
+  handleref = Ref{Ptr{Cvoid}}(C_NULL)
+  retval = ccall((:ContextData_NextContextData, libsealc), Clong,
+                 (Ptr{Cvoid}, Ref{Ptr{Cvoid}}),
+                 context_data, handleref)
+  @check_return_value retval
+  if handleref[] == C_NULL
+    return nothing
+  else
+    return ContextData(handleref[], destroy_on_gc=false)
+  end
 end
 
 

@@ -33,25 +33,26 @@ export Modulus, SecLevelType, bit_count, value, coeff_modulus_create, coeff_modu
 include("encryptionparams.jl")
 export EncryptionParameters, SchemeType, get_poly_modulus_degree,
        set_poly_modulus_degree!, set_coeff_modulus!, coeff_modulus,
-       scheme, plain_modulus, set_plain_modulus!, plain_modulus_batching
+       scheme, plain_modulus, set_plain_modulus!, plain_modulus_batching, parms_id
 
 include("context.jl")
-export SEALContext, first_parms_id, get_context_data, key_context_data, first_context_data,
-       parameter_error_message
-export ContextData, chain_index, parms, total_coeff_modulus_bit_count, qualifiers
+export SEALContext, first_parms_id, last_parms_id, get_context_data, key_context_data,
+       first_context_data, parameter_error_message
+export ContextData, chain_index, parms, parms_id, total_coeff_modulus_bit_count, qualifiers,
+       next_context_data
 export EncryptionParameterQualifiers, using_batching
 
 include("publickey.jl")
-export PublicKey
+export PublicKey, parms_id
 
 include("secretkey.jl")
-export SecretKey
+export SecretKey, parms_id
 
 include("galoiskeys.jl")
-export GaloisKeys
+export GaloisKeys, parms_id
 
 include("relinkeys.jl")
-export RelinKeys
+export RelinKeys, parms_id
 
 include("keygenerator.jl")
 export KeyGenerator, public_key, secret_key, relin_keys_local, relin_keys, galois_keys_local
@@ -68,8 +69,9 @@ export Encryptor, encrypt!
 include("evaluator.jl")
 export Evaluator, square!, square_inplace!, relinearize!, relinearize_inplace!, rescale_to_next!,
        rescale_to_next_inplace!, multiply_plain!, multiply_plain_inplace!, multiply!,
-       multiply_inplace!, mod_switch_to!, mod_switch_to_inplace!, add!, add_inplace!,
-       add_plain!, add_plain_inplace!, rotate_vector!, rotate_vector_inplace!, negate!
+       multiply_inplace!, mod_switch_to!, mod_switch_to_inplace!, mod_switch_to_next!,
+       mod_switch_to_next_inplace!, add!, add_inplace!, add_plain!, add_plain_inplace!,
+       rotate_vector!, rotate_vector_inplace!, negate!
 
 include("decryptor.jl")
 export Decryptor, decrypt!, invariant_noise_budget

@@ -28,3 +28,12 @@ mutable struct SecretKey <: SEALObject
   end
 end
 
+function parms_id(key::SecretKey)
+  parms_id = zeros(UInt64, 4)
+  retval = ccall((:SecretKey_ParmsId, libsealc), Clong,
+                 (Ptr{Cvoid}, Ref{UInt64}),
+                 key, parms_id)
+  @check_return_value retval
+  return parms_id
+end
+
