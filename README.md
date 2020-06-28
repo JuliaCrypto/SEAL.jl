@@ -138,11 +138,11 @@ library provides excellent inline code documentation, thus by reading (and
 understanding) the comments in the C++ files you should immediately be able to
 reproduce the same implementation with SEAL.jl.
 
-However, since C++ and Julia are quite different, some implementation details do
-not directly translate from one language to the other. Also, the Julia community
-has a few very strong conventions that would make it difficult for an
-experienced Julia user if they were violated. Thus, when trying to recreate C++
-SEAL example with SEAL.jl, there are a few things to watch out for:
+However, some implementation details do not translate well from C++ to
+Julia. Also, the Julia community has a few strong conventions that if violated
+would make it unnecessarily difficult for experienced Julia users to use SEAL.jl
+correctly. Thus, when trying to recreate SEAL examples written in C++ with
+SEAL.jl in Julia, there are a few things to watch out for:
 
 * Functions that modify their input are suffixed by `!`.
 * Function arguments that are modified come first (but the rest remains in
