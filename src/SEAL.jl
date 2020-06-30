@@ -30,10 +30,14 @@ export version_major, version_minor, version_patch, version
 include("modulus.jl")
 export Modulus, SecLevelType, bit_count, value, coeff_modulus_create, coeff_modulus_bfv_default
 
+include("serialization.jl")
+export ComprModeType
+
 include("encryptionparams.jl")
 export EncryptionParameters, SchemeType, get_poly_modulus_degree,
        set_poly_modulus_degree!, set_coeff_modulus!, coeff_modulus,
-       scheme, plain_modulus, set_plain_modulus!, plain_modulus_batching, parms_id
+       scheme, plain_modulus, set_plain_modulus!, plain_modulus_batching, parms_id, save!,
+       save_size, load!
 
 include("context.jl")
 export SEALContext, first_parms_id, last_parms_id, get_context_data, key_context_data,
@@ -46,7 +50,7 @@ include("publickey.jl")
 export PublicKey, parms_id
 
 include("secretkey.jl")
-export SecretKey, parms_id
+export SecretKey, parms_id, save!
 
 include("galoiskeys.jl")
 export GaloisKeys, parms_id

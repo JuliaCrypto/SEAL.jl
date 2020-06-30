@@ -23,7 +23,7 @@ See also: [`SEALContext`](@ref)
 mutable struct EncryptionParameters <: SEALObject
   handle::Ptr{Cvoid}
 
-  function EncryptionParameters(scheme::SchemeType.SchemeTypeEnum)
+  function EncryptionParameters(scheme::SchemeType.SchemeTypeEnum=SchemeType.none)
     handleref = Ref{Ptr{Cvoid}}(C_NULL)
     retval = ccall((:EncParams_Create1, libsealc), Clong,
                    (UInt8, Ref{Ptr{Cvoid}}),
@@ -129,5 +129,51 @@ function parms_id(enc_param::EncryptionParameters)
                  enc_param, parms_id_)
   @check_return_value retval
   return parms_id_
+end
+
+function save!(buffer::DenseVector{UInt8}, length::Integer,
+               compr_mode::ComprModeType.ComprModeTypeEnum, enc_param::EncryptionParameters)
+  out_bytes = Ref{Int64}(0)
+  retval = ccall((:EncParams_Save, libsealc), Clong,
+                 (Ptr{Cvoid}, Ref{UInt8}, UInt64, UInt8, Ref{Int64}),
+                 enc_param, buffer, length, compr_mode, out_bytes)
+  @check_return_value retval
+  return Int(out_bytes[])
+end
+function save!(buffer::DenseVector{UInt8}, length::Integer, enc_param::EncryptionParameters)
+  return save!(buffer, length, ComprModeType.default, enc_param)
+end
+function save!(buffer::DenseVector{UInt8}, enc_param::EncryptionParameters)
+  return save!(buffer, length(buffer), enc_param)
+end
+
+function save_size(compr_mode, enc_param::EncryptionParameters)
+  result = Ref{Int64}(0)
+  retval = ccall((:EncParams_SaveSize, libsealc), Clong,
+                 (Ptr{Cvoid}, UInt8, Ref{Int64}),
+                 enc_param, compr_mode, result)
+  @check_return_value retval
+  return Int(result[])
+end
+save_size(enc_param::EncryptionParameters) = save_size(ComprModeType.default, enc_param)
+
+function load!(enc_param::EncryptionParameters, buffer::DenseVector{UInt8}, length)
+  in_bytes = Ref{Int64}(0)
+  retval = ccall((:EncParams_Load, libsealc), Clong,
+                 (Ptr{Cvoid}, Ref{UInt8}, UInt64, Ref{Int64}),
+                 enc_param, buffer, length, in_bytes)
+  @check_return_value retval
+  return Int(in_bytes[])
+end
+load!(enc_param::EncryptionParameters, buffer::DenseVector{UInt8}) = load!(enc_param, buffer,
+                                                                           length(buffer))
+
+function Base.:(==)(enc_param1::EncryptionParameters, enc_param2::EncryptionParameters)
+  result = Ref{UInt8}(0)
+  retval = ccall((:EncParams_Equals, libsealc), Clong,
+                 (Ptr{Cvoid}, Ptr{Cvoid}, Ref{UInt8}),
+                 enc_param1, enc_param1, result)
+  @check_return_value retval
+  return Bool(result[])
 end
 
