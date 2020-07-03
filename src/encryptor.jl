@@ -54,3 +54,19 @@ function encrypt!(destination::Ciphertext, plain::Plaintext, encryptor::Encrypto
   return destination
 end
 
+function encrypt_symmetric!(destination::Ciphertext, plain::Plaintext, encryptor::Encryptor)
+  retval = ccall((:Encryptor_EncryptSymmetric, libsealc), Clong,
+                 (Ptr{Cvoid}, Ptr{Cvoid}, UInt8, Ptr{Cvoid}, Ptr{Cvoid}),
+                 encryptor, plain, false, destination, C_NULL)
+  @check_return_value retval
+  return destination
+end
+function encrypt_symmetric!(plain::Plaintext, encryptor::Encryptor)
+  destination = Ciphertext()
+  retval = ccall((:Encryptor_EncryptSymmetric, libsealc), Clong,
+                 (Ptr{Cvoid}, Ptr{Cvoid}, UInt8, Ptr{Cvoid}, Ptr{Cvoid}),
+                 encryptor, plain, true, destination, C_NULL)
+  @check_return_value retval
+  return destination
+end
+

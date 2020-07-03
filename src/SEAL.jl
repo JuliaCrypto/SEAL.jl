@@ -56,7 +56,7 @@ include("galoiskeys.jl")
 export GaloisKeys, parms_id
 
 include("relinkeys.jl")
-export RelinKeys, parms_id
+export RelinKeys, parms_id, save_size, save!, load!
 
 include("keygenerator.jl")
 export KeyGenerator, public_key, secret_key, relin_keys_local, relin_keys, galois_keys_local
@@ -65,10 +65,10 @@ include("plaintext.jl")
 export Plaintext, scale, scale!, parms_id, to_string
 
 include("ciphertext.jl")
-export Ciphertext, scale, scale!, parms_id, size, length
+export Ciphertext, scale, scale!, parms_id, size, length, save_size, save!, load!
 
 include("encryptor.jl")
-export Encryptor, encrypt!
+export Encryptor, encrypt!, encrypt_symmetric!
 
 include("evaluator.jl")
 export Evaluator, square!, square_inplace!, relinearize!, relinearize_inplace!, rescale_to_next!,

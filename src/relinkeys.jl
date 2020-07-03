@@ -38,3 +38,42 @@ function parms_id(key::RelinKeys)
   return parms_id
 end
 
+function save_size(compr_mode, key::RelinKeys)
+  result = Ref{Int64}(0)
+  retval = ccall((:KSwitchKeys_SaveSize, libsealc), Clong,
+                 (Ptr{Cvoid}, UInt8, Ref{Int64}),
+                 key, compr_mode, result)
+  @check_return_value retval
+  return Int(result[])
+end
+save_size(key::RelinKeys) = save_size(ComprModeType.default, key)
+
+function save!(buffer::DenseVector{UInt8}, length::Integer,
+               compr_mode::ComprModeType.ComprModeTypeEnum, key::RelinKeys)
+  out_bytes = Ref{Int64}(0)
+  retval = ccall((:KSwitchKeys_Save, libsealc), Clong,
+                 (Ptr{Cvoid}, Ref{UInt8}, UInt64, UInt8, Ref{Int64}),
+                 key, buffer, length, compr_mode, out_bytes)
+  @check_return_value retval
+  return Int(out_bytes[])
+end
+function save!(buffer::DenseVector{UInt8}, length::Integer, key::RelinKeys)
+  return save!(buffer, length, ComprModeType.default, key)
+end
+function save!(buffer::DenseVector{UInt8}, key::RelinKeys)
+  return save!(buffer, length(buffer), key)
+end
+
+function load!(key::RelinKeys, context::SEALContext, buffer::DenseVector{UInt8}, length)
+  in_bytes = Ref{Int64}(0)
+  retval = ccall((:KSwitchKeys_Load, libsealc), Clong,
+                 (Ptr{Cvoid}, Ptr{Cvoid}, Ref{UInt8}, UInt64, Ref{Int64}),
+                 key, context, buffer, length, in_bytes)
+  @check_return_value retval
+  return Int(in_bytes[])
+end
+load!(key::RelinKeys, context::SEALContext, buffer::DenseVector{UInt8}) = load!(key,
+                                                                                context,
+                                                                                buffer,
+                                                                                length(buffer))
+
