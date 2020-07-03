@@ -63,3 +63,15 @@ function save_size(compr_mode, key::SecretKey)
 end
 save_size(key::SecretKey) = save_size(ComprModeType.default, key)
 
+function load!(key::SecretKey, context::SEALContext, buffer::DenseVector{UInt8}, length)
+  in_bytes = Ref{Int64}(0)
+  retval = ccall((:SecretKey_Load, libsealc), Clong,
+                 (Ptr{Cvoid}, Ptr{Cvoid}, Ref{UInt8}, UInt64, Ref{Int64}),
+                 key, context, buffer, length, in_bytes)
+  @check_return_value retval
+  return Int(in_bytes[])
+end
+function load!(key::SecretKey, context::SEALContext, buffer::DenseVector{UInt8})
+  return load!(key, context, buffer, length(buffer))
+end
+

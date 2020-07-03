@@ -76,7 +76,7 @@ function example_serialization()
     println("Serializable<RelinKeys>: wrote ", size_rlk, " bytes")
     println("             ", "RelinKeys (local): wrote ", size_rlk_local, " bytes")
 
-    initial_scale = 2.0^40
+    initial_scale = 2.0^20
     encoder = CKKSEncoder(context)
     plain1 = Plaintext()
     plain2 = Plaintext()
@@ -137,6 +137,36 @@ function example_serialization()
     print_line(@__LINE__)
     println("Ciphertext (symmetric-key): wrote ", size_encrypted_prod, " bytes")
   end
+
+  # Client
+  let
+    enc_parms = EncryptionParameters()
+    load!(enc_parms, parms_stream)
+    context = SEALContext(enc_parms)
+
+    sk = SecretKey()
+    load!(sk, context, sk_stream)
+    decryptor = Decryptor(context, sk)
+    encoder = CKKSEncoder(context)
+
+    encrypted_result = Ciphertext()
+    load!(encrypted_result, context, data_stream4)
+
+    plain_result = Plaintext()
+    decrypt!(plain_result, encrypted_result, decryptor)
+    slot_count_ = slot_count(encoder)
+    result = Vector{Float64}(undef, slot_count_)
+    decode!(result, plain_result, encoder)
+
+    print_line(@__LINE__)
+    println("Result: ")
+    print_vector(result, 3, 7)
+  end
+
+  pt = Plaintext("1x^2 + 3")
+  stream = Vector{UInt8}(undef, save_size(pt))
+  data_size = save!(stream, pt)
+  resize!(stream, data_size)
 
   return
 end
