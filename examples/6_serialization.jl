@@ -168,5 +168,13 @@ function example_serialization()
   data_size = save!(stream, pt)
   resize!(stream, data_size)
 
+  header = SEALHeader()
+  load_header!(header, stream)
+
+  print_line(@__LINE__)
+  println("Size written to stream: ", data_size, " bytes")
+  println("             ", "Size indicated in SEALHeader: ", header.size, " bytes")
+  println()
+
   return
 end

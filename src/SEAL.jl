@@ -31,7 +31,7 @@ include("modulus.jl")
 export Modulus, SecLevelType, bit_count, value, coeff_modulus_create, coeff_modulus_bfv_default
 
 include("serialization.jl")
-export ComprModeType
+export ComprModeType, SEALHeader, load_header!
 
 include("encryptionparams.jl")
 export EncryptionParameters, SchemeType, get_poly_modulus_degree,
