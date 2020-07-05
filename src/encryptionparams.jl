@@ -42,7 +42,7 @@ mutable struct EncryptionParameters <: SEALObject
   end
 end
 
-function get_poly_modulus_degree(enc_param::EncryptionParameters)
+function poly_modulus_degree(enc_param::EncryptionParameters)
   degree = Ref{UInt64}(0)
   retval = ccall((:EncParams_GetPolyModulusDegree, libsealc), Clong,
                  (Ptr{Cvoid}, Ref{UInt64}),

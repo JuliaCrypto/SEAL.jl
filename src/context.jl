@@ -94,6 +94,15 @@ function parameter_error_message(context::SEALContext)
   return String(message)
 end
 
+function using_keyswitching(context::SEALContext)
+  valueref = Ref{UInt8}(0)
+  retval = ccall((:SEALContext_UsingKeyswitching, libsealc), Clong,
+                 (Ptr{Cvoid}, Ref{UInt8}),
+                 context, valueref)
+  @check_return_value retval
+  return Bool(valueref[])
+end
+
 
 mutable struct ContextData <: SEALObject
   handle::Ptr{Cvoid}

@@ -34,14 +34,14 @@ include("serialization.jl")
 export ComprModeType, SEALHeader, load_header!
 
 include("encryptionparams.jl")
-export EncryptionParameters, SchemeType, get_poly_modulus_degree,
+export EncryptionParameters, SchemeType, poly_modulus_degree,
        set_poly_modulus_degree!, set_coeff_modulus!, coeff_modulus,
        scheme, plain_modulus, set_plain_modulus!, plain_modulus_batching, parms_id, save!,
        save_size, load!
 
 include("context.jl")
 export SEALContext, first_parms_id, last_parms_id, get_context_data, key_context_data,
-       first_context_data, parameter_error_message
+       first_context_data, parameter_error_message, using_keyswitching
 export ContextData, chain_index, parms, parms_id, total_coeff_modulus_bit_count, qualifiers,
        next_context_data
 export EncryptionParameterQualifiers, using_batching
