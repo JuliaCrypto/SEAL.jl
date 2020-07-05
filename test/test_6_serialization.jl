@@ -100,12 +100,14 @@
     end
     sym_encryptor = Encryptor(context, sk)
 
-    @testset "encrypt_symmetric!" begin
-      @test encrypt_symmetric!(plain1, sym_encryptor) isa Ciphertext
-      @test encrypt_symmetric!(plain2, sym_encryptor) isa Ciphertext
+    @testset "encrypt_symmetric, encrypt_symmetric!" begin
+      @test encrypt_symmetric(plain1, sym_encryptor) isa Ciphertext
+      @test encrypt_symmetric(plain2, sym_encryptor) isa Ciphertext
+      c = Ciphertext()
+      @test encrypt_symmetric!(c, plain2, sym_encryptor)  == c
     end
-    sym_encrypted1 = encrypt_symmetric!(plain1, sym_encryptor)
-    sym_encrypted2 = encrypt_symmetric!(plain2, sym_encryptor)
+    sym_encrypted1 = encrypt_symmetric(plain1, sym_encryptor)
+    sym_encrypted2 = encrypt_symmetric(plain2, sym_encryptor)
 
     @testset "save! Ciphertext" begin
       @test save_size(sym_encrypted1) == 131298

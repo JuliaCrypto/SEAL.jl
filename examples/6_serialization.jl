@@ -90,8 +90,8 @@ function example_serialization()
     encrypt!(encrypted2, plain2, encryptor)
 
     sym_encryptor = Encryptor(context, sk)
-    sym_encrypted1 = encrypt_symmetric!(plain1, sym_encryptor)
-    sym_encrypted2 = encrypt_symmetric!(plain2, sym_encryptor)
+    sym_encrypted1 = encrypt_symmetric(plain1, sym_encryptor)
+    sym_encrypted2 = encrypt_symmetric(plain2, sym_encryptor)
 
     resize!(data_stream2, save_size(sym_encrypted1))
     size_sym_encrypted1 = save!(data_stream2, sym_encrypted1)
