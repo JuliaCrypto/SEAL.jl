@@ -127,5 +127,9 @@
     encrypt!(c8, p, encryptor)
     @test rotate_vector_inplace!(c8, 5, galois_keys_, evaluator) == c8
   end
+
+  @testset "using_keyswitching" begin
+    using_keyswitching(context) == true
+  end
 end
 

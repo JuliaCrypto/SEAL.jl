@@ -6,7 +6,7 @@
 
   @testset "polynomial modulus degree" begin
     @test_nowarn set_poly_modulus_degree!(enc_parms, 8192)
-    @test get_poly_modulus_degree(enc_parms) == 8192
+    @test poly_modulus_degree(enc_parms) == 8192
   end
 
   @testset "coefficient modulus" begin
