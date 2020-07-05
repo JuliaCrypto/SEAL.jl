@@ -37,3 +37,41 @@ function parms_id(key::SecretKey)
   return parms_id
 end
 
+function save!(buffer::DenseVector{UInt8}, length::Integer,
+               compr_mode::ComprModeType.ComprModeTypeEnum, key::SecretKey)
+  out_bytes = Ref{Int64}(0)
+  retval = ccall((:SecretKey_Save, libsealc), Clong,
+                 (Ptr{Cvoid}, Ref{UInt8}, UInt64, UInt8, Ref{Int64}),
+                 key, buffer, length, compr_mode, out_bytes)
+  @check_return_value retval
+  return Int(out_bytes[])
+end
+function save!(buffer::DenseVector{UInt8}, length::Integer, key::SecretKey)
+  return save!(buffer, length, ComprModeType.default, key)
+end
+function save!(buffer::DenseVector{UInt8}, key::SecretKey)
+  return save!(buffer, length(buffer), key)
+end
+
+function save_size(compr_mode, key::SecretKey)
+  result = Ref{Int64}(0)
+  retval = ccall((:SecretKey_SaveSize, libsealc), Clong,
+                 (Ptr{Cvoid}, UInt8, Ref{Int64}),
+                 key, compr_mode, result)
+  @check_return_value retval
+  return Int(result[])
+end
+save_size(key::SecretKey) = save_size(ComprModeType.default, key)
+
+function load!(key::SecretKey, context::SEALContext, buffer::DenseVector{UInt8}, length)
+  in_bytes = Ref{Int64}(0)
+  retval = ccall((:SecretKey_Load, libsealc), Clong,
+                 (Ptr{Cvoid}, Ptr{Cvoid}, Ref{UInt8}, UInt64, Ref{Int64}),
+                 key, context, buffer, length, in_bytes)
+  @check_return_value retval
+  return Int(in_bytes[])
+end
+function load!(key::SecretKey, context::SEALContext, buffer::DenseVector{UInt8})
+  return load!(key, context, buffer, length(buffer))
+end
+

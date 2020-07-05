@@ -30,10 +30,14 @@ export version_major, version_minor, version_patch, version
 include("modulus.jl")
 export Modulus, SecLevelType, bit_count, value, coeff_modulus_create, coeff_modulus_bfv_default
 
+include("serialization.jl")
+export ComprModeType, SEALHeader, load_header!
+
 include("encryptionparams.jl")
 export EncryptionParameters, SchemeType, get_poly_modulus_degree,
        set_poly_modulus_degree!, set_coeff_modulus!, coeff_modulus,
-       scheme, plain_modulus, set_plain_modulus!, plain_modulus_batching, parms_id
+       scheme, plain_modulus, set_plain_modulus!, plain_modulus_batching, parms_id, save!,
+       save_size, load!
 
 include("context.jl")
 export SEALContext, first_parms_id, last_parms_id, get_context_data, key_context_data,
@@ -46,25 +50,25 @@ include("publickey.jl")
 export PublicKey, parms_id
 
 include("secretkey.jl")
-export SecretKey, parms_id
+export SecretKey, parms_id, save!, load!
 
 include("galoiskeys.jl")
 export GaloisKeys, parms_id
 
 include("relinkeys.jl")
-export RelinKeys, parms_id
+export RelinKeys, parms_id, save_size, save!, load!
 
 include("keygenerator.jl")
 export KeyGenerator, public_key, secret_key, relin_keys_local, relin_keys, galois_keys_local
 
 include("plaintext.jl")
-export Plaintext, scale, scale!, parms_id, to_string
+export Plaintext, scale, scale!, parms_id, to_string, save_size, save!
 
 include("ciphertext.jl")
-export Ciphertext, scale, scale!, parms_id, size, length
+export Ciphertext, scale, scale!, parms_id, size, length, save_size, save!, load!
 
 include("encryptor.jl")
-export Encryptor, encrypt!
+export Encryptor, encrypt!, encrypt_symmetric, encrypt_symmetric!
 
 include("evaluator.jl")
 export Evaluator, square!, square_inplace!, relinearize!, relinearize_inplace!, rescale_to_next!,

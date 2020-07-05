@@ -86,3 +86,29 @@ function to_string(plain::Plaintext)
   # Return as String but without terminating NULL byte
   return String(message[1:end-1])
 end
+
+function save_size(compr_mode, plain::Plaintext)
+  result = Ref{Int64}(0)
+  retval = ccall((:Plaintext_SaveSize, libsealc), Clong,
+                 (Ptr{Cvoid}, UInt8, Ref{Int64}),
+                 plain, compr_mode, result)
+  @check_return_value retval
+  return Int(result[])
+end
+save_size(plain::Plaintext) = save_size(ComprModeType.default, plain)
+
+function save!(buffer::DenseVector{UInt8}, length::Integer,
+               compr_mode::ComprModeType.ComprModeTypeEnum, plain::Plaintext)
+  out_bytes = Ref{Int64}(0)
+  retval = ccall((:Plaintext_Save, libsealc), Clong,
+                 (Ptr{Cvoid}, Ref{UInt8}, UInt64, UInt8, Ref{Int64}),
+                 plain, buffer, length, compr_mode, out_bytes)
+  @check_return_value retval
+  return Int(out_bytes[])
+end
+function save!(buffer::DenseVector{UInt8}, length::Integer, plain::Plaintext)
+  return save!(buffer, length, ComprModeType.default, plain)
+end
+function save!(buffer::DenseVector{UInt8}, plain::Plaintext)
+  return save!(buffer, length(buffer), plain)
+end

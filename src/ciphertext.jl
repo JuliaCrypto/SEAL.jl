@@ -68,3 +68,41 @@ function Base.size(encrypted::Ciphertext)
 end
 Base.length(encrypted::Ciphertext) = size(encrypted)[1]
 
+function save_size(compr_mode, encrypted::Ciphertext)
+  result = Ref{Int64}(0)
+  retval = ccall((:Ciphertext_SaveSize, libsealc), Clong,
+                 (Ptr{Cvoid}, UInt8, Ref{Int64}),
+                 encrypted, compr_mode, result)
+  @check_return_value retval
+  return Int(result[])
+end
+save_size(encrypted::Ciphertext) = save_size(ComprModeType.default, encrypted)
+
+function save!(buffer::DenseVector{UInt8}, length::Integer,
+               compr_mode::ComprModeType.ComprModeTypeEnum, encrypted::Ciphertext)
+  out_bytes = Ref{Int64}(0)
+  retval = ccall((:Ciphertext_Save, libsealc), Clong,
+                 (Ptr{Cvoid}, Ref{UInt8}, UInt64, UInt8, Ref{Int64}),
+                 encrypted, buffer, length, compr_mode, out_bytes)
+  @check_return_value retval
+  return Int(out_bytes[])
+end
+function save!(buffer::DenseVector{UInt8}, length::Integer, encrypted::Ciphertext)
+  return save!(buffer, length, ComprModeType.default, encrypted)
+end
+function save!(buffer::DenseVector{UInt8}, encrypted::Ciphertext)
+  return save!(buffer, length(buffer), encrypted)
+end
+
+function load!(encrypted::Ciphertext, context::SEALContext, buffer::DenseVector{UInt8}, length)
+  in_bytes = Ref{Int64}(0)
+  retval = ccall((:Ciphertext_Load, libsealc), Clong,
+                 (Ptr{Cvoid}, Ptr{Cvoid}, Ref{UInt8}, UInt64, Ref{Int64}),
+                 encrypted, context, buffer, length, in_bytes)
+  @check_return_value retval
+  return Int(in_bytes[])
+end
+function load!(encrypted::Ciphertext, context::SEALContext, buffer::DenseVector{UInt8})
+  return load!(encrypted, context, buffer, length(buffer))
+end
+
