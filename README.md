@@ -11,8 +11,7 @@ known as HEAAN in literature) schemes and exposes the homomorphic encryption
 capabilitites of SEAL in a (mostly) intuitive and Julian way. SEAL.jl is
 published under the same permissive MIT license as the original SEAL library.
 
-Currently, SEAL.jl supports all operations that are used in the examples 1
-through 5 of the
+Currently, SEAL.jl supports all operations that are used in the examples of the
 [SEAL library](https://github.com/microsoft/SEAL/tree/master/native/examples).
 This includes encoding and encryption, addition and multiplication, rotation,
 relinearization and modulus switching for the BFV and CKKS schemes.
