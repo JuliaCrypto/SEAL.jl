@@ -172,7 +172,7 @@ function Base.:(==)(enc_param1::EncryptionParameters, enc_param2::EncryptionPara
   result = Ref{UInt8}(0)
   retval = ccall((:EncParams_Equals, libsealc), Clong,
                  (Ptr{Cvoid}, Ptr{Cvoid}, Ref{UInt8}),
-                 enc_param1, enc_param1, result)
+                 enc_param1, enc_param2, result)
   @check_return_value retval
   return Bool(result[])
 end

@@ -22,6 +22,15 @@ mutable struct Ciphertext <: SEALObject
     return Ciphertext(handleref[])
   end
 
+  function Ciphertext(context)
+    handleref = Ref{Ptr{Cvoid}}(C_NULL)
+    retval = ccall((:Ciphertext_Create3, libsealc), Clong,
+                   (Ptr{Cvoid}, Ptr{Cvoid}, Ref{Ptr{Cvoid}}),
+                   context, C_NULL, handleref)
+    @check_return_value retval
+    return Ciphertext(handleref[])
+  end
+
   function Ciphertext(handle::Ptr{Cvoid})
     x = new(handle)
     finalizer(x) do x
@@ -104,5 +113,13 @@ function load!(encrypted::Ciphertext, context::SEALContext, buffer::DenseVector{
 end
 function load!(encrypted::Ciphertext, context::SEALContext, buffer::DenseVector{UInt8})
   return load!(encrypted, context, buffer, length(buffer))
+end
+
+function reserve!(encrypted::Ciphertext, capacity)
+  retval = ccall((:Ciphertext_Reserve3, libsealc), Clong,
+                 (Ptr{Cvoid}, UInt64),
+                 encrypted, capacity)
+  @check_return_value retval
+  return encrypted
 end
 

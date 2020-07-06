@@ -65,7 +65,7 @@ include("plaintext.jl")
 export Plaintext, scale, scale!, parms_id, to_string, save_size, save!
 
 include("ciphertext.jl")
-export Ciphertext, scale, scale!, parms_id, size, length, save_size, save!, load!
+export Ciphertext, scale, scale!, parms_id, size, length, save_size, save!, load!, reserve!
 
 include("encryptor.jl")
 export Encryptor, encrypt!, encrypt_symmetric, encrypt_symmetric!
@@ -75,7 +75,8 @@ export Evaluator, square!, square_inplace!, relinearize!, relinearize_inplace!, 
        rescale_to_next_inplace!, multiply_plain!, multiply_plain_inplace!, multiply!,
        multiply_inplace!, mod_switch_to!, mod_switch_to_inplace!, mod_switch_to_next!,
        mod_switch_to_next_inplace!, add!, add_inplace!, add_plain!, add_plain_inplace!,
-       rotate_vector!, rotate_vector_inplace!, negate!
+       rotate_vector!, rotate_vector_inplace!, rotate_rows!, rotate_rows_inplace!,
+       rotate_columns!, rotate_columns_inplace!, negate!
 
 include("decryptor.jl")
 export Decryptor, decrypt!, invariant_noise_budget

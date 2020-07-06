@@ -20,6 +20,15 @@ mutable struct Plaintext <: SEALObject
     return Plaintext(handleref[])
   end
 
+  function Plaintext(capacity, coeff_count)
+    handleref = Ref{Ptr{Cvoid}}(C_NULL)
+    retval = ccall((:Plaintext_Create3, libsealc), Clong,
+                   (UInt64, UInt64, Ptr{Cvoid}, Ref{Ptr{Cvoid}}),
+                   capacity, coeff_count, C_NULL, handleref)
+    @check_return_value retval
+    return Plaintext(handleref[])
+  end
+
   function Plaintext(hex_poly)
     handleref = Ref{Ptr{Cvoid}}(C_NULL)
     retval = ccall((:Plaintext_Create4, libsealc), Clong,
@@ -111,4 +120,13 @@ function save!(buffer::DenseVector{UInt8}, length::Integer, plain::Plaintext)
 end
 function save!(buffer::DenseVector{UInt8}, plain::Plaintext)
   return save!(buffer, length(buffer), plain)
+end
+
+function Base.:(==)(plain1::Plaintext, plain2::Plaintext)
+  result = Ref{UInt8}(0)
+  retval = ccall((:Plaintext_Equals, libsealc), Clong,
+                 (Ptr{Cvoid}, Ptr{Cvoid}, Ref{UInt8}),
+                 plain1, plain2, result)
+  @check_return_value retval
+  return Bool(result[])
 end
