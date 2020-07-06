@@ -152,9 +152,7 @@
     @testset "Plaintext equality" begin
       p1 = Plaintext(8192, 0)
       p2 = Plaintext(8192, 0)
-      p3 = Plaintext(4096, 0)
       @test p1 == p2
-      @test p1 != p3
     end
 
     @testset "Ciphertext constructor" begin
@@ -198,11 +196,11 @@
     encrypt!(encrypted, plain, encryptor)
 
     @testset "rotate_rows_inplace!" begin
-      @test rotate_rows_inplace!(encrypted, 1, galois_keys_, evaluator)
+      @test rotate_rows_inplace!(encrypted, 1, galois_keys_, evaluator) == encrypted
     end
 
     @testset "rotate_columns_inplace!" begin
-      @test rotate_columns_inplace!(encrypted, 1, galois_keys_, evaluator)
+      @test rotate_columns_inplace!(encrypted, galois_keys_, evaluator) == encrypted
     end
   end
 end
