@@ -335,8 +335,12 @@ function example_bfv_performance_custom()
   poly_modulus_degree = 0
   println()
   print("Set poly_modulus_degree (1024, 2048, 4096, 8192, 16384, or 32768): ")
+  input = readline()
+  if !isopen(stdin)
+    return
+  end
   try
-    poly_modulus_degree = parse(Int, readline())
+    poly_modulus_degree = parse(Int, input)
   catch
     println("Invalid option")
     return
@@ -395,8 +399,12 @@ function example_ckks_performance_custom()
   poly_modulus_degree = 0
   println()
   print("Set poly_modulus_degree (1024, 2048, 4096, 8192, 16384, or 32768): ")
+  input = readline()
+  if !isopen(stdin)
+    return
+  end
   try
-    poly_modulus_degree = parse(Int, readline())
+    poly_modulus_degree = parse(Int, input)
   catch
     println("Invalid option")
     return
@@ -430,8 +438,13 @@ function example_performance_test()
     selection = 0
     println()
     print("> Run performance test (1 ~ 4) or go back (0): ")
+    input = readline()
+    if !isopen(stdin)
+      println()
+      return
+    end
     try
-      selection = parse(Int, readline())
+      selection = parse(Int, input)
     catch
       println("Invalid option")
       continue
