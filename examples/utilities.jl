@@ -32,7 +32,7 @@ function print_parameters(context::SEALContext)
   println("/")
   println("| Encryption parameters :")
   println("|   scheme: ", scheme_name)
-  println("|   poly_modulus_degree: ", get_poly_modulus_degree(encryption_parms))
+  println("|   poly_modulus_degree: ", poly_modulus_degree(encryption_parms))
 
   print("|   coeff_modulus size: ", total_coeff_modulus_bit_count(context_data), " (")
   bit_counts = [bit_count(modulus) for modulus in coeff_modulus(encryption_parms)]
@@ -138,4 +138,22 @@ function print_matrix(matrix, row_size)
   end
 
   println()
+end
+
+
+"""
+    @elapsedus(ex)
+
+Return integer number of elapsed microseconds required for executing `ex`. Modified from
+`Base.@elapsed`, which returns the number of seconds as a floating point number.
+
+See also: [`@elapsed`](@ref)
+"""
+macro elapsedus(ex)
+  quote
+    while false; end # compiler heuristic: compile this block (alter this if the heuristic changes)
+    local t0 = time_ns()
+    $(esc(ex))
+    Int(div(time_ns() - t0, 1000))
+  end
 end

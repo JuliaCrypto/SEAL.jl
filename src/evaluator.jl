@@ -173,6 +173,48 @@ function rotate_vector_inplace!(encrypted::Ciphertext, steps, galois_keys::Galoi
   return rotate_vector!(encrypted, encrypted, steps, galois_keys, evaluator)
 end
 
+function rotate_rows!(destination::Ciphertext, encrypted::Ciphertext, steps,
+                      galois_keys::GaloisKeys, evaluator::Evaluator)
+  retval = ccall((:Evaluator_RotateRows, libsealc), Clong,
+                 (Ptr{Cvoid}, Ptr{Cvoid}, Cint, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}),
+                 evaluator, encrypted, steps, galois_keys, destination, C_NULL)
+  @check_return_value retval
+  return destination
+end
+
+function rotate_rows_inplace!(encrypted::Ciphertext, steps, galois_keys::GaloisKeys,
+                              evaluator::Evaluator)
+  return rotate_rows!(encrypted, encrypted, steps, galois_keys, evaluator)
+end
+
+function rotate_columns!(destination::Ciphertext, encrypted::Ciphertext, galois_keys::GaloisKeys,
+                         evaluator::Evaluator)
+  retval = ccall((:Evaluator_RotateColumns, libsealc), Clong,
+                 (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}),
+                 evaluator, encrypted, galois_keys, destination, C_NULL)
+  @check_return_value retval
+  return destination
+end
+
+function rotate_columns_inplace!(encrypted::Ciphertext, galois_keys::GaloisKeys,
+                                 evaluator::Evaluator)
+  return rotate_columns!(encrypted, encrypted, galois_keys, evaluator)
+end
+
+function complex_conjugate!(destination::Ciphertext, encrypted::Ciphertext, galois_keys::GaloisKeys,
+                            evaluator::Evaluator)
+  retval = ccall((:Evaluator_ComplexConjugate, libsealc), Clong,
+                 (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}),
+                 evaluator, encrypted, galois_keys, destination, C_NULL)
+  @check_return_value retval
+  return destination
+end
+
+function complex_conjugate_inplace!(encrypted::Ciphertext, galois_keys::GaloisKeys,
+                                    evaluator::Evaluator)
+  return complex_conjugate!(encrypted, encrypted, galois_keys, evaluator)
+end
+
 function negate!(destination::Ciphertext, encrypted::Ciphertext, evaluator::Evaluator)
   retval = ccall((:Evaluator_Negate, libsealc), Clong,
                  (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}),

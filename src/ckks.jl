@@ -78,6 +78,15 @@ function encode!(destination::Plaintext, data::Float64, scale, encoder::CKKSEnco
   return destination
 end
 
+function encode!(destination::Plaintext, data::Integer, encoder::CKKSEncoder)
+  parms_id = first_parms_id(encoder.context)
+  retval = ccall((:CKKSEncoder_Encode5, libsealc), Clong,
+                 (Ptr{Cvoid}, Int64, Ref{UInt64}, Ptr{Cvoid}),
+                 encoder, data, parms_id, destination)
+  @check_return_value retval
+  return destination
+end
+
 """
     decode!(destination, plain, encoder)
 
