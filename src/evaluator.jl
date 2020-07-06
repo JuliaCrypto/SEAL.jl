@@ -201,6 +201,20 @@ function rotate_columns_inplace!(encrypted::Ciphertext, galois_keys::GaloisKeys,
   return rotate_columns!(encrypted, encrypted, galois_keys, evaluator)
 end
 
+function complex_conjugate!(destination::Ciphertext, encrypted::Ciphertext, galois_keys::GaloisKeys,
+                            evaluator::Evaluator)
+  retval = ccall((:Evaluator_ComplexConjugate, libsealc), Clong,
+                 (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}),
+                 evaluator, encrypted, galois_keys, destination, C_NULL)
+  @check_return_value retval
+  return destination
+end
+
+function complex_conjugate_inplace!(encrypted::Ciphertext, galois_keys::GaloisKeys,
+                                    evaluator::Evaluator)
+  return complex_conjugate!(encrypted, encrypted, galois_keys, evaluator)
+end
+
 function negate!(destination::Ciphertext, encrypted::Ciphertext, evaluator::Evaluator)
   retval = ccall((:Evaluator_Negate, libsealc), Clong,
                  (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}),

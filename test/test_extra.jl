@@ -131,6 +131,12 @@
       @test rotate_vector_inplace!(c8, 5, galois_keys_, evaluator) == c8
     end
 
+    @testset "complex_conjugate_inplace!" begin
+      c9 = Ciphertext()
+      encrypt!(c9, p, encryptor)
+      @test complex_conjugate_inplace!(c9, galois_keys_, evaluator) == c9
+    end
+
     @testset "using_keyswitching" begin
       using_keyswitching(context) == true
     end
@@ -154,6 +160,11 @@
     @testset "reserve! Ciphertext" begin
       c = Ciphertext(context)
       @test reserve!(c, 3) == c
+    end
+
+    @testset "encode!" begin
+      p2 = Plaintext()
+      @test encode!(p2, 17, encoder) == p2
     end
   end
 
