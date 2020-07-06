@@ -92,7 +92,7 @@ include("batchencoder.jl")
 export BatchEncoder, slot_count, encode!, decode!
 
 include("memorymanager.jl")
-export MemoryPoolHandle, memory_manager_get_pool
+export MemoryPoolHandle, alloc_byte_count, memory_manager_get_pool
 
 
 end

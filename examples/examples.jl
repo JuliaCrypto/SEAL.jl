@@ -17,14 +17,17 @@ function seal_examples()
     println("+---------------------------------------------------------+")
     println("| Examples                   | Source Files               |")
     println("+----------------------------+----------------------------+")
-    println("| 1. BFV Basics              | 1_bfv_basics.cpp           |")
-    println("| 2. Encoders                | 2_encoders.cpp             |")
-    println("| 3. Levels                  | 3_levels.cpp               |")
-    println("| 4. CKKS Basics             | 4_ckks_basics.cpp          |")
-    println("| 5. Rotation                | 5_rotation.cpp             |")
-    println("| 6. Serialization           | 6_serialization.cpp        |")
-    println("| 7. Performance Test        | 7_performance.cpp          |")
+    println("| 1. BFV Basics              | 1_bfv_basics.jl            |")
+    println("| 2. Encoders                | 2_encoders.jl              |")
+    println("| 3. Levels                  | 3_levels.jl                |")
+    println("| 4. CKKS Basics             | 4_ckks_basics.jl           |")
+    println("| 5. Rotation                | 5_rotation.jl              |")
+    println("| 6. Serialization           | 6_serialization.jl         |")
+    println("| 7. Performance Test        | 7_performance.jl           |")
     println("+----------------------------+----------------------------+")
+
+    megabytes = alloc_byte_count(memory_manager_get_pool()) >> 20
+    @printf("[% 7d MB] Total allocation from the memory pool\n", megabytes)
 
     selection = 0
     invalid = true

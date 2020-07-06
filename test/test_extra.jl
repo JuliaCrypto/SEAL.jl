@@ -42,6 +42,10 @@
       @test_nowarn memory_manager_get_pool()
     end
 
+    @testset "alloc_byte_count" begin
+      @test alloc_byte_count(memory_manager_get_pool()) isa Int
+    end
+
     @testset "check_return_value" begin
       @test_throws ErrorException SEAL.check_return_value(0x80004003)
       @test_throws ErrorException SEAL.check_return_value(0x80070057)

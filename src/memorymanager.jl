@@ -12,6 +12,15 @@ mutable struct MemoryPoolHandle <: SEALObject
   end
 end
 
+function alloc_byte_count(handle::MemoryPoolHandle)
+  count = Ref{UInt64}(0)
+  retval = ccall((:MemoryPoolHandle_AllocByteCount, libsealc), Clong,
+                 (Ptr{Cvoid}, Ref{UInt64}),
+                 handle, count)
+  @check_return_value retval
+  return Int(count[])
+end
+
 function memory_manager_get_pool()
   handleref = Ref{Ptr{Cvoid}}(C_NULL)
   retval = ccall((:MemoryManager_GetPool2, libsealc), Clong,
