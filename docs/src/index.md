@@ -150,7 +150,7 @@ examples:
 Microsoft SEAL version: 3.5.5
 +---------------------------------------------------------+
 | The following examples should be executed while reading |
-| comments in associated files in native/examples/.       |
+| comments in associated files in examples/.              |
 +---------------------------------------------------------+
 | Examples                   | Source Files               |
 +----------------------------+----------------------------+

@@ -13,7 +13,7 @@ function seal_examples()
   while true
     println("+---------------------------------------------------------+")
     println("| The following examples should be executed while reading |")
-    println("| comments in associated files in native/examples/.       |")
+    println("| comments in associated files in examples/.              |")
     println("+---------------------------------------------------------+")
     println("| Examples                   | Source Files               |")
     println("+----------------------------+----------------------------+")
