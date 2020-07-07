@@ -1,14 +1,13 @@
 # SEAL.jl
 
-**SEAL.jl** is a Julia package that wraps the
+**SEAL.jl** is a Julia package that wraps the Microsoft
 [SEAL](https://github.com/microsoft/SEAL) library for homomorphic encryption. It
 supports the Brakerski/Fan-Vercauteren (BFV) and Cheon-Kim-Kim-Song (CKKS, also
 known as HEAAN in literature) schemes and exposes the homomorphic encryption
 capabilitites of SEAL in a (mostly) intuitive and Julian way. SEAL.jl is
-published under the same permissive MIT license as the original SEAL library.
+published under the same permissive MIT license as the Microsoft SEAL library.
 
-Currently, SEAL.jl supports all operations that are used in the examples 1
-through 5 of the
+Currently, SEAL.jl supports all operations that are used in the examples of the
 [SEAL library](https://github.com/microsoft/SEAL/tree/master/native/examples).
 This includes encoding and encryption, addition and multiplication, rotation,
 relinearization and modulus switching for the BFV and CKKS schemes.
@@ -28,11 +27,13 @@ SEAL.jl depends on the binary distribution of the SEAL library, which is
 available as a Julia package `SEAL_jll.jl` and which is automatically installed
 as a dependency.
 
-*Note: Currently SEAL_jll.jl is not available on Windows, thus SEAL.jl will also
-work only on Linux, MacOS and FreeBSD.*
+*Note: Currently SEAL_jll.jl is not available on Windows, thus SEAL.jl will
+work only on Linux, MacOS and FreeBSD. Also, SEAL_jll.jl does not work on 32-bit
+systems.*
 
 
-## Usage
+## Getting started
+### Usage
 After installation, load SEAL.jl by running
 ```julia
 using SEAL
@@ -107,6 +108,7 @@ julia> decode_int32(plain_result, encoder)
 49
 ```
 
+### Examples
 As you can see, using homomorphic encryption is quite involved: You need to pick
 a scheme, provide sensible encryption parameters, encode your raw data into
 plaintext, encrypt it to ciphertext, perform your arithmetic operations on it,
@@ -114,14 +116,58 @@ and then decrypt and decode again.  Therefore, before starting to use SEAL.jl
 for your own applications, it is **highly recommended** to have a look at the
 examples in the
 [`examples/`](https://github.com/JuliaCrypto/SEAL.jl/tree/master/examples/)
-directory. Otherwise it will be very likely that you are using SEAL/SEAL.jl in a
+directory. Otherwise it will be very likely that you are using SEAL.jl (and SEAL) in a
 way that is either not secure, will produce unexpected results, or just crashes.
-The examples included here follow almost line-by-line the examples provided by
-the
+The examples included in SEAL.jl follow almost line-by-line the examples provided by the
 [SEAL library](https://github.com/microsoft/SEAL/tree/master/native/examples).
-The example above is actually based on the `example_integer_encoder()` function
-in
+For example, the snippet above is based on the `example_integer_encoder()` function in
 [`examples/2_encoders.jl`](https://github.com/JuliaCrypto/SEAL.jl/tree/master/examples/2_encoders.jl).
+The full list of examples is as follows:
+
+|SEAL.jl             |SEAL (C++)           |Description                                                                 |
+|--------------------|---------------------|----------------------------------------------------------------------------|
+|`examples.jl`       |`examples.cpp`       |The example runner application                                              |
+|`1_bfv_basics.jl`   |`1_bfv_basics.cpp`   |Encrypted modular arithmetic using the BFV scheme                           |
+|`2_encoders.jl`     |`2_encoders.cpp`     |Encoding more complex data into Microsoft SEAL plaintext objects            |
+|`3_levels.jl`       |`3_levels.cpp`       |Introduces the concept of levels; prerequisite for using the CKKS scheme    |
+|`4_ckks_basics.jl`  |`4_ckks_basics.cpp`  |Encrypted real number arithmetic using the CKKS scheme                      |
+|`5_rotation.jl`     |`5_rotation.cpp`     |Performing cyclic rotations on encrypted vectors in the BFV and CKKS schemes|
+|`6_serialization.jl`|`6_serialization.cpp`|Serializing objects in Microsoft SEAL                                       |
+|`7_performance.jl`  |`7_performance.cpp`  |Performance tests                                                           |
+
+To run the examples, first install SEAL.jl (as shown [above](#usage)) and clone this repository:
+```shell
+git clone https://github.com/JuliaCrypto/SEAL.jl.git
+```
+Then, run Julia and include `examples/examples.jl` before executing `seal_examples()`:
+```shell
+julia --project=. -e 'include("SEAL.jl/examples/examples.jl"); seal_examples()'
+```
+
+You will be shown an interactive prompt that lets you run any of the available
+examples:
+```
+Microsoft SEAL version: 3.5.5
++---------------------------------------------------------+
+| The following examples should be executed while reading |
+| comments in associated files in native/examples/.       |
++---------------------------------------------------------+
+| Examples                   | Source Files               |
++----------------------------+----------------------------+
+| 1. BFV Basics              | 1_bfv_basics.jl            |
+| 2. Encoders                | 2_encoders.jl              |
+| 3. Levels                  | 3_levels.jl                |
+| 4. CKKS Basics             | 4_ckks_basics.jl           |
+| 5. Rotation                | 5_rotation.jl              |
+| 6. Serialization           | 6_serialization.jl         |
+| 7. Performance Test        | 7_performance.jl           |
++----------------------------+----------------------------+
+[      0 MB] Total allocation from the memory pool
+
+> Run example (1 ~ 7) or exit (0): 
+```
+Since the examples will not create or modify any files, feel free to run them from
+any directory.
 
 
 ## Implementation strategy
