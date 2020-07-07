@@ -107,7 +107,7 @@ function bfv_performance_test(context)
       end
 
       row_size = div(slot_count(batch_encoder), 2)
-      random_rotation = rand(RandomDevice(), Int64) % row_size
+      random_rotation = rand(RandomDevice(), Int64) & (row_size - 1)
       time_rotate_rows_random_sum += @elapsedus begin
         rotate_rows_inplace!(encrypted, random_rotation, galois_keys_, evaluator)
       end
@@ -250,7 +250,7 @@ function ckks_performance_test(context)
         rotate_vector_inplace!(encrypted, -1, galois_keys_, evaluator)
       end
 
-      random_rotation = rand(RandomDevice(), Int64) % slot_count(ckks_encoder)
+      random_rotation = rand(RandomDevice(), Int64) & (slot_count(ckks_encoder) - 1)
       time_rotate_random_sum += @elapsedus begin
         rotate_vector_inplace!(encrypted, random_rotation, galois_keys_, evaluator)
       end

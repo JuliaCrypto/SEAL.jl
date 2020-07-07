@@ -173,6 +173,7 @@ function example_bfv_basics()
   context = SEALContext(parms)
   print_parameters(context)
   println("Parameter validation (failed): ", parameter_error_message(context))
+  println()
 
   return
 end
