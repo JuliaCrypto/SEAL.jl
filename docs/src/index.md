@@ -115,13 +115,13 @@ plaintext, encrypt it to ciphertext, perform your arithmetic operations on it,
 and then decrypt and decode again.  Therefore, before starting to use SEAL.jl
 for your own applications, it is **highly recommended** to have a look at the
 examples in the
-[`examples/`](https://github.com/JuliaCrypto/SEAL.jl/tree/master/examples/)
+[`examples/`](https://github.com/JuliaCrypto/SEAL.jl/tree/main/examples/)
 directory. Otherwise it will be very likely that you are using SEAL.jl (and SEAL) in a
 way that is either not secure, will produce unexpected results, or just crashes.
 The examples included in SEAL.jl follow almost line-by-line the examples provided by the
 [SEAL library](https://github.com/microsoft/SEAL/tree/master/native/examples).
 For example, the snippet above is based on the `example_integer_encoder()` function in
-[`examples/2_encoders.jl`](https://github.com/JuliaCrypto/SEAL.jl/tree/master/examples/2_encoders.jl).
+[`examples/2_encoders.jl`](https://github.com/JuliaCrypto/SEAL.jl/tree/main/examples/2_encoders.jl).
 The full list of examples is as follows:
 
 |SEAL.jl             |SEAL (C++)           |Description                                                                 |
