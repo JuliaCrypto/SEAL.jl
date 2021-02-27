@@ -1,9 +1,9 @@
 # Documentation: https://docs.travis-ci.com/user/languages/julia/
 language: julia
 
-# Use Julia 1.4 + whatever the latest stable release is
+# Use Julia 1.5 + whatever the latest stable release is
 julia:
-  - 1.4
+  - 1.5
   - 1
 
 # Only test on Linux for now
