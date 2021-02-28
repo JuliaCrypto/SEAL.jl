@@ -4,11 +4,14 @@ mutable struct MemoryPoolHandle <: SEALObject
 
   function MemoryPoolHandle(handle::Ptr{Cvoid})
     object = new(handle)
-    finalizer(object) do object
-      # @async println("Finalizing $object at line $(@__LINE__).")
-      ccall((:MemoryPoolHandle_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
-    end
+    finalizer(destroy, object)
     return object
+  end
+end
+
+function destroy(object::MemoryPoolHandle)
+  if isallocated(object)
+    ccall((:MemoryPoolHandle_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
   end
 end
 

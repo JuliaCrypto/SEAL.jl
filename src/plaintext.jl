@@ -40,11 +40,14 @@ mutable struct Plaintext <: SEALObject
 
   function Plaintext(handle::Ptr{Cvoid})
     object = new(handle)
-    finalizer(object) do object
-      # @async println("Finalizing $object at line $(@__LINE__).")
-      ccall((:Plaintext_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
-    end
+    finalizer(destroy, object)
     return object
+  end
+end
+
+function destroy(object::Plaintext)
+  if isallocated(object)
+    ccall((:Plaintext_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
   end
 end
 

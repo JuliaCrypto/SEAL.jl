@@ -22,11 +22,14 @@ mutable struct KeyGenerator <: SEALObject
 
   function KeyGenerator(handle::Ptr{Cvoid})
     object = new(handle)
-    finalizer(object) do object
-      # @async println("Finalizing $object at line $(@__LINE__).")
-      ccall((:KeyGenerator_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
-    end
+    finalizer(destroy, object)
     return object
+  end
+end
+
+function destroy(object::KeyGenerator)
+  if isallocated(object)
+    ccall((:KeyGenerator_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
   end
 end
 

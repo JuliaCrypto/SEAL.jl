@@ -21,11 +21,14 @@ mutable struct Evaluator <: SEALObject
 
   function Evaluator(handle::Ptr{Cvoid})
     object = new(handle)
-    finalizer(object) do object
-      # @async println("Finalizing $object at line $(@__LINE__).")
-      ccall((:Evaluator_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
-    end
+    finalizer(destroy, object)
     return object
+  end
+end
+
+function destroy(object::Evaluator)
+  if isallocated(object)
+    ccall((:Evaluator_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
   end
 end
 

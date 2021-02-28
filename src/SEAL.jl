@@ -15,9 +15,31 @@ abstract type SEALObject end
 
 Return the raw C pointer to where `object` resides in memory.
 """
-handle(object::SEALObject) = object.handle
+@inline handle(object::SEALObject) = object.handle
 
-export SEALObject, handle
+"""
+    destroy(object::SEALObject)
+
+Call the corresponding destruction function on `object` to free up memory and reset object handle to
+a null pointer. If `object` is not allocated, `destroy` will not do anything.
+"""
+function destroy(object::SEALObject) end
+
+"""
+    isnull(object::SEALObject)
+
+Return true if the object handle is a null pointer and false otherwise.
+"""
+@inline isnull(object::SEALObject) = handle(object) == C_NULL
+
+"""
+    isallocated(object::SEALObject)
+
+Return true if the object is allocated, i.e., if it is not null.
+"""
+@inline isallocated(object::SEALObject) = !isnull(object)
+
+export SEALObject, handle, destroy, isnull, isallocated
 
 Base.unsafe_convert(::Type{Ptr{Cvoid}}, object::SEALObject) = handle(object)
 
