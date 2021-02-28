@@ -13,12 +13,12 @@ mutable struct IntegerEncoder <: SEALObject
   end
 
   function IntegerEncoder(handle::Ptr{Cvoid}, context)
-    x = new(handle, context)
-    finalizer(x) do x
-      # @async println("Finalizing $x at line $(@__LINE__).")
-      ccall((:IntegerEncoder_Destroy, libsealc), Clong, (Ptr{Cvoid},), x)
+    object = new(handle, context)
+    finalizer(object) do object
+      # @async println("Finalizing $object at line $(@__LINE__).")
+      ccall((:IntegerEncoder_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
     end
-    return x
+    return object
   end
 end
 

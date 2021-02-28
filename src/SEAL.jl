@@ -11,15 +11,15 @@ Abstract parent type for all types based on SEAL classes.
 abstract type SEALObject end
 
 """
-    handle(x::SEALObject)
+    handle(object::SEALObject)
 
-Return the raw C pointer to where `x` resides in memory.
+Return the raw C pointer to where `object` resides in memory.
 """
-handle(x::SEALObject) = x.handle
+handle(object::SEALObject) = object.handle
 
 export SEALObject, handle
 
-Base.unsafe_convert(::Type{Ptr{Cvoid}}, x::SEALObject) = handle(x)
+Base.unsafe_convert(::Type{Ptr{Cvoid}}, object::SEALObject) = handle(object)
 
 include("auxiliary.jl")
 # Julia-only auxiliary methods -> no exports

@@ -19,12 +19,12 @@ mutable struct SecretKey <: SEALObject
   end
 
   function SecretKey(handle::Ptr{Cvoid})
-    x = new(handle)
-    finalizer(x) do x
-      # @async println("Finalizing $x at line $(@__LINE__).")
-      ccall((:SecretKey_Destroy, libsealc), Clong, (Ptr{Cvoid},), x)
+    object = new(handle)
+    finalizer(object) do object
+      # @async println("Finalizing $object at line $(@__LINE__).")
+      ccall((:SecretKey_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
     end
-    return x
+    return object
   end
 end
 
