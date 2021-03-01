@@ -1,9 +1,9 @@
 @testset "5_rotation" begin
   @testset "rotation_ckks" begin
     @testset "EncryptionParameters" begin
-      @test_nowarn EncryptionParameters(SchemeType.CKKS)
+      @test_nowarn EncryptionParameters(SchemeType.ckks)
     end
-    enc_parms = EncryptionParameters(SchemeType.CKKS)
+    enc_parms = EncryptionParameters(SchemeType.ckks)
 
     @testset "polynomial modulus degree" begin
       @test_nowarn set_poly_modulus_degree!(enc_parms, 8192)

@@ -1,8 +1,8 @@
 @testset "3_levels" begin
   @testset "EncryptionParameters" begin
-    @test_nowarn EncryptionParameters(SchemeType.BFV)
+    @test_nowarn EncryptionParameters(SchemeType.bfv)
   end
-  enc_parms = EncryptionParameters(SchemeType.BFV)
+  enc_parms = EncryptionParameters(SchemeType.bfv)
 
   @testset "polynomial modulus degree" begin
     @test_nowarn set_poly_modulus_degree!(enc_parms, 8192)

@@ -7,7 +7,7 @@
   sk_stream = UInt8[]
 
   @testset "server (part 1)" begin
-    enc_parms = EncryptionParameters(SchemeType.CKKS)
+    enc_parms = EncryptionParameters(SchemeType.ckks)
     poly_modulus_degree = 8192
     @testset "polynomial modulus degree" begin
       @test_nowarn set_poly_modulus_degree!(enc_parms, poly_modulus_degree)
@@ -69,14 +69,14 @@
       resize!(data_stream1, size_rlk)
     end
 
-    rlk = RelinKeys()
-    create_relin_keys!(rlk, keygen)
+    rlk_big = RelinKeys()
+    create_relin_keys!(rlk_big, keygen)
     @testset "save! create_relin_keys" begin
-      @test save_size(rlk) == 786963
-      resize!(data_stream2, save_size(rlk))
-      @test isapprox(save!(data_stream2, rlk), 593391, rtol=0.001)
-      size_rlk = save!(data_stream2, rlk)
-      resize!(data_stream2, size_rlk)
+      @test save_size(rlk_big) == 786963
+      resize!(data_stream2, save_size(rlk_big))
+      @test isapprox(save!(data_stream2, rlk_big), 593391, rtol=0.001)
+      size_rlk_big = save!(data_stream2, rlk_big)
+      resize!(data_stream2, size_rlk_big)
     end
 
     initial_scale = 2.0^20

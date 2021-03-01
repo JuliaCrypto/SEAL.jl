@@ -7,7 +7,7 @@ using Printf
 function example_levels()
   print_example_banner("Example: Levels")
 
-  enc_parms = EncryptionParameters(SchemeType.BFV)
+  enc_parms = EncryptionParameters(SchemeType.bfv)
 
   poly_modulus_degree = 8192
   set_poly_modulus_degree!(enc_parms, poly_modulus_degree)

@@ -1,8 +1,8 @@
 @testset "4_ckks_basics" begin
   @testset "EncryptionParameters" begin
-    @test_nowarn EncryptionParameters(SchemeType.CKKS)
+    @test_nowarn EncryptionParameters(SchemeType.ckks)
   end
-  enc_parms = EncryptionParameters(SchemeType.CKKS)
+  enc_parms = EncryptionParameters(SchemeType.ckks)
 
   @testset "polynomial modulus degree" begin
     @test_nowarn set_poly_modulus_degree!(enc_parms, 8192)
@@ -24,7 +24,7 @@
     context_data = key_context_data(context)
     @test_nowarn parms(context_data)
     ec = parms(context_data)
-    @test scheme(ec) == SchemeType.CKKS
+    @test scheme(ec) == SchemeType.ckks
     @test total_coeff_modulus_bit_count(context_data) == 200
     @test_nowarn coeff_modulus(ec)
     bit_counts = [bit_count(modulus) for modulus in coeff_modulus(ec)]

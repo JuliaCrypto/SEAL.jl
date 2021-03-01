@@ -58,7 +58,7 @@
   end
 
   @testset "additional CKKS tests" begin
-    enc_parms = EncryptionParameters(SchemeType.CKKS)
+    enc_parms = EncryptionParameters(SchemeType.ckks)
     set_poly_modulus_degree!(enc_parms, 8192)
     set_coeff_modulus!(enc_parms, coeff_modulus_create(8192, [60, 40, 40, 60]))
     context = SEALContext(enc_parms)
@@ -174,7 +174,7 @@
   end
 
   @testset "additional BFV tests" begin
-    enc_parms = EncryptionParameters(SchemeType.BFV)
+    enc_parms = EncryptionParameters(SchemeType.bfv)
     poly_modulus_degree = 4096
     set_poly_modulus_degree!(enc_parms, poly_modulus_degree)
     set_coeff_modulus!(enc_parms, coeff_modulus_bfv_default(poly_modulus_degree))

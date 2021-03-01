@@ -17,7 +17,7 @@ output.
 function example_rotation_ckks()
   print_example_banner("Example: Rotation / Rotation in CKKS")
 
-  parms = EncryptionParameters(SchemeType.CKKS)
+  parms = EncryptionParameters(SchemeType.ckks)
 
   poly_modulus_degree = 8192
   set_poly_modulus_degree!(parms, poly_modulus_degree)

@@ -8,7 +8,7 @@ refers to the Cheon-Kim-Kim-Song scheme (sometimes also called `HEAAN` in the li
 `none` indicates that no encryption should be used.
 """
 module SchemeType
-@enum SchemeTypeEnum::UInt8 none=0 BFV=1 CKKS=2
+@enum SchemeTypeEnum::UInt8 none=0 bfv=1 ckks=2
 end
 
 """

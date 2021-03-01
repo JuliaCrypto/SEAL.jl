@@ -21,9 +21,9 @@ function print_parameters(context::SEALContext)
   context_data = key_context_data(context)
   encryption_parms = parms(context_data)
   scheme_type = scheme(encryption_parms)
-  if scheme_type == SchemeType.BFV
+  if scheme_type == SchemeType.bfv
     scheme_name = "BFV"
-  elseif scheme_type == SchemeType.CKKS
+  elseif scheme_type == SchemeType.ckks
     scheme_name = "CKKS"
   else
     error("unsupported scheme")
@@ -39,7 +39,7 @@ function print_parameters(context::SEALContext)
   print(join(bit_counts, " + "))
   println(") bits")
 
-  if scheme_type == SchemeType.BFV
+  if scheme_type == SchemeType.bfv
     println("|   plain_modulus: ", value(plain_modulus(encryption_parms)))
   end
 

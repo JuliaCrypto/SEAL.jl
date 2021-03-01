@@ -1,6 +1,6 @@
 @testset "2_encoders" begin
   @testset "batch_encoder" begin
-    parms = EncryptionParameters(SchemeType.BFV)
+    parms = EncryptionParameters(SchemeType.bfv)
     poly_modulus_degree = 8192
     set_poly_modulus_degree!(parms, poly_modulus_degree)
     set_coeff_modulus!(parms, coeff_modulus_bfv_default(poly_modulus_degree))

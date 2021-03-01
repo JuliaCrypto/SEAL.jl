@@ -313,7 +313,7 @@ end
 function example_bfv_performance_default()
   print_example_banner("BFV Performance Test with Degrees: 4096, 8192, and 16384")
 
-  enc_parms = EncryptionParameters(SchemeType.BFV)
+  enc_parms = EncryptionParameters(SchemeType.bfv)
   poly_modulus_degree = 4096
   set_poly_modulus_degree!(enc_parms, poly_modulus_degree)
   set_coeff_modulus!(enc_parms, coeff_modulus_bfv_default(poly_modulus_degree))
@@ -366,7 +366,7 @@ function example_bfv_performance_custom()
 
   print_example_banner("BFV Performance Test with Degree: $poly_modulus_degree")
 
-  enc_parms = EncryptionParameters(SchemeType.BFV)
+  enc_parms = EncryptionParameters(SchemeType.bfv)
   set_poly_modulus_degree!(enc_parms, poly_modulus_degree)
   set_coeff_modulus!(enc_parms, coeff_modulus_bfv_default(poly_modulus_degree))
   if poly_modulus_degree == 1024
@@ -381,7 +381,7 @@ function example_ckks_performance_default()
   print_example_banner("CKKS Performance Test with Degrees: 4096, 8192, and 16384")
 
   # BFV primes are not recommended for CKKS, but are good enough for performance testing
-  enc_parms = EncryptionParameters(SchemeType.CKKS)
+  enc_parms = EncryptionParameters(SchemeType.ckks)
   poly_modulus_degree = 4096
   set_poly_modulus_degree!(enc_parms, poly_modulus_degree)
   set_coeff_modulus!(enc_parms, coeff_modulus_bfv_default(poly_modulus_degree))
@@ -430,7 +430,7 @@ function example_ckks_performance_custom()
 
   print_example_banner("CKKS Performance Test with Degree: $poly_modulus_degree")
 
-  enc_parms = EncryptionParameters(SchemeType.CKKS)
+  enc_parms = EncryptionParameters(SchemeType.ckks)
   set_poly_modulus_degree!(enc_parms, poly_modulus_degree)
   set_coeff_modulus!(enc_parms, coeff_modulus_bfv_default(poly_modulus_degree))
   ckks_performance_test(SEALContext(enc_parms))

@@ -18,7 +18,7 @@ function example_serialization()
 
   # Server
   let
-    enc_parms = EncryptionParameters(SchemeType.CKKS)
+    enc_parms = EncryptionParameters(SchemeType.ckks)
     poly_modulus_degree = 8192
     set_poly_modulus_degree!(enc_parms, poly_modulus_degree)
     set_coeff_modulus!(enc_parms, coeff_modulus_create(poly_modulus_degree, [50, 20, 50]))

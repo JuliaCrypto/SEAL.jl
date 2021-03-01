@@ -6,7 +6,7 @@ using Printf
 function example_batch_encoder()
   print_example_banner("Example: Encoders / Batch Encoder")
 
-  parms = EncryptionParameters(SchemeType.BFV)
+  parms = EncryptionParameters(SchemeType.bfv)
   poly_modulus_degree = 8192
   set_poly_modulus_degree!(parms, poly_modulus_degree)
   set_coeff_modulus!(parms, coeff_modulus_bfv_default(poly_modulus_degree))
@@ -95,7 +95,7 @@ end
 function example_ckks_encoder()
   print_example_banner("Example: Encoders / CKKS Encoder")
 
-  parms = EncryptionParameters(SchemeType.CKKS)
+  parms = EncryptionParameters(SchemeType.ckks)
 
   poly_modulus_degree = 8192
   set_poly_modulus_degree!(parms, poly_modulus_degree)

@@ -19,7 +19,7 @@ See also: [`example_ckks_basics`](@ref)
 function example_bfv_basics()
   print_example_banner("Example: BFV Basics")
 
-  parms = EncryptionParameters(SchemeType.BFV)
+  parms = EncryptionParameters(SchemeType.bfv)
 
   poly_modulus_degree = 4096
   set_poly_modulus_degree!(parms, poly_modulus_degree)

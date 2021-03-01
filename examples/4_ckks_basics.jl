@@ -19,7 +19,7 @@ See also: [`example_ckks_basics`](@ref)
 function example_ckks_basics()
   print_example_banner("Example: CKKS Basics")
 
-  parms = EncryptionParameters(SchemeType.CKKS)
+  parms = EncryptionParameters(SchemeType.ckks)
 
   poly_modulus_degree = 8192
   set_poly_modulus_degree!(parms, poly_modulus_degree)
