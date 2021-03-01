@@ -40,9 +40,9 @@ function example_bfv_basics()
   println("~~~~~~ A naive way to calculate 4(x^2+1)(x+1)^2. ~~~~~~")
 
   keygen = KeyGenerator(context)
+  secret_key_ = secret_key(keygen)
   public_key_ = PublicKey()
   create_public_key!(public_key_, keygen)
-  secret_key_ = secret_key(keygen)
 
   encryptor = Encryptor(context, public_key_)
 
@@ -115,7 +115,7 @@ function example_bfv_basics()
   println("~~~~~~ A better way to calculate 4(x^2+1)(x+1)^2. ~~~~~~")
 
   print_line(@__LINE__)
-  println("Generate locally usable relinearization keys.")
+  println("Generate relinearization keys.")
   relin_keys_ = RelinKeys()
   create_relin_keys!(relin_keys_, keygen)
 

@@ -24,8 +24,7 @@ function example_levels()
   println("Print the modulus switching chain.")
 
   context_data = key_context_data(context)
-  println("----> Level (chain index): ", chain_index(context_data))
-  println(" ...... key_context_data()")
+  println("----> Level (chain index): ", chain_index(context_data), " ...... key_context_data()")
   print("      parms_id:")
   for parm_id in parms_id(context_data)
     @printf(" %016x", parm_id)
@@ -73,8 +72,6 @@ function example_levels()
   relin_keys_ = RelinKeys()
   create_relin_keys!(relin_keys_, keygen)
 
-  galois_keys_ = GaloisKeys()
-  create_galois_keys!(galois_keys_, keygen)
   print_line(@__LINE__)
   println("Print the parameter IDs of generated elements.")
   print("    + public_key:  ")
@@ -89,11 +86,6 @@ function example_levels()
   println()
   print("    + relin_keys:  ")
   for parm_id in parms_id(relin_keys_)
-    @printf(" %016x", parm_id)
-  end
-  println()
-  print("    + galois_keys: ")
-  for parm_id in parms_id(galois_keys_)
     @printf(" %016x", parm_id)
   end
   println()
@@ -218,5 +210,6 @@ function example_levels()
     context_data = next_context_data(context_data)
   end
   println(" End of chain reached")
+  println()
 
 end
