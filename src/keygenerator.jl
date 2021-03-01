@@ -90,7 +90,7 @@ end
 
 function create_galois_keys!(destination::GaloisKeys, keygen::KeyGenerator)
   keyptr = Ref{Ptr{Cvoid}}(C_NULL)
-  retval = ccall((:KeyGenerator_GaloisKeysAll, libsealc), Clong,
+  retval = ccall((:KeyGenerator_CreateGaloisKeysAll, libsealc), Clong,
                  (Ptr{Cvoid}, UInt8, Ref{Ptr{Cvoid}}),
                  keygen, false, keyptr)
   @check_return_value retval

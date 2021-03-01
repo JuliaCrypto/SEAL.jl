@@ -72,11 +72,11 @@
     rlk = RelinKeys()
     create_relin_keys!(rlk, keygen)
     @testset "save! create_relin_keys" begin
-      @test save_size(rlk_local) == 786963
-      resize!(data_stream2, save_size(rlk_local))
-      @test isapprox(save!(data_stream2, rlk_local), 593391, rtol=0.001)
-      size_rlk_local = save!(data_stream2, rlk_local)
-      resize!(data_stream2, size_rlk_local)
+      @test save_size(rlk) == 786963
+      resize!(data_stream2, save_size(rlk))
+      @test isapprox(save!(data_stream2, rlk), 593391, rtol=0.001)
+      size_rlk = save!(data_stream2, rlk)
+      resize!(data_stream2, size_rlk)
     end
 
     initial_scale = 2.0^20
