@@ -79,8 +79,8 @@
       @test isapprox(scale(p), 2.0^40)
     end
 
-    @testset "relin_keys" begin
-      @test_nowarn relin_keys(keygen)
+    @testset "create_relin_keys" begin
+      @test_nowarn create_relin_keys(keygen)
     end
 
     @testset "plain_modulus" begin
@@ -92,7 +92,8 @@
     encode!(p, 3.14159265, 2.0^40, encoder) 
     encryptor = Encryptor(context, public_key_)
     evaluator = Evaluator(context)
-    relin_keys_ = relin_keys_local(keygen)
+    relin_keys_ = RelinKeys()
+    create_relin_keys!(relin_keys_, keygen)
     @testset "{square,relinearize,rescale_to_next}_inplace!" begin
       c1 = Ciphertext()
       encrypt!(c1, p, encryptor)
@@ -183,7 +184,8 @@
     create_public_key!(public_key_, keygen)
     secret_key_ = secret_key(keygen)
     galois_keys_ = galois_keys_local(keygen)
-    relin_keys_ = relin_keys_local(keygen)
+    relin_keys_ = RelinKeys()
+    create_relin_keys!(relin_keys_, keygen)
 
     int_encoder = IntegerEncoder(context)
     batch_encoder = BatchEncoder(context)

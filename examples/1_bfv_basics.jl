@@ -116,7 +116,8 @@ function example_bfv_basics()
 
   print_line(@__LINE__)
   println("Generate locally usable relinearization keys.")
-  relin_keys_ = relin_keys_local(keygen)
+  relin_keys_ = RelinKeys()
+  create_relin_keys!(relin_keys_, keygen)
 
   print_line(@__LINE__)
   println("Compute and relinearize x_squared (x^2),")

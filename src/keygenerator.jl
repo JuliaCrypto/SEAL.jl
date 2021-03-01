@@ -65,18 +65,23 @@ function secret_key(keygen::KeyGenerator)
   return SecretKey(keyptr[])
 end
 
-function relin_keys_local(keygen::KeyGenerator)
+function create_relin_keys!(destination::RelinKeys, keygen::KeyGenerator)
   keyptr = Ref{Ptr{Cvoid}}(C_NULL)
-  retval = ccall((:KeyGenerator_RelinKeys, libsealc), Clong,
+  retval = ccall((:KeyGenerator_CreateRelinKeys, libsealc), Clong,
                  (Ptr{Cvoid}, UInt8, Ref{Ptr{Cvoid}}),
                  keygen, false, keyptr)
   @check_return_value retval
-  return RelinKeys(keyptr[])
+
+  # Destroy previous key and reuse its container
+  destroy(destination)
+  sethandle!(destination, keyptr[])
+
+  return nothing
 end
 
-function relin_keys(keygen::KeyGenerator)
+function create_relin_keys(keygen::KeyGenerator)
   keyptr = Ref{Ptr{Cvoid}}(C_NULL)
-  retval = ccall((:KeyGenerator_RelinKeys, libsealc), Clong,
+  retval = ccall((:KeyGenerator_CreateRelinKeys, libsealc), Clong,
                  (Ptr{Cvoid}, UInt8, Ref{Ptr{Cvoid}}),
                  keygen, true, keyptr)
   @check_return_value retval

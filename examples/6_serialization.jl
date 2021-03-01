@@ -62,13 +62,14 @@ function example_serialization()
     out_bytes = save!(sk_stream, sk)
     resize!(sk_stream, out_bytes)
 
-    rlk = relin_keys(keygen)
+    rlk = create_relin_keys(keygen)
 
     resize!(data_stream1, save_size(rlk))
     size_rlk = save!(data_stream1, rlk)
     resize!(data_stream1, size_rlk)
 
-    rlk_local = relin_keys_local(keygen)
+    rlk = RelinKeys()
+    create_relin_keys!(rlk, keygen)
     resize!(data_stream2, save_size(rlk_local))
     size_rlk_local = save!(data_stream2, rlk_local)
     resize!(data_stream2, size_rlk_local)

@@ -87,7 +87,8 @@
   public_key_ = PublicKey()
   create_public_key!(public_key_, keygen)
   secret_key_ = secret_key(keygen)
-  relin_keys_ = relin_keys_local(keygen)
+  relin_keys_ = RelinKeys()
+  create_relin_keys!(relin_keys_, keygen)
   galois_keys_ = galois_keys_local(keygen)
 
   @testset "parms_id of generated keys" begin

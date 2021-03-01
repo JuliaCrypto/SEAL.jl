@@ -60,8 +60,8 @@
       resize!(sk_stream, out_bytes)
     end
 
-    rlk = relin_keys(keygen)
-    @testset "save! relin_keys" begin
+    rlk = create_relin_keys(keygen)
+    @testset "save! create_relin_keys" begin
       @test save_size(rlk) == 393755
       resize!(data_stream1, save_size(rlk))
       @test isapprox(save!(data_stream1, rlk), 297521, rtol=0.001)
@@ -69,8 +69,9 @@
       resize!(data_stream1, size_rlk)
     end
 
-    rlk_local = relin_keys_local(keygen)
-    @testset "save! relin_keys_local" begin
+    rlk = RelinKeys()
+    create_relin_keys!(rlk, keygen)
+    @testset "save! create_relin_keys" begin
       @test save_size(rlk_local) == 786963
       resize!(data_stream2, save_size(rlk_local))
       @test isapprox(save!(data_stream2, rlk_local), 593391, rtol=0.001)

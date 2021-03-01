@@ -23,7 +23,10 @@ function bfv_performance_test(context)
 
   if using_keyswitching(context)
     print("Generating relinearization keys: ")
-    time_diff = @elapsedus relin_keys_ = relin_keys_local(keygen)
+    time_diff = @elapsedus begin
+      relin_keys_ = RelinKeys()
+      create_relin_keys!(relin_keys_, keygen)
+    end
     println("Done [", time_diff, " microseconds]")
 
     if !using_batching(qualifiers(key_context_data(context)))
@@ -171,7 +174,10 @@ function ckks_performance_test(context)
 
   if using_keyswitching(context)
     print("Generating relinearization keys: ")
-    time_diff = @elapsedus relin_keys_ = relin_keys_local(keygen)
+    time_diff = @elapsedus begin
+      relin_keys_ = RelinKeys()
+      create_relin_keys!(relin_keys_, keygen)
+    end
     println("Done [", time_diff, " microseconds]")
 
     if !using_batching(qualifiers(key_context_data(context)))

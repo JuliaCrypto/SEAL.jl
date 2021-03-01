@@ -40,9 +40,13 @@
     secret_key_ = secret_key(keygen)
 
     @testset "RelinKeys" begin
-      @test_nowarn relin_keys_local(keygen)
+      @test_nowarn RelinKeys()
     end
-    relin_keys_ = relin_keys_local(keygen)
+    relin_keys_ = RelinKeys()
+
+    @testset "create_relin_keys" begin
+      @test_nowarn create_relin_keys!(relin_keys_, keygen)
+    end
 
     @testset "GaloisKeys" begin
       @test_nowarn galois_keys_local(keygen)
