@@ -16,6 +16,8 @@ abstract type SEALObject end
 Return the raw C pointer to where `object` resides in memory.
 """
 @inline handle(object::SEALObject) = object.handle
+@inline gethandle(object::SEALObject) = object.handle
+@inline sethandle!(object::SEALObject, handle) = object.handle = handle
 
 """
     destroy(object::SEALObject)
@@ -81,7 +83,8 @@ include("relinkeys.jl")
 export RelinKeys, parms_id, save_size, save!, load!
 
 include("keygenerator.jl")
-export KeyGenerator, public_key, secret_key, relin_keys_local, relin_keys, galois_keys_local
+export KeyGenerator, create_public_key!, create_public_key, secret_key, relin_keys_local,
+       relin_keys, galois_keys_local
 
 include("plaintext.jl")
 export Plaintext, scale, scale!, parms_id, to_string, save_size, save!

@@ -11,7 +11,8 @@
 
     context = SEALContext(parms)
     keygen = KeyGenerator(context)
-    public_key_ = public_key(keygen)
+    public_key_ = PublicKey()
+    create_public_key!(public_key_, keygen)
     secret_key_ = secret_key(keygen)
     encryptor = Encryptor(context, public_key_)
     evaluator = Evaluator(context)
@@ -113,7 +114,8 @@
     end
 
     keygen = KeyGenerator(context)
-    public_key_ = public_key(keygen)
+    public_key_ = PublicKey()
+    create_public_key!(public_key_, keygen)
     secret_key_ = secret_key(keygen)
     relin_keys_ = relin_keys_local(keygen)
     encryptor = Encryptor(context, public_key_)

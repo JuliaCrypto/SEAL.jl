@@ -40,7 +40,8 @@ function example_bfv_basics()
   println("~~~~~~ A naive way to calculate 4(x^2+1)(x+1)^2. ~~~~~~")
 
   keygen = KeyGenerator(context)
-  public_key_ = public_key(keygen)
+  public_key_ = PublicKey()
+  create_public_key!(public_key_, keygen)
   secret_key_ = secret_key(keygen)
 
   encryptor = Encryptor(context, public_key_)

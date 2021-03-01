@@ -37,9 +37,13 @@
   keygen = KeyGenerator(context)
 
   @testset "PublicKey" begin
-    @test_nowarn public_key(keygen)
+    @test_nowarn PublicKey()
   end
-  public_key_ = public_key(keygen)
+  public_key_ = PublicKey()
+
+  @testset "create_public_key" begin
+    @test_nowarn create_public_key!(public_key_, keygen)
+  end
 
   @testset "SecretKey" begin
     @test_nowarn secret_key(keygen)

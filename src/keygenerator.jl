@@ -33,11 +33,25 @@ function destroy(object::KeyGenerator)
   end
 end
 
-function public_key(keygen::KeyGenerator)
+function create_public_key!(destination::PublicKey, keygen::KeyGenerator)
   keyptr = Ref{Ptr{Cvoid}}(C_NULL)
-  retval = ccall((:KeyGenerator_PublicKey, libsealc), Clong,
-                 (Ptr{Cvoid}, Ref{Ptr{Cvoid}}),
-                 keygen, keyptr)
+  retval = ccall((:KeyGenerator_CreatePublicKey, libsealc), Clong,
+                 (Ptr{Cvoid}, UInt8, Ref{Ptr{Cvoid}}),
+                 keygen, false, keyptr)
+  @check_return_value retval
+
+  # Destroy previous key and reuse its container
+  destroy(destination)
+  sethandle!(destination, keyptr[])
+
+  return nothing
+end
+
+function create_public_key(keygen::KeyGenerator)
+  keyptr = Ref{Ptr{Cvoid}}(C_NULL)
+  retval = ccall((:KeyGenerator_CreatePublicKey, libsealc), Clong,
+                 (Ptr{Cvoid}, UInt8, Ref{Ptr{Cvoid}}),
+                 keygen, true, keyptr)
   @check_return_value retval
   return PublicKey(keyptr[])
 end

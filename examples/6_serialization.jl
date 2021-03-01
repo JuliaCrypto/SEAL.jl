@@ -54,7 +54,8 @@ function example_serialization()
     context = SEALContext(enc_parms)
 
     keygen = KeyGenerator(context)
-    pk = public_key(keygen)
+    pk = PublicKey()
+    create_public_key!(pk, keygen)
     sk = secret_key(keygen)
 
     resize!(sk_stream, save_size(sk))

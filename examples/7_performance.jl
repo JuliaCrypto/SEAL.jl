@@ -18,7 +18,8 @@ function bfv_performance_test(context)
   println("Done")
 
   secret_key_ = secret_key(keygen)
-  public_key_ = public_key(keygen)
+  public_key_ = PublicKey()
+  create_public_key!(public_key_, keygen)
 
   if using_keyswitching(context)
     print("Generating relinearization keys: ")
@@ -165,7 +166,8 @@ function ckks_performance_test(context)
   println("Done")
 
   secret_key_ = secret_key(keygen)
-  public_key_ = public_key(keygen)
+  public_key_ = PublicKey()
+  create_public_key!(public_key_, keygen)
 
   if using_keyswitching(context)
     print("Generating relinearization keys: ")

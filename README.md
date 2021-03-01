@@ -69,8 +69,10 @@ SEALContext(Ptr{Nothing} @0x0000000004298440)
 julia> keygen = KeyGenerator(context)
 KeyGenerator(Ptr{Nothing} @0x00000000021ef540)
 
-julia> public_key_ = public_key(keygen)
-PublicKey(Ptr{Nothing} @0x000000000437f760)
+julia> public_key_ = PublicKey()
+PublicKey(Ptr{Nothing} @0x0000000002272610)
+
+julia> create_public_key!(public_key_, keygen)
 
 julia> secret_key_ = secret_key(keygen)
 SecretKey(Ptr{Nothing} @0x0000000001cec2a0)
