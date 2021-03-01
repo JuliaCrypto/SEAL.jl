@@ -86,13 +86,13 @@ Evaluator(Ptr{Nothing} @0x000000000428bdd0)
 julia> decryptor = Decryptor(context, secret_key_)
 Decryptor(Ptr{Nothing} @0x00000000037670d0)
 
-julia> encoder = IntegerEncoder(context)
-IntegerEncoder(Ptr{Nothing} @0x0000000002ec3350, SEALContext(Ptr{Nothing} @0x0000000004298440))
+julia> encoder = IntegerEncoder(context) #FIXME fix-tests
+IntegerEncoder(Ptr{Nothing} @0x0000000002ec3350, SEALContext(Ptr{Nothing} @0x0000000004298440)) #FIXME fix-tests
 
 julia> value = 7
 7
 
-julia> plain = encode(value, encoder)
+julia> plain = encode(value, encoder) #FIXME fix-tests
 Plaintext(Ptr{Nothing} @0x00000000042db6e0)
 
 julia> encrypted = Ciphertext()
@@ -110,7 +110,7 @@ Plaintext(Ptr{Nothing} @0x0000000004591550)
 julia> decrypt!(plain_result, encrypted, decryptor)
 Plaintext(Ptr{Nothing} @0x0000000004591550)
 
-julia> decode_int32(plain_result, encoder)
+julia> decode_int32(plain_result, encoder) #FIXME fix-tests
 49
 ```
 
@@ -126,7 +126,7 @@ directory. Otherwise it will be very likely that you are using SEAL.jl (and SEAL
 way that is either not secure, will produce unexpected results, or just crashes.
 The examples included in SEAL.jl follow almost line-by-line the examples provided by the
 [SEAL library](https://github.com/microsoft/SEAL/tree/master/native/examples).
-For example, the snippet above is based on the `example_integer_encoder()` function in
+For example, the snippet above is based on the `example_integer_encoder()` function in #FIXME fix-tests
 [`examples/2_encoders.jl`](examples/2_encoders.jl).
 The full list of examples is as follows:
 

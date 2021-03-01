@@ -46,7 +46,6 @@ function bfv_performance_test(context)
   decryptor = Decryptor(context, secret_key_)
   evaluator = Evaluator(context)
   batch_encoder = BatchEncoder(context)
-  encoder = IntegerEncoder(context)
 
   time_batch_sum = 0
   time_unbatch_sum = 0
@@ -89,9 +88,9 @@ function bfv_performance_test(context)
     end
 
     encrypted1 = Ciphertext(context)
-    encrypt!(encrypted1, encode(UInt64(i), encoder), encryptor)
+    encrypt!(encrypted1, encode(UInt64(i), encoder), encryptor) #FIXME fix-tests
     encrypted2 = Ciphertext(context)
-    encrypt!(encrypted2, encode(UInt64(i + 1), encoder), encryptor)
+    encrypt!(encrypted2, encode(UInt64(i + 1), encoder), encryptor) #FIXME fix-tests
     time_add_sum += @elapsedus begin
       add_inplace!(encrypted1, encrypted1, evaluator)
       add_inplace!(encrypted2, encrypted2, evaluator)

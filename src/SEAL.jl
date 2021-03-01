@@ -110,9 +110,6 @@ export Decryptor, decrypt!, invariant_noise_budget
 include("ckks.jl")
 export CKKSEncoder, slot_count, encode!, decode!
 
-include("intencoder.jl")
-export IntegerEncoder, encode!, encode, decode_int32, plain_modulus
-
 include("batchencoder.jl")
 export BatchEncoder, slot_count, encode!, decode!
 

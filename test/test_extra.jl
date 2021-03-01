@@ -189,7 +189,6 @@
     relin_keys_ = RelinKeys()
     create_relin_keys!(relin_keys_, keygen)
 
-    int_encoder = IntegerEncoder(context)
     batch_encoder = BatchEncoder(context)
     slot_count_ = slot_count(batch_encoder)
     encryptor = Encryptor(context, public_key_)
