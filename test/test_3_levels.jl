@@ -89,7 +89,8 @@
   secret_key_ = secret_key(keygen)
   relin_keys_ = RelinKeys()
   create_relin_keys!(relin_keys_, keygen)
-  galois_keys_ = galois_keys_local(keygen)
+  galois_keys_ = GaloisKeys()
+  create_galois_keys!(galois_keys_, keygen)
 
   @testset "parms_id of generated keys" begin
     p = [0x26d0ad92b6a78b12, 0x667d7d6411d19434, 0x18ade70427566279, 0x84e0aa06442af302]

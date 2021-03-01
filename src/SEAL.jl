@@ -84,7 +84,7 @@ export RelinKeys, parms_id, save_size, save!, load!
 
 include("keygenerator.jl")
 export KeyGenerator, create_public_key!, create_public_key, secret_key, create_relin_keys!,
-       create_relin_keys, galois_keys_local
+       create_relin_keys, create_galois_keys!
 
 include("plaintext.jl")
 export Plaintext, scale, scale!, parms_id, to_string, save_size, save!

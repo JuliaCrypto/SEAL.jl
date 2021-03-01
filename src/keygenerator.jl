@@ -88,11 +88,16 @@ function create_relin_keys(keygen::KeyGenerator)
   return RelinKeys(keyptr[])
 end
 
-function galois_keys_local(keygen::KeyGenerator)
+function create_galois_keys!(destination::GaloisKeys, keygen::KeyGenerator)
   keyptr = Ref{Ptr{Cvoid}}(C_NULL)
   retval = ccall((:KeyGenerator_GaloisKeysAll, libsealc), Clong,
                  (Ptr{Cvoid}, UInt8, Ref{Ptr{Cvoid}}),
                  keygen, false, keyptr)
   @check_return_value retval
-  return GaloisKeys(keyptr[])
+
+  # Destroy previous key and reuse its container
+  destroy(destination)
+  sethandle!(destination, keyptr[])
+
+  return nothing
 end

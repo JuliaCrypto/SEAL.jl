@@ -49,9 +49,13 @@
     end
 
     @testset "GaloisKeys" begin
-      @test_nowarn galois_keys_local(keygen)
+      @test_nowarn GaloisKeys()
     end
-    galois_keys_ = galois_keys_local(keygen)
+    galois_keys_ = GaloisKeys()
+
+    @testset "create_galois_keys" begin
+      @test_nowarn create_galois_keys!(galois_keys_, keygen)
+    end
 
     @testset "Encryptor" begin
       @test_nowarn Encryptor(context, public_key_)

@@ -35,7 +35,10 @@ function bfv_performance_test(context)
     end
 
     print("Generating Galois keys: ")
-    time_diff = @elapsedus galois_keys_ = galois_keys_local(keygen)
+    time_diff = @elapsedus begin
+      galois_keys_ = GaloisKeys()
+      create_galois_keys!(galois_keys_, keygen)
+    end
     println("Done [", time_diff, " microseconds]")
   end
 
@@ -186,7 +189,10 @@ function ckks_performance_test(context)
     end
 
     print("Generating Galois keys: ")
-    time_diff = @elapsedus galois_keys_ = galois_keys_local(keygen)
+    time_diff = @elapsedus begin
+      galois_keys_ = GaloisKeys()
+      create_galois_keys!(galois_keys_, keygen)
+    end
     println("Done [", time_diff, " microseconds]")
   end
 

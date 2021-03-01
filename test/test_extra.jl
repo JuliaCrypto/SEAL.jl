@@ -130,7 +130,8 @@
       @test_nowarn add_plain_inplace!(c7, p, evaluator)
     end
 
-    galois_keys_ = galois_keys_local(keygen)
+    galois_keys_ = GaloisKeys()
+    create_galois_keys!(galois_keys_, keygen)
     @testset "rotate_vector_inplace!" begin
       c8 = Ciphertext()
       encrypt!(c8, p, encryptor)
@@ -183,7 +184,8 @@
     public_key_ = PublicKey()
     create_public_key!(public_key_, keygen)
     secret_key_ = secret_key(keygen)
-    galois_keys_ = galois_keys_local(keygen)
+    galois_keys_ = GaloisKeys()
+    create_galois_keys!(galois_keys_, keygen)
     relin_keys_ = RelinKeys()
     create_relin_keys!(relin_keys_, keygen)
 
