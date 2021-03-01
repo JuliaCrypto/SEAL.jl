@@ -68,15 +68,15 @@ function example_serialization()
     size_rlk = save!(data_stream1, rlk)
     resize!(data_stream1, size_rlk)
 
-    rlk = RelinKeys()
-    create_relin_keys!(rlk, keygen)
-    resize!(data_stream2, save_size(rlk_local))
-    size_rlk_local = save!(data_stream2, rlk_local)
-    resize!(data_stream2, size_rlk_local)
+    rlk_big = RelinKeys()
+    create_relin_keys!(rlk_big, keygen)
+    resize!(data_stream2, save_size(rlk_big))
+    size_rlk_big = save!(data_stream2, rlk_big)
+    resize!(data_stream2, size_rlk_big)
 
     print_line(@__LINE__)
     println("Serializable<RelinKeys>: wrote ", size_rlk, " bytes")
-    println("             ", "RelinKeys (local): wrote ", size_rlk_local, " bytes")
+    println("             ", "RelinKeys wrote ", size_rlk_big, " bytes")
 
     initial_scale = 2.0^20
     encoder = CKKSEncoder(context)
