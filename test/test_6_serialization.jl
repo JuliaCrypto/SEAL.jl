@@ -62,7 +62,7 @@
 
     rlk = create_relin_keys(keygen)
     @testset "save! create_relin_keys" begin
-      @test save_size(rlk) == 393755
+      @test save_size(rlk) == 393789
       resize!(data_stream1, save_size(rlk))
       @test isapprox(save!(data_stream1, rlk), 297521, rtol=0.001)
       size_rlk = save!(data_stream1, rlk)
@@ -112,7 +112,7 @@
     sym_encrypted2 = encrypt_symmetric(plain2, sym_encryptor)
 
     @testset "save! Ciphertext" begin
-      @test save_size(sym_encrypted1) == 131298
+      @test save_size(sym_encrypted1) == 131315
       resize!(data_stream2, save_size(sym_encrypted1))
       @test isapprox(save!(data_stream2, sym_encrypted1), 88528, rtol=0.001)
       size_sym_encrypted1 = save!(data_stream2, sym_encrypted1)
@@ -124,7 +124,7 @@
       size_encrypted1 = save!(data_stream3, encrypted1)
       resize!(data_stream3, size_encrypted1)
 
-      @test save_size(sym_encrypted2) == 131298
+      @test save_size(sym_encrypted2) == 131315
       resize!(data_stream3, save_size(sym_encrypted2))
       @test isapprox(save!(data_stream3, sym_encrypted2), 88467, rtol=0.001)
       size_sym_encrypted2 = save!(data_stream3, sym_encrypted2)
@@ -150,7 +150,7 @@
 
     @testset "load! Ciphertext" begin
       @test isapprox(load!(encrypted1, context, data_stream2), 88513, rtol=0.001)
-      @test isapprox(load!(encrypted2, context, data_stream3), 88464, rtol=0.001)
+      @test isapprox(load!(encrypted2, context, data_stream3), 88554, rtol=0.001)
     end
 
     encrypted_prod = Ciphertext()
