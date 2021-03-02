@@ -49,6 +49,14 @@ function destroy(object::Encryptor)
   end
 end
 
+function set_secret_key!(encryptor::Encryptor, secret_key::SecretKey)
+  retval = ccall((:Encryptor_SetSecretKey, libsealc), Clong,
+                  (Ptr{Cvoid}, Ptr{Cvoid}),
+                  encryptor, secret_key)
+  @check_return_value retval
+  return nothing
+end
+
 function encrypt!(destination::Ciphertext, plain::Plaintext, encryptor::Encryptor)
   retval = ccall((:Encryptor_Encrypt, libsealc), Clong,
                  (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}),

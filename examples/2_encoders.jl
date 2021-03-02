@@ -33,7 +33,7 @@ function example_batch_encoder()
   batch_encoder = BatchEncoder(context)
   slot_count_ = slot_count(batch_encoder)
   row_size = div(slot_count_, 2)
-  println( "Plaintext matrix row size: ", row_size)
+  println("Plaintext matrix row size: ", row_size)
 
   pod_matrix = zeros(UInt64, slot_count_)
   pod_matrix[1] = 0

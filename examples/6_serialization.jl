@@ -18,13 +18,13 @@ function example_serialization()
 
   # Server
   let
-    enc_parms = EncryptionParameters(SchemeType.ckks)
+    parms = EncryptionParameters(SchemeType.ckks)
     poly_modulus_degree = 8192
-    set_poly_modulus_degree!(enc_parms, poly_modulus_degree)
-    set_coeff_modulus!(enc_parms, coeff_modulus_create(poly_modulus_degree, [50, 20, 50]))
+    set_poly_modulus_degree!(parms, poly_modulus_degree)
+    set_coeff_modulus!(parms, coeff_modulus_create(poly_modulus_degree, [50, 20, 50]))
 
-    resize!(parms_stream, save_size(enc_parms))
-    out_bytes = save!(parms_stream, enc_parms)
+    resize!(parms_stream, save_size(parms))
+    out_bytes = save!(parms_stream, parms)
     resize!(parms_stream, out_bytes)
 
     print_line(@__LINE__)
@@ -32,31 +32,31 @@ function example_serialization()
 
     print_line(@__LINE__)
     println("EncryptionParameters: data size upper bound (compr_mode_type::none): ",
-            save_size(ComprModeType.none, enc_parms))
-    println("             EncryptionParameters: data size upper bound (compr_mode_type::deflate): ",
-            save_size(ComprModeType.deflate, enc_parms))
+            save_size(ComprModeType.none, parms))
+    println("             EncryptionParameters: data size upper bound (compression): ",
+            save_size(parms))
 
-    byte_buffer = Vector{UInt8}(undef, save_size(enc_parms))
-    save!(byte_buffer, length(byte_buffer), enc_parms)
+    byte_buffer = Vector{UInt8}(undef, save_size(parms))
+    save!(byte_buffer, length(byte_buffer), parms)
 
-    enc_parms2 = EncryptionParameters()
-    load!(enc_parms2, byte_buffer, length(byte_buffer))
+    parms2 = EncryptionParameters()
+    load!(parms2, byte_buffer, length(byte_buffer))
 
     print_line(@__LINE__)
-    println("EncryptionParameters: parms == parms2: ", enc_parms == enc_parms2)
+    println("EncryptionParameters: parms == parms2: ", parms == parms2)
   end
 
   # Client
   let
-    enc_parms = EncryptionParameters()
-    load!(enc_parms, parms_stream)
+    parms = EncryptionParameters()
+    load!(parms, parms_stream)
 
-    context = SEALContext(enc_parms)
+    context = SEALContext(parms)
 
     keygen = KeyGenerator(context)
+    sk = secret_key(keygen)
     pk = PublicKey()
     create_public_key!(pk, keygen)
-    sk = secret_key(keygen)
 
     resize!(sk_stream, save_size(sk))
     out_bytes = save!(sk_stream, sk)
@@ -64,12 +64,12 @@ function example_serialization()
 
     rlk = create_relin_keys(keygen)
 
+    rlk_big = RelinKeys()
+    create_relin_keys!(rlk_big, keygen)
+
     resize!(data_stream1, save_size(rlk))
     size_rlk = save!(data_stream1, rlk)
     resize!(data_stream1, size_rlk)
-
-    rlk_big = RelinKeys()
-    create_relin_keys!(rlk_big, keygen)
     resize!(data_stream2, save_size(rlk_big))
     size_rlk_big = save!(data_stream2, rlk_big)
     resize!(data_stream2, size_rlk_big)
@@ -86,36 +86,30 @@ function example_serialization()
     encode!(plain2, 4.5, initial_scale, encoder)
 
     encryptor = Encryptor(context, pk)
+
     encrypted1 = Ciphertext()
-    encrypted2 = Ciphertext()
     encrypt!(encrypted1, plain1, encryptor)
-    encrypt!(encrypted2, plain2, encryptor)
+    resize!(data_stream2, save_size(encrypted1))
+    size_encrypted1 = save!(data_stream2, encrypted1)
+    resize!(data_stream2, size_encrypted1)
 
-    sym_encryptor = Encryptor(context, sk)
-    sym_encrypted1 = encrypt_symmetric(plain1, sym_encryptor)
-    sym_encrypted2 = encrypt_symmetric(plain2, sym_encryptor)
-
-    resize!(data_stream2, save_size(sym_encrypted1))
-    size_sym_encrypted1 = save!(data_stream2, sym_encrypted1)
-    resize!(data_stream2, size_sym_encrypted1)
-    resize!(data_stream3, save_size(encrypted1))
-    size_encrypted1 = save!(data_stream3, encrypted1)
-    resize!(data_stream3, size_encrypted1)
-
-    print_line(@__LINE__)
-    println("Serializable<Ciphertext> (symmetric-key): wrote ", size_sym_encrypted1, " bytes")
-    println("             ", "Ciphertext (public-key): wrote ", size_encrypted1, " bytes")
-
+    set_secret_key!(encryptor, sk)
+    sym_encrypted2 = encrypt_symmetric(plain2, encryptor)
     resize!(data_stream3, save_size(sym_encrypted2))
     size_sym_encrypted2 = save!(data_stream3, sym_encrypted2)
     resize!(data_stream3, size_sym_encrypted2)
+
+    print_line(@__LINE__)
+    println("Serializable<Ciphertext> (public-key): wrote ", size_encrypted1, " bytes")
+    println("             ",
+            "Serializable<Ciphertext> (seeded secret-key): wrote ", size_sym_encrypted2, " bytes")
   end
 
   # Server
   let
-    enc_parms = EncryptionParameters()
-    load!(enc_parms, parms_stream)
-    context = SEALContext(enc_parms)
+    parms = EncryptionParameters()
+    load!(parms, parms_stream)
+    context = SEALContext(parms)
 
     evaluator = Evaluator(context)
 
@@ -137,14 +131,14 @@ function example_serialization()
     resize!(data_stream4, size_encrypted_prod)
 
     print_line(@__LINE__)
-    println("Ciphertext (symmetric-key): wrote ", size_encrypted_prod, " bytes")
+    println("Ciphertext (secret-key): wrote ", size_encrypted_prod, " bytes")
   end
 
   # Client
   let
-    enc_parms = EncryptionParameters()
-    load!(enc_parms, parms_stream)
-    context = SEALContext(enc_parms)
+    parms = EncryptionParameters()
+    load!(parms, parms_stream)
+    context = SEALContext(parms)
 
     sk = SecretKey()
     load!(sk, context, sk_stream)
@@ -175,7 +169,8 @@ function example_serialization()
 
   print_line(@__LINE__)
   println("Size written to stream: ", data_size, " bytes")
-  println("             ", "Size indicated in SEALHeader: ", header.size, " bytes")
+  println("             ",
+          "Size indicated in SEALHeader: ", header.size, " bytes")
   println()
 
   return

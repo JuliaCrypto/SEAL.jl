@@ -93,7 +93,7 @@ include("ciphertext.jl")
 export Ciphertext, scale, scale!, parms_id, size, length, save_size, save!, load!, reserve!
 
 include("encryptor.jl")
-export Encryptor, encrypt!, encrypt_symmetric, encrypt_symmetric!
+export Encryptor, set_secret_key!, encrypt!, encrypt_symmetric, encrypt_symmetric!
 
 include("evaluator.jl")
 export Evaluator, square!, square_inplace!, relinearize!, relinearize_inplace!, rescale_to_next!,
