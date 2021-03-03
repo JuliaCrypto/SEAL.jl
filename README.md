@@ -1,7 +1,7 @@
 # SEAL.jl
 
 [![Documentation-stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://juliacrypto.github.io/SEAL.jl/stable)
-[![Documentation-stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://juliacrypto.github.io/SEAL.jl/dev)
+[![Documentation-dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://juliacrypto.github.io/SEAL.jl/dev)
 [![Build Status](https://github.com/JuliaCrypto/SEAL.jl/workflows/CI/badge.svg)](https://github.com/JuliaCrypto/SEAL.jl/actions?query=workflow%3ACI)
 [![codecov](https://codecov.io/gh/JuliaCrypto/SEAL.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/JuliaCrypto/SEAL.jl)
 [![License: MIT](https://img.shields.io/badge/License-MIT-success.svg)](https://opensource.org/licenses/MIT)
