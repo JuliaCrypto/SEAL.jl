@@ -18,24 +18,24 @@
     end
 
     @testset "save! EncryptionParameters" begin
-      @test save_size(enc_parms) == 146
+      @test save_size(enc_parms) == 192
       resize!(parms_stream, save_size(enc_parms))
-      @test save!(parms_stream, enc_parms) == 60
-      out_bytes = 60
+      @test save!(parms_stream, enc_parms) == 75
+      out_bytes = 75
       resize!(parms_stream, out_bytes)
     end
 
     @testset "save_size comparison" begin
       @test save_size(ComprModeType.none, enc_parms) == 129
-      @test save_size(ComprModeType.deflate, enc_parms) == 146
+      @test save_size(ComprModeType.zlib, enc_parms) == 146
     end
 
     @testset "save! and load! EncryptionParameters" begin
       byte_buffer = Vector{UInt8}(undef, save_size(enc_parms))
-      @test save!(byte_buffer, length(byte_buffer), enc_parms) == 60
+      @test save!(byte_buffer, length(byte_buffer), enc_parms) == 75
 
       enc_parms2 = EncryptionParameters()
-      @test load!(enc_parms2, byte_buffer, length(byte_buffer)) == 60
+      @test load!(enc_parms2, byte_buffer, length(byte_buffer)) == 75
       @test enc_parms == enc_parms2
     end
   end
@@ -43,7 +43,7 @@
   @testset "client (part 1)" begin
     enc_parms = EncryptionParameters()
     @testset "load! EncryptionParameters" begin
-      @test load!(enc_parms, parms_stream) == 60
+      @test load!(enc_parms, parms_stream) == 75
     end
 
     context = SEALContext(enc_parms)
@@ -53,18 +53,18 @@
     sk = secret_key(keygen)
 
     @testset "save! SecretKey" begin
-      @test save_size(sk) == 196773
+      @test save_size(sk) == 197464
       resize!(sk_stream, save_size(sk))
-      @test isapprox(save!(sk_stream, sk), 148752, rtol=0.001)
+      @test isapprox(save!(sk_stream, sk), 145823, rtol=0.01)
       out_bytes = save!(sk_stream, sk)
       resize!(sk_stream, out_bytes)
     end
 
     rlk = create_relin_keys(keygen)
     @testset "save! create_relin_keys" begin
-      @test save_size(rlk) == 393789
+      @test save_size(rlk) == 395189
       resize!(data_stream1, save_size(rlk))
-      @test isapprox(save!(data_stream1, rlk), 297521, rtol=0.001)
+      @test isapprox(save!(data_stream1, rlk), 291635, rtol=0.01)
       size_rlk = save!(data_stream1, rlk)
       resize!(data_stream1, size_rlk)
     end
@@ -72,9 +72,9 @@
     rlk_big = RelinKeys()
     create_relin_keys!(rlk_big, keygen)
     @testset "save! create_relin_keys" begin
-      @test save_size(rlk_big) == 786963
+      @test save_size(rlk_big) == 789779
       resize!(data_stream2, save_size(rlk_big))
-      @test isapprox(save!(data_stream2, rlk_big), 593391, rtol=0.001)
+      @test isapprox(save!(data_stream2, rlk_big), 583244, rtol=0.01)
       size_rlk_big = save!(data_stream2, rlk_big)
       resize!(data_stream2, size_rlk_big)
     end
@@ -112,21 +112,21 @@
     sym_encrypted2 = encrypt_symmetric(plain2, sym_encryptor)
 
     @testset "save! Ciphertext" begin
-      @test save_size(sym_encrypted1) == 131315
+      @test save_size(sym_encrypted1) == 131770
       resize!(data_stream2, save_size(sym_encrypted1))
-      @test isapprox(save!(data_stream2, sym_encrypted1), 88528, rtol=0.001)
+      @test isapprox(save!(data_stream2, sym_encrypted1), 87070, rtol=0.01)
       size_sym_encrypted1 = save!(data_stream2, sym_encrypted1)
       resize!(data_stream2, size_sym_encrypted1)
 
-      @test save_size(encrypted1) == 262346
+      @test save_size(encrypted1) == 263273
       resize!(data_stream3, save_size(encrypted1))
-      @test isapprox(save!(data_stream3, encrypted1), 177295, rtol=0.001)
+      @test isapprox(save!(data_stream3, encrypted1), 173531, rtol=0.01)
       size_encrypted1 = save!(data_stream3, encrypted1)
       resize!(data_stream3, size_encrypted1)
 
-      @test save_size(sym_encrypted2) == 131315
+      @test save_size(sym_encrypted2) == 131770
       resize!(data_stream3, save_size(sym_encrypted2))
-      @test isapprox(save!(data_stream3, sym_encrypted2), 88467, rtol=0.001)
+      @test isapprox(save!(data_stream3, sym_encrypted2), 86966, rtol=0.01)
       size_sym_encrypted2 = save!(data_stream3, sym_encrypted2)
       resize!(data_stream3, size_sym_encrypted2)
     end
@@ -135,7 +135,7 @@
   @testset "server (part 2)" begin
     enc_parms = EncryptionParameters()
     @testset "load! EncryptionParameters" begin
-      @test load!(enc_parms, parms_stream) == 60
+      @test load!(enc_parms, parms_stream) == 75
     end
 
     context = SEALContext(enc_parms)
@@ -145,12 +145,12 @@
     encrypted2 = Ciphertext()
 
     @testset "load! RelinKeys" begin
-      @test isapprox(load!(rlk, context, data_stream1), 297640, rtol=0.001)
+      @test isapprox(load!(rlk, context, data_stream1), 291635, rtol=0.01)
     end
 
     @testset "load! Ciphertext" begin
-      @test isapprox(load!(encrypted1, context, data_stream2), 88513, rtol=0.001)
-      @test isapprox(load!(encrypted2, context, data_stream3), 88554, rtol=0.001)
+      @test isapprox(load!(encrypted1, context, data_stream2), 87070, rtol=0.01)
+      @test isapprox(load!(encrypted2, context, data_stream3), 86966, rtol=0.01)
     end
 
     encrypted_prod = Ciphertext()
@@ -161,9 +161,9 @@
     end
 
     @testset "save! Ciphertext" begin
-      @test save_size(encrypted_prod) == 131234
+      @test save_size(encrypted_prod) == 131689
       resize!(data_stream4, save_size(encrypted_prod))
-      @test isapprox(save!(data_stream4, encrypted_prod), 119229, rtol=0.001)
+      @test isapprox(save!(data_stream4, encrypted_prod), 117909, rtol=0.01)
       size_encrypted_prod = save!(data_stream4, encrypted_prod)
       resize!(data_stream4, size_encrypted_prod)
     end
@@ -176,7 +176,7 @@
 
     sk = SecretKey()
     @testset "load! SecretKey" begin
-      @test isapprox(load!(sk, context, sk_stream), 148772, rtol=0.001)
+      @test isapprox(load!(sk, context, sk_stream), 145823, rtol=0.01)
     end
 
     decryptor = Decryptor(context, sk)
@@ -207,15 +207,15 @@
   pt = Plaintext("1x^2 + 3")
   stream = Vector{UInt8}(undef, save_size(pt))
   @testset "save! Plaintext" begin
-    @test save!(stream, pt) == 49
-    data_size = 49
+    @test save!(stream, pt) == 66
+    data_size = 66
     resize!(stream, data_size)
   end
 
   header = SEALHeader()
   @testset "load_header!" begin
     @test load_header!(header, stream) == header
-    @test header.size == 49
+    @test header.size == 66
   end
 end
 

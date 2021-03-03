@@ -1,7 +1,7 @@
 
 module ComprModeType
-@enum ComprModeTypeEnum::UInt8 none=0 deflate=1
-const default = deflate
+@enum ComprModeTypeEnum::UInt8 none=0 zlib=1 zstd=2
+const default = zstd
 end
 
 mutable struct SEALHeader
