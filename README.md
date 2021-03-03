@@ -44,13 +44,13 @@ After installation, load SEAL.jl by running
 ```julia
 using SEAL
 ```
-in the REPL. A **minimal** working example for encrypting an integer using the BFV
+in the REPL. A **minimal** working example for encrypting an array of integers using the BFV
 scheme, squaring it, and decrypting it, looks as follows:
 ```julia
 julia> using SEAL
 [ Info: Precompiling SEAL [bac81e26-86e4-4b48-8696-7d0406d5dbc1]
 
-julia> parms = EncryptionParameters(SchemeType.BFV)
+julia> parms = EncryptionParameters(SchemeType.bfv)
 EncryptionParameters(Ptr{Nothing} @0x0000000002e1d3a0)
 
 julia> poly_modulus_degree = 4096
@@ -62,7 +62,7 @@ EncryptionParameters(Ptr{Nothing} @0x0000000002e1d3a0)
 julia> set_coeff_modulus!(parms, coeff_modulus_bfv_default(poly_modulus_degree))
 EncryptionParameters(Ptr{Nothing} @0x0000000002e1d3a0)
 
-julia> set_plain_modulus!(parms, 512)
+julia> set_plain_modulus!(parms, plain_modulus_batching(poly_modulus_degree, 20))
 EncryptionParameters(Ptr{Nothing} @0x0000000002e1d3a0)
 
 julia> context = SEALContext(parms)
@@ -88,32 +88,53 @@ Evaluator(Ptr{Nothing} @0x000000000428bdd0)
 julia> decryptor = Decryptor(context, secret_key_)
 Decryptor(Ptr{Nothing} @0x00000000037670d0)
 
-julia> encoder = IntegerEncoder(context) #FIXME fix-tests
-IntegerEncoder(Ptr{Nothing} @0x0000000002ec3350, SEALContext(Ptr{Nothing} @0x0000000004298440)) #FIXME fix-tests
+julia> batch_encoder = BatchEncoder(context)
+BatchEncoder(Ptr{Nothing} @0x0000000001fb4bd0, SEALContext(Ptr{Nothing} @0x0000000001b87780))
 
-julia> value = 7
-7
+julia> pod_matrix = collect(UInt64, 1:slot_count(batch_encoder));
 
-julia> plain = encode(value, encoder) #FIXME fix-tests
+julia> Int.(vcat(pod_matrix[1:3], pod_matrix[end-3:end]))
+7-element Array{Int64,1}:
+    1
+    2
+    3
+ 4093
+ 4094
+ 4095
+ 4096
+
+julia> plain_matrix = Plaintext()
 Plaintext(Ptr{Nothing} @0x00000000042db6e0)
 
-julia> encrypted = Ciphertext()
+julia> encode!(plain_matrix, pod_matrix, batch_encoder)
+Plaintext(Ptr{Nothing} @0x0000000002ce0370)
+
+julia> encrypted_matrix = Ciphertext()
 Ciphertext(Ptr{Nothing} @0x0000000002d91b80)
 
-julia> encrypt!(encrypted, plain, encryptor)
+julia> encrypt!(encrypted_matrix, plain_matrix, encryptor)
 Ciphertext(Ptr{Nothing} @0x0000000002d91b80)
 
-julia> square_inplace!(encrypted, evaluator)
-Ciphertext(Ptr{Nothing} @0x0000000002d91b80)
+julia> add_inplace!(encrypted_matrix, encrypted_matrix, evaluator)
+Ciphertext(Ptr{Nothing} @0x0000000002ce1280)
 
 julia> plain_result = Plaintext()
 Plaintext(Ptr{Nothing} @0x0000000004591550)
 
-julia> decrypt!(plain_result, encrypted, decryptor)
+julia> decrypt!(plain_result, encrypted_matrix, decryptor)
 Plaintext(Ptr{Nothing} @0x0000000004591550)
 
-julia> decode_int32(plain_result, encoder) #FIXME fix-tests
-49
+julia> decode!(pod_matrix, plain_result, batch_encoder);
+
+julia> Int.(vcat(pod_matrix[1:3], pod_matrix[end-3:end]))
+7-element Array{Int64,1}:
+    2
+    4
+    6
+ 8186
+ 8188
+ 8190
+ 8192
 ```
 
 ### Examples
@@ -128,7 +149,7 @@ directory. Otherwise it will be very likely that you are using SEAL.jl (and SEAL
 way that is either not secure, will produce unexpected results, or just crashes.
 The examples included in SEAL.jl follow almost line-by-line the examples provided by the
 [SEAL library](https://github.com/microsoft/SEAL/tree/master/native/examples).
-For example, the snippet above is based on the `example_integer_encoder()` function in #FIXME fix-tests
+For example, the snippet above is based on the `example_batch_encoder()` function in
 [`examples/2_encoders.jl`](examples/2_encoders.jl).
 The full list of examples is as follows:
 
@@ -155,7 +176,7 @@ julia --project=. -e 'include("SEAL.jl/examples/examples.jl"); seal_examples()'
 You will be shown an interactive prompt that lets you run any of the available
 examples:
 ```
-Microsoft SEAL version: 3.5.5
+Microsoft SEAL version: 3.6.2
 +---------------------------------------------------------+
 | The following examples should be executed while reading |
 | comments in associated files in examples/.              |
