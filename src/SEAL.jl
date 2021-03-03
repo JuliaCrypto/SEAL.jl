@@ -11,12 +11,17 @@ Abstract parent type for all types based on SEAL classes.
 abstract type SEALObject end
 
 """
-    handle(object::SEALObject)
+    gethandle(object::SEALObject)
 
 Return the raw C pointer to where `object` resides in memory.
 """
-@inline handle(object::SEALObject) = object.handle
 @inline gethandle(object::SEALObject) = object.handle
+
+"""
+    sethandle!(object::SEALObject, handle)
+
+Set the underlying raw C pointer to where `object` resides in memory to `handle`.
+"""
 @inline sethandle!(object::SEALObject, handle) = object.handle = handle
 
 """
@@ -32,7 +37,7 @@ function destroy(object::SEALObject) end
 
 Return true if the object handle is a null pointer and false otherwise.
 """
-@inline isnull(object::SEALObject) = handle(object) == C_NULL
+@inline isnull(object::SEALObject) = gethandle(object) == C_NULL
 
 """
     isallocated(object::SEALObject)
@@ -41,9 +46,9 @@ Return true if the object is allocated, i.e., if it is not null.
 """
 @inline isallocated(object::SEALObject) = !isnull(object)
 
-export SEALObject, handle, destroy, isnull, isallocated
+export SEALObject, gethandle, sethandle!, destroy, isnull, isallocated
 
-Base.unsafe_convert(::Type{Ptr{Cvoid}}, object::SEALObject) = handle(object)
+Base.unsafe_convert(::Type{Ptr{Cvoid}}, object::SEALObject) = gethandle(object)
 
 include("auxiliary.jl")
 # Julia-only auxiliary methods -> no exports

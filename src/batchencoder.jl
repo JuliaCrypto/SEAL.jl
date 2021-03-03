@@ -21,8 +21,11 @@ end
 
 function destroy(object::BatchEncoder)
   if isallocated(object)
-    ccall((:BatchEncoder_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
+    @check_return_value ccall((:BatchEncoder_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
+    sethandle!(object, C_NULL)
   end
+
+  return nothing
 end
 
 function slot_count(encoder::BatchEncoder)

@@ -29,8 +29,11 @@ end
 
 function destroy(object::SEALContext)
   if isallocated(object)
-    ccall((:SEALContext_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
+    @check_return_value ccall((:SEALContext_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
+    sethandle!(object, C_NULL)
   end
+
+  return nothing
 end
 
 function first_parms_id(context::SEALContext)
@@ -119,8 +122,11 @@ end
 
 function destroy(object::ContextData)
   if isallocated(object)
-    ccall((:ContextData_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
+    @check_return_value ccall((:ContextData_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
+    sethandle!(object, C_NULL)
   end
+
+  return nothing
 end
 
 function chain_index(context_data::ContextData)
@@ -190,8 +196,11 @@ end
 
 function destroy(object::EncryptionParameterQualifiers)
   if isallocated(object)
-    ccall((:EncryptionParameterQualifiers_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
+    @check_return_value ccall((:EncryptionParameterQualifiers_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
+    sethandle!(object, C_NULL)
   end
+
+  return nothing
 end
 
 function using_batching(epq::EncryptionParameterQualifiers)

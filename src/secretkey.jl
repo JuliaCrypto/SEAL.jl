@@ -27,8 +27,11 @@ end
 
 function destroy(object::SecretKey)
   if isallocated(object)
-    ccall((:SecretKey_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
+    @check_return_value ccall((:SecretKey_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
+    sethandle!(object, C_NULL)
   end
+
+  return nothing
 end
 
 function parms_id(key::SecretKey)

@@ -41,8 +41,11 @@ end
 
 function destroy(object::EncryptionParameters)
   if isallocated(object)
-    ccall((:EncParams_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
+    @check_return_value ccall((:EncParams_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
+    sethandle!(object, C_NULL)
   end
+
+  return nothing
 end
 
 function poly_modulus_degree(enc_param::EncryptionParameters)
@@ -63,7 +66,7 @@ function set_poly_modulus_degree!(enc_param::EncryptionParameters, degree)
 end
 
 function set_coeff_modulus!(enc_param::EncryptionParameters, coeff_modulus)
-  coeff_modulus_ptrs = Ptr{Cvoid}[handle(c) for c in coeff_modulus]
+  coeff_modulus_ptrs = Ptr{Cvoid}[gethandle(c) for c in coeff_modulus]
   retval = ccall((:EncParams_SetCoeffModulus, libsealc), Clong,
                  (Ptr{Cvoid}, UInt64, Ref{Ptr{Cvoid}}),
                  enc_param, length(coeff_modulus), coeff_modulus_ptrs)

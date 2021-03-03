@@ -27,8 +27,11 @@ end
 
 function destroy(object::PublicKey)
   if isallocated(object)
-    ccall((:PublicKey_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
+    @check_return_value ccall((:PublicKey_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
+    sethandle!(object, C_NULL)
   end
+
+  return nothing
 end
 
 function parms_id(key::PublicKey)

@@ -11,8 +11,11 @@ end
 
 function destroy(object::MemoryPoolHandle)
   if isallocated(object)
-    ccall((:MemoryPoolHandle_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
+    @check_return_value ccall((:MemoryPoolHandle_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
+    sethandle!(object, C_NULL)
   end
+
+  return nothing
 end
 
 function alloc_byte_count(handle::MemoryPoolHandle)

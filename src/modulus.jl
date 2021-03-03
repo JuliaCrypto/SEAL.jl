@@ -30,8 +30,11 @@ end
 
 function destroy(object::Modulus)
   if isallocated(object)
-    ccall((:Modulus_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
+    @check_return_value ccall((:Modulus_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
+    sethandle!(object, C_NULL)
   end
+
+  return nothing
 end
 
 module SecLevelType

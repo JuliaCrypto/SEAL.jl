@@ -28,8 +28,11 @@ end
 
 function destroy(object::Evaluator)
   if isallocated(object)
-    ccall((:Evaluator_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
+    @check_return_value ccall((:Evaluator_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
+    sethandle!(object, C_NULL)
   end
+
+  return nothing
 end
 
 function square!(destination::Ciphertext, encrypted::Ciphertext, evaluator::Evaluator)

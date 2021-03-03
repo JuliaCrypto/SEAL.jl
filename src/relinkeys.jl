@@ -28,8 +28,11 @@ end
 
 function destroy(object::RelinKeys)
   if isallocated(object)
-    ccall((:KSwitchKeys_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
+    @check_return_value ccall((:KSwitchKeys_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
+    sethandle!(object, C_NULL)
   end
+
+  return nothing
 end
 
 function parms_id(key::RelinKeys)

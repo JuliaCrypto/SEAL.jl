@@ -29,8 +29,11 @@ end
 
 function destroy(object::KeyGenerator)
   if isallocated(object)
-    ccall((:KeyGenerator_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
+    @check_return_value ccall((:KeyGenerator_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
+    sethandle!(object, C_NULL)
   end
+
+  return nothing
 end
 
 function create_public_key!(destination::PublicKey, keygen::KeyGenerator)

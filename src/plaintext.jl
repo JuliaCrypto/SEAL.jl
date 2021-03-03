@@ -47,8 +47,11 @@ end
 
 function destroy(object::Plaintext)
   if isallocated(object)
-    ccall((:Plaintext_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
+    @check_return_value ccall((:Plaintext_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
+    sethandle!(object, C_NULL)
   end
+
+  return nothing
 end
 
 function scale(plain::Plaintext)

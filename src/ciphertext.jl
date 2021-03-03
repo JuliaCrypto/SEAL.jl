@@ -40,8 +40,11 @@ end
 
 function destroy(object::Ciphertext)
   if isallocated(object)
-    ccall((:Ciphertext_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
+    @check_return_value ccall((:Ciphertext_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
+    sethandle!(object, C_NULL)
   end
+
+  return nothing
 end
 
 function scale(encrypted::Ciphertext)

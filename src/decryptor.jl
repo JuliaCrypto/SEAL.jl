@@ -27,8 +27,11 @@ end
 
 function destroy(object::Decryptor)
   if isallocated(object)
-    ccall((:Decryptor_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
+    @check_return_value ccall((:Decryptor_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
+    sethandle!(object, C_NULL)
   end
+
+  return nothing
 end
 
 function decrypt!(destination::Plaintext, encrypted::Ciphertext, decryptor::Decryptor)
