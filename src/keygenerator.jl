@@ -22,12 +22,12 @@ mutable struct KeyGenerator <: SEALObject
 
   function KeyGenerator(handle::Ptr{Cvoid})
     object = new(handle)
-    finalizer(destroy, object)
+    finalizer(destroy!, object)
     return object
   end
 end
 
-function destroy(object::KeyGenerator)
+function destroy!(object::KeyGenerator)
   if isallocated(object)
     @check_return_value ccall((:KeyGenerator_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
     sethandle!(object, C_NULL)
@@ -44,7 +44,7 @@ function create_public_key!(destination::PublicKey, keygen::KeyGenerator)
   @check_return_value retval
 
   # Destroy previous key and reuse its container
-  destroy(destination)
+  destroy!(destination)
   sethandle!(destination, keyptr[])
 
   return nothing
@@ -76,7 +76,7 @@ function create_relin_keys!(destination::RelinKeys, keygen::KeyGenerator)
   @check_return_value retval
 
   # Destroy previous key and reuse its container
-  destroy(destination)
+  destroy!(destination)
   sethandle!(destination, keyptr[])
 
   return nothing
@@ -99,7 +99,7 @@ function create_galois_keys!(destination::GaloisKeys, keygen::KeyGenerator)
   @check_return_value retval
 
   # Destroy previous key and reuse its container
-  destroy(destination)
+  destroy!(destination)
   sethandle!(destination, keyptr[])
 
   return nothing

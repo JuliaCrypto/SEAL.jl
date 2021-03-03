@@ -25,12 +25,12 @@ Set the underlying raw C pointer to where `object` resides in memory to `handle`
 @inline sethandle!(object::SEALObject, handle) = object.handle = handle
 
 """
-    destroy(object::SEALObject)
+    destroy!(object::SEALObject)
 
 Call the corresponding destruction function on `object` to free up memory and reset object handle to
-a null pointer. If `object` is not allocated, `destroy` will not do anything.
+a null pointer. If `object` is not allocated, `destroy!` will not do anything.
 """
-function destroy(object::SEALObject) end
+function destroy!(object::SEALObject) end
 
 """
     isnull(object::SEALObject)
@@ -46,7 +46,7 @@ Return true if the object is allocated, i.e., if it is not null.
 """
 @inline isallocated(object::SEALObject) = !isnull(object)
 
-export SEALObject, gethandle, sethandle!, destroy, isnull, isallocated
+export SEALObject, gethandle, sethandle!, destroy!, isnull, isallocated
 
 Base.unsafe_convert(::Type{Ptr{Cvoid}}, object::SEALObject) = gethandle(object)
 

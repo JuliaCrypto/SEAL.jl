@@ -38,12 +38,12 @@ mutable struct Encryptor <: SEALObject
 
   function Encryptor(handle::Ptr{Cvoid})
     object = new(handle)
-    finalizer(destroy, object)
+    finalizer(destroy!, object)
     return object
   end
 end
 
-function destroy(object::Encryptor)
+function destroy!(object::Encryptor)
   if isallocated(object)
     @check_return_value ccall((:Encryptor_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
     sethandle!(object, C_NULL)

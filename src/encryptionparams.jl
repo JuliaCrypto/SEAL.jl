@@ -34,12 +34,12 @@ mutable struct EncryptionParameters <: SEALObject
 
   function EncryptionParameters(handle::Ptr{Cvoid})
     object = new(handle)
-    finalizer(destroy, object)
+    finalizer(destroy!, object)
     return object
   end
 end
 
-function destroy(object::EncryptionParameters)
+function destroy!(object::EncryptionParameters)
   if isallocated(object)
     @check_return_value ccall((:EncParams_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
     sethandle!(object, C_NULL)

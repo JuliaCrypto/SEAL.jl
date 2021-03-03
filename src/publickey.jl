@@ -20,12 +20,12 @@ mutable struct PublicKey <: SEALObject
 
   function PublicKey(handle::Ptr{Cvoid})
     object = new(handle)
-    finalizer(destroy, object)
+    finalizer(destroy!, object)
     return object
   end
 end
 
-function destroy(object::PublicKey)
+function destroy!(object::PublicKey)
   if isallocated(object)
     @check_return_value ccall((:PublicKey_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
     sethandle!(object, C_NULL)

@@ -14,12 +14,12 @@ mutable struct BatchEncoder <: SEALObject
 
   function BatchEncoder(handle::Ptr{Cvoid}, context)
     object = new(handle, context)
-    finalizer(destroy, object)
+    finalizer(destroy!, object)
     return object
   end
 end
 
-function destroy(object::BatchEncoder)
+function destroy!(object::BatchEncoder)
   if isallocated(object)
     @check_return_value ccall((:BatchEncoder_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
     sethandle!(object, C_NULL)

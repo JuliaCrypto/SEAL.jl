@@ -22,12 +22,12 @@ mutable struct SEALContext <: SEALObject
 
   function SEALContext(handle::Ptr{Cvoid})
     object = new(handle)
-    finalizer(destroy, object)
+    finalizer(destroy!, object)
     return object
   end
 end
 
-function destroy(object::SEALContext)
+function destroy!(object::SEALContext)
   if isallocated(object)
     @check_return_value ccall((:SEALContext_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
     sethandle!(object, C_NULL)
@@ -115,12 +115,12 @@ mutable struct ContextData <: SEALObject
 
   function ContextData(handle::Ptr{Cvoid}; destroy_on_gc=true)
     object = new(handle)
-    destroy_on_gc && finalizer(destroy, object)
+    destroy_on_gc && finalizer(destroy!, object)
     return object
   end
 end
 
-function destroy(object::ContextData)
+function destroy!(object::ContextData)
   if isallocated(object)
     @check_return_value ccall((:ContextData_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
     sethandle!(object, C_NULL)
@@ -189,12 +189,12 @@ mutable struct EncryptionParameterQualifiers <: SEALObject
 
   function EncryptionParameterQualifiers(handle::Ptr{Cvoid}; destroy_on_gc=true)
     object = new(handle)
-    destroy_on_gc && finalizer(destroy, object)
+    destroy_on_gc && finalizer(destroy!, object)
     return object
   end
 end
 
-function destroy(object::EncryptionParameterQualifiers)
+function destroy!(object::EncryptionParameterQualifiers)
   if isallocated(object)
     @check_return_value ccall((:EncryptionParameterQualifiers_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
     sethandle!(object, C_NULL)
