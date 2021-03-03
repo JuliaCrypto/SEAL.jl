@@ -1,7 +1,7 @@
 name = "SEAL"
 uuid = "bac81e26-86e4-4b48-8696-7d0406d5dbc1"
 authors = ["Michael Schlottke-Lakemper <michael@sloede.com>"]
-version = "0.3.0"
+version = "0.4.0"
 
 [deps]
 Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"
