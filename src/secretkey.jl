@@ -20,15 +20,18 @@ mutable struct SecretKey <: SEALObject
 
   function SecretKey(handle::Ptr{Cvoid})
     object = new(handle)
-    finalizer(destroy, object)
+    finalizer(destroy!, object)
     return object
   end
 end
 
-function destroy(object::SecretKey)
+function destroy!(object::SecretKey)
   if isallocated(object)
-    ccall((:SecretKey_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
+    @check_return_value ccall((:SecretKey_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
+    sethandle!(object, C_NULL)
   end
+
+  return nothing
 end
 
 function parms_id(key::SecretKey)

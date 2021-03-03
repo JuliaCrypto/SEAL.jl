@@ -33,15 +33,18 @@ mutable struct Ciphertext <: SEALObject
 
   function Ciphertext(handle::Ptr{Cvoid})
     object = new(handle)
-    finalizer(destroy, object)
+    finalizer(destroy!, object)
     return object
   end
 end
 
-function destroy(object::Ciphertext)
+function destroy!(object::Ciphertext)
   if isallocated(object)
-    ccall((:Ciphertext_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
+    @check_return_value ccall((:Ciphertext_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
+    sethandle!(object, C_NULL)
   end
+
+  return nothing
 end
 
 function scale(encrypted::Ciphertext)

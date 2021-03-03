@@ -1,0 +1,11 @@
+# https://docs.codecov.io/docs/codecovyml-reference
+
+# We have 2 parallel jobs in ci.yml
+codecov:
+  notify:
+    after_n_builds: 2
+comment:
+  after_n_builds: 2
+
+github_checks:
+  annotations: false

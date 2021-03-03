@@ -22,16 +22,19 @@ mutable struct Modulus <: SEALObject
   function Modulus(handle::Ptr{Cvoid}; destroy_on_gc=true)
     object = new(handle)
     if destroy_on_gc
-      finalizer(destroy, object)
+      finalizer(destroy!, object)
     end
     return object
   end
 end
 
-function destroy(object::Modulus)
+function destroy!(object::Modulus)
   if isallocated(object)
-    ccall((:Modulus_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
+    @check_return_value ccall((:Modulus_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
+    sethandle!(object, C_NULL)
   end
+
+  return nothing
 end
 
 module SecLevelType

@@ -21,15 +21,18 @@ mutable struct Evaluator <: SEALObject
 
   function Evaluator(handle::Ptr{Cvoid})
     object = new(handle)
-    finalizer(destroy, object)
+    finalizer(destroy!, object)
     return object
   end
 end
 
-function destroy(object::Evaluator)
+function destroy!(object::Evaluator)
   if isallocated(object)
-    ccall((:Evaluator_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
+    @check_return_value ccall((:Evaluator_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
+    sethandle!(object, C_NULL)
   end
+
+  return nothing
 end
 
 function square!(destination::Ciphertext, encrypted::Ciphertext, evaluator::Evaluator)
