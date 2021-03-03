@@ -58,12 +58,13 @@
   end
 
   @testset "additional CKKS tests" begin
-    enc_parms = EncryptionParameters(SchemeType.CKKS)
+    enc_parms = EncryptionParameters(SchemeType.ckks)
     set_poly_modulus_degree!(enc_parms, 8192)
     set_coeff_modulus!(enc_parms, coeff_modulus_create(8192, [60, 40, 40, 60]))
     context = SEALContext(enc_parms)
     keygen = KeyGenerator(context)
-    public_key_ = public_key(keygen)
+    public_key_ = PublicKey()
+    create_public_key!(public_key_, keygen)
     secret_key_ = secret_key(keygen)
     @testset "Encryptor" begin
       @test_nowarn Encryptor(context, public_key_, secret_key_)
@@ -78,8 +79,8 @@
       @test isapprox(scale(p), 2.0^40)
     end
 
-    @testset "relin_keys" begin
-      @test_nowarn relin_keys(keygen)
+    @testset "create_relin_keys" begin
+      @test_nowarn create_relin_keys(keygen)
     end
 
     @testset "plain_modulus" begin
@@ -91,7 +92,8 @@
     encode!(p, 3.14159265, 2.0^40, encoder) 
     encryptor = Encryptor(context, public_key_)
     evaluator = Evaluator(context)
-    relin_keys_ = relin_keys_local(keygen)
+    relin_keys_ = RelinKeys()
+    create_relin_keys!(relin_keys_, keygen)
     @testset "{square,relinearize,rescale_to_next}_inplace!" begin
       c1 = Ciphertext()
       encrypt!(c1, p, encryptor)
@@ -128,7 +130,8 @@
       @test_nowarn add_plain_inplace!(c7, p, evaluator)
     end
 
-    galois_keys_ = galois_keys_local(keygen)
+    galois_keys_ = GaloisKeys()
+    create_galois_keys!(galois_keys_, keygen)
     @testset "rotate_vector_inplace!" begin
       c8 = Ciphertext()
       encrypt!(c8, p, encryptor)
@@ -171,19 +174,21 @@
   end
 
   @testset "additional BFV tests" begin
-    enc_parms = EncryptionParameters(SchemeType.BFV)
+    enc_parms = EncryptionParameters(SchemeType.bfv)
     poly_modulus_degree = 4096
     set_poly_modulus_degree!(enc_parms, poly_modulus_degree)
     set_coeff_modulus!(enc_parms, coeff_modulus_bfv_default(poly_modulus_degree))
     set_plain_modulus!(enc_parms, 786433)
     context = SEALContext(enc_parms)
     keygen = KeyGenerator(context)
-    public_key_ = public_key(keygen)
+    public_key_ = PublicKey()
+    create_public_key!(public_key_, keygen)
     secret_key_ = secret_key(keygen)
-    galois_keys_ = galois_keys_local(keygen)
-    relin_keys_ = relin_keys_local(keygen)
+    galois_keys_ = GaloisKeys()
+    create_galois_keys!(galois_keys_, keygen)
+    relin_keys_ = RelinKeys()
+    create_relin_keys!(relin_keys_, keygen)
 
-    int_encoder = IntegerEncoder(context)
     batch_encoder = BatchEncoder(context)
     slot_count_ = slot_count(batch_encoder)
     encryptor = Encryptor(context, public_key_)

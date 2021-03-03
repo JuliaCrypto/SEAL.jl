@@ -8,7 +8,7 @@ refers to the Cheon-Kim-Kim-Song scheme (sometimes also called `HEAAN` in the li
 `none` indicates that no encryption should be used.
 """
 module SchemeType
-@enum SchemeTypeEnum::UInt8 none=0 BFV=1 CKKS=2
+@enum SchemeTypeEnum::UInt8 none=0 bfv=1 ckks=2
 end
 
 """
@@ -33,12 +33,15 @@ mutable struct EncryptionParameters <: SEALObject
   end
 
   function EncryptionParameters(handle::Ptr{Cvoid})
-    x = new(handle)
-    finalizer(x) do x
-      # @async println("Finalizing $x at line $(@__LINE__).")
-      ccall((:EncParams_Destroy, libsealc), Clong, (Ptr{Cvoid},), x)
-    end
-    return x
+    object = new(handle)
+    finalizer(destroy, object)
+    return object
+  end
+end
+
+function destroy(object::EncryptionParameters)
+  if isallocated(object)
+    ccall((:EncParams_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
   end
 end
 

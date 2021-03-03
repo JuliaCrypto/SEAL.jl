@@ -1,8 +1,8 @@
 @testset "4_ckks_basics" begin
   @testset "EncryptionParameters" begin
-    @test_nowarn EncryptionParameters(SchemeType.CKKS)
+    @test_nowarn EncryptionParameters(SchemeType.ckks)
   end
-  enc_parms = EncryptionParameters(SchemeType.CKKS)
+  enc_parms = EncryptionParameters(SchemeType.ckks)
 
   @testset "polynomial modulus degree" begin
     @test_nowarn set_poly_modulus_degree!(enc_parms, 8192)
@@ -24,7 +24,7 @@
     context_data = key_context_data(context)
     @test_nowarn parms(context_data)
     ec = parms(context_data)
-    @test scheme(ec) == SchemeType.CKKS
+    @test scheme(ec) == SchemeType.ckks
     @test total_coeff_modulus_bit_count(context_data) == 200
     @test_nowarn coeff_modulus(ec)
     bit_counts = [bit_count(modulus) for modulus in coeff_modulus(ec)]
@@ -37,9 +37,13 @@
   keygen = KeyGenerator(context)
 
   @testset "PublicKey" begin
-    @test_nowarn public_key(keygen)
+    @test_nowarn PublicKey()
   end
-  public_key_ = public_key(keygen)
+  public_key_ = PublicKey()
+
+  @testset "create_public_key" begin
+    @test_nowarn create_public_key!(public_key_, keygen)
+  end
 
   @testset "SecretKey" begin
     @test_nowarn secret_key(keygen)
@@ -47,9 +51,13 @@
   secret_key_ = secret_key(keygen)
 
   @testset "RelinKeys" begin
-    @test_nowarn relin_keys_local(keygen)
+    @test_nowarn RelinKeys()
   end
-  relin_keys_ = relin_keys_local(keygen)
+  relin_keys_ = RelinKeys()
+
+  @testset "create_relin_keys" begin
+    @test_nowarn create_relin_keys!(relin_keys_, keygen)
+  end
 
   @testset "Encryptor" begin
     @test_nowarn Encryptor(context, public_key_)

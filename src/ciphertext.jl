@@ -32,12 +32,15 @@ mutable struct Ciphertext <: SEALObject
   end
 
   function Ciphertext(handle::Ptr{Cvoid})
-    x = new(handle)
-    finalizer(x) do x
-      # @async println("Finalizing $x at line $(@__LINE__).")
-      ccall((:Ciphertext_Destroy, libsealc), Clong, (Ptr{Cvoid},), x)
-    end
-    return x
+    object = new(handle)
+    finalizer(destroy, object)
+    return object
+  end
+end
+
+function destroy(object::Ciphertext)
+  if isallocated(object)
+    ccall((:Ciphertext_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
   end
 end
 

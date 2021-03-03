@@ -18,11 +18,15 @@ function bfv_performance_test(context)
   println("Done")
 
   secret_key_ = secret_key(keygen)
-  public_key_ = public_key(keygen)
+  public_key_ = PublicKey()
+  create_public_key!(public_key_, keygen)
 
   if using_keyswitching(context)
     print("Generating relinearization keys: ")
-    time_diff = @elapsedus relin_keys_ = relin_keys_local(keygen)
+    time_diff = @elapsedus begin
+      relin_keys_ = RelinKeys()
+      create_relin_keys!(relin_keys_, keygen)
+    end
     println("Done [", time_diff, " microseconds]")
 
     if !using_batching(qualifiers(key_context_data(context)))
@@ -31,7 +35,10 @@ function bfv_performance_test(context)
     end
 
     print("Generating Galois keys: ")
-    time_diff = @elapsedus galois_keys_ = galois_keys_local(keygen)
+    time_diff = @elapsedus begin
+      galois_keys_ = GaloisKeys()
+      create_galois_keys!(galois_keys_, keygen)
+    end
     println("Done [", time_diff, " microseconds]")
   end
 
@@ -39,7 +46,6 @@ function bfv_performance_test(context)
   decryptor = Decryptor(context, secret_key_)
   evaluator = Evaluator(context)
   batch_encoder = BatchEncoder(context)
-  encoder = IntegerEncoder(context)
 
   time_batch_sum = 0
   time_unbatch_sum = 0
@@ -53,6 +59,9 @@ function bfv_performance_test(context)
   time_rotate_rows_one_step_sum = 0
   time_rotate_rows_random_sum = 0
   time_rotate_columns_sum = 0
+  time_serialize_sum = 0
+  time_serialize_zlib_sum = 0
+  time_serialize_zstd_sum = 0
 
   count = 10
 
@@ -61,7 +70,9 @@ function bfv_performance_test(context)
 
   print("Running tests ")
   for i in 1:count
-    plain = Plaintext(poly_modulus_degree(enc_params), 0)
+    plain = Plaintext(poly_modulus_degree_, 0)
+    plain1 = Plaintext(poly_modulus_degree_, 0)
+    plain2 = Plaintext(poly_modulus_degree_, 0)
     time_batch_sum += @elapsedus encode!(plain, pod_vector, batch_encoder)
 
     pod_vector2 = Vector{UInt64}(undef, slot_count_)
@@ -82,9 +93,11 @@ function bfv_performance_test(context)
     end
 
     encrypted1 = Ciphertext(context)
-    encrypt!(encrypted1, encode(UInt64(i), encoder), encryptor)
+    encode!(plain1, fill(UInt64(i), slot_count_), batch_encoder)
+    encrypt!(encrypted1, plain1, encryptor)
     encrypted2 = Ciphertext(context)
-    encrypt!(encrypted2, encode(UInt64(i + 1), encoder), encryptor)
+    encode!(plain2, fill(UInt64(i+1), slot_count_), batch_encoder)
+    encrypt!(encrypted2, plain2, encryptor) #FIXME fix-tests
     time_add_sum += @elapsedus begin
       add_inplace!(encrypted1, encrypted1, evaluator)
       add_inplace!(encrypted2, encrypted2, evaluator)
@@ -117,6 +130,24 @@ function bfv_performance_test(context)
       end
     end
 
+    buf_size = save_size(ComprModeType.none, encrypted)
+    buf = Vector{UInt8}(undef, buf_size)
+    time_serialize_sum += @elapsedus begin
+      save!(buf, buf_size, ComprModeType.none, encrypted)
+    end
+
+    buf_size = save_size(ComprModeType.zlib, encrypted)
+    resize!(buf, buf_size)
+    time_serialize_zlib_sum += @elapsedus begin
+      save!(buf, buf_size, ComprModeType.zlib, encrypted)
+    end
+
+    buf_size = save_size(ComprModeType.zstd, encrypted)
+    resize!(buf, buf_size)
+    time_serialize_zstd_sum += @elapsedus begin
+      save!(buf, buf_size, ComprModeType.zstd, encrypted)
+    end
+
     print(".")
     flush(stdout)
   end
@@ -136,6 +167,9 @@ function bfv_performance_test(context)
   avg_rotate_rows_one_step = div(time_rotate_rows_one_step_sum, (2 * count))
   avg_rotate_rows_random = div(time_rotate_rows_random_sum, count)
   avg_rotate_columns = div(time_rotate_columns_sum, count)
+  avg_serialize = div(time_serialize_sum, count)
+  avg_serialize_zlib = div(time_serialize_zlib_sum, count)
+  avg_serialize_zstd = div(time_serialize_zstd_sum, count)
 
   println("Average batch: ", avg_batch, " microseconds")
   println("Average unbatch: ", avg_unbatch, " microseconds")
@@ -151,6 +185,9 @@ function bfv_performance_test(context)
     println("Average rotate rows random: ", avg_rotate_rows_random, " microseconds")
     println("Average rotate columns: ", avg_rotate_columns, " microseconds")
   end
+  println("Average serialize ciphertext: ", avg_serialize, " microseconds")
+  println("Average compressed (ZLIB) serialize ciphertext: ", avg_serialize_zlib, " microseconds")
+  println("Average compressed (Zstandard) serialize ciphertext: ", avg_serialize_zstd, " microseconds")
 end
 
 function ckks_performance_test(context)
@@ -165,11 +202,15 @@ function ckks_performance_test(context)
   println("Done")
 
   secret_key_ = secret_key(keygen)
-  public_key_ = public_key(keygen)
+  public_key_ = PublicKey()
+  create_public_key!(public_key_, keygen)
 
   if using_keyswitching(context)
     print("Generating relinearization keys: ")
-    time_diff = @elapsedus relin_keys_ = relin_keys_local(keygen)
+    time_diff = @elapsedus begin
+      relin_keys_ = RelinKeys()
+      create_relin_keys!(relin_keys_, keygen)
+    end
     println("Done [", time_diff, " microseconds]")
 
     if !using_batching(qualifiers(key_context_data(context)))
@@ -178,7 +219,10 @@ function ckks_performance_test(context)
     end
 
     print("Generating Galois keys: ")
-    time_diff = @elapsedus galois_keys_ = galois_keys_local(keygen)
+    time_diff = @elapsedus begin
+      galois_keys_ = GaloisKeys()
+      create_galois_keys!(galois_keys_, keygen)
+    end
     println("Done [", time_diff, " microseconds]")
   end
 
@@ -200,12 +244,15 @@ function ckks_performance_test(context)
   time_rotate_one_step_sum = 0
   time_rotate_random_sum = 0
   time_conjugate_sum = 0
+  time_serialize_sum = 0
+  time_serialize_zlib_sum = 0
+  time_serialize_zstd_sum = 0
 
   count = 10
 
   pod_vector = 1.001 * collect(1:slot_count(ckks_encoder))
 
-  println("Running tests ")
+  print("Running tests ")
   for i in 1:count
     plain = Plaintext(poly_modulus_degree(enc_params) * length(coeff_modulus(enc_params)), 0)
 
@@ -258,6 +305,24 @@ function ckks_performance_test(context)
       time_conjugate_sum += @elapsedus complex_conjugate_inplace!(encrypted, galois_keys_, evaluator)
     end
 
+    buf_size = save_size(ComprModeType.none, encrypted)
+    buf = Vector{UInt8}(undef, buf_size)
+    time_serialize_sum += @elapsedus begin
+      save!(buf, buf_size, ComprModeType.none, encrypted)
+    end
+
+    buf_size = save_size(ComprModeType.zlib, encrypted)
+    resize!(buf, buf_size)
+    time_serialize_zlib_sum += @elapsedus begin
+      save!(buf, buf_size, ComprModeType.zlib, encrypted)
+    end
+
+    buf_size = save_size(ComprModeType.zstd, encrypted)
+    resize!(buf, buf_size)
+    time_serialize_zstd_sum += @elapsedus begin
+      save!(buf, buf_size, ComprModeType.zstd, encrypted)
+    end
+
     print(".")
     flush(stdout)
   end
@@ -278,6 +343,9 @@ function ckks_performance_test(context)
   avg_rotate_one_step = div(time_rotate_one_step_sum, (2 * count))
   avg_rotate_random = div(time_rotate_random_sum, count)
   avg_conjugate = div(time_conjugate_sum, count)
+  avg_serialize = div(time_serialize_sum, count)
+  avg_serialize_zlib = div(time_serialize_zlib_sum, count)
+  avg_serialize_zstd = div(time_serialize_zstd_sum, count)
 
   println("Average encode: ", avg_encode, " microseconds")
   println("Average decode: ", avg_decode, " microseconds")
@@ -294,13 +362,16 @@ function ckks_performance_test(context)
     println("Average rotate vector random: ", avg_rotate_random, " microseconds")
     println("Average complex conjugate: ", avg_conjugate, " microseconds")
   end
+  println("Average serialize ciphertext: ", avg_serialize, " microseconds")
+  println("Average compressed (ZLIB) serialize ciphertext: ", avg_serialize_zlib, " microseconds")
+  println("Average compressed (Zstandard) serialize ciphertext: ", avg_serialize_zstd, " microseconds")
   flush(stdout)
 end
 
 function example_bfv_performance_default()
   print_example_banner("BFV Performance Test with Degrees: 4096, 8192, and 16384")
 
-  enc_parms = EncryptionParameters(SchemeType.BFV)
+  enc_parms = EncryptionParameters(SchemeType.bfv)
   poly_modulus_degree = 4096
   set_poly_modulus_degree!(enc_parms, poly_modulus_degree)
   set_coeff_modulus!(enc_parms, coeff_modulus_bfv_default(poly_modulus_degree))
@@ -353,7 +424,7 @@ function example_bfv_performance_custom()
 
   print_example_banner("BFV Performance Test with Degree: $poly_modulus_degree")
 
-  enc_parms = EncryptionParameters(SchemeType.BFV)
+  enc_parms = EncryptionParameters(SchemeType.bfv)
   set_poly_modulus_degree!(enc_parms, poly_modulus_degree)
   set_coeff_modulus!(enc_parms, coeff_modulus_bfv_default(poly_modulus_degree))
   if poly_modulus_degree == 1024
@@ -368,7 +439,7 @@ function example_ckks_performance_default()
   print_example_banner("CKKS Performance Test with Degrees: 4096, 8192, and 16384")
 
   # BFV primes are not recommended for CKKS, but are good enough for performance testing
-  enc_parms = EncryptionParameters(SchemeType.CKKS)
+  enc_parms = EncryptionParameters(SchemeType.ckks)
   poly_modulus_degree = 4096
   set_poly_modulus_degree!(enc_parms, poly_modulus_degree)
   set_coeff_modulus!(enc_parms, coeff_modulus_bfv_default(poly_modulus_degree))
@@ -417,7 +488,7 @@ function example_ckks_performance_custom()
 
   print_example_banner("CKKS Performance Test with Degree: $poly_modulus_degree")
 
-  enc_parms = EncryptionParameters(SchemeType.CKKS)
+  enc_parms = EncryptionParameters(SchemeType.ckks)
   set_poly_modulus_degree!(enc_parms, poly_modulus_degree)
   set_coeff_modulus!(enc_parms, coeff_modulus_bfv_default(poly_modulus_degree))
   ckks_performance_test(SEALContext(enc_parms))

@@ -19,7 +19,7 @@ See also: [`example_ckks_basics`](@ref)
 function example_ckks_basics()
   print_example_banner("Example: CKKS Basics")
 
-  parms = EncryptionParameters(SchemeType.CKKS)
+  parms = EncryptionParameters(SchemeType.ckks)
 
   poly_modulus_degree = 8192
   set_poly_modulus_degree!(parms, poly_modulus_degree)
@@ -32,9 +32,11 @@ function example_ckks_basics()
   println()
 
   keygen = KeyGenerator(context)
-  public_key_ = public_key(keygen)
+  public_key_ = PublicKey()
+  create_public_key!(public_key_, keygen)
   secret_key_ = secret_key(keygen)
-  relin_keys_ = relin_keys_local(keygen)
+  relin_keys_ = RelinKeys()
+  create_relin_keys!(relin_keys_, keygen)
   encryptor = Encryptor(context, public_key_)
   evaluator = Evaluator(context)
   decryptor = Decryptor(context, secret_key_)

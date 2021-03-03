@@ -20,14 +20,17 @@ mutable struct Modulus <: SEALObject
   end
 
   function Modulus(handle::Ptr{Cvoid}; destroy_on_gc=true)
-    x = new(handle)
+    object = new(handle)
     if destroy_on_gc
-      finalizer(x) do x
-        # @async println("Finalizing $x at line $(@__LINE__).")
-        ccall((:Modulus_Destroy, libsealc), Clong, (Ptr{Cvoid},), x)
-      end
+      finalizer(destroy, object)
     end
-    return x
+    return object
+  end
+end
+
+function destroy(object::Modulus)
+  if isallocated(object)
+    ccall((:Modulus_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
   end
 end
 

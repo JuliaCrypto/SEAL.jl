@@ -11,15 +11,39 @@ Abstract parent type for all types based on SEAL classes.
 abstract type SEALObject end
 
 """
-    handle(x::SEALObject)
+    handle(object::SEALObject)
 
-Return the raw C pointer to where `x` resides in memory.
+Return the raw C pointer to where `object` resides in memory.
 """
-handle(x::SEALObject) = x.handle
+@inline handle(object::SEALObject) = object.handle
+@inline gethandle(object::SEALObject) = object.handle
+@inline sethandle!(object::SEALObject, handle) = object.handle = handle
 
-export SEALObject, handle
+"""
+    destroy(object::SEALObject)
 
-Base.unsafe_convert(::Type{Ptr{Cvoid}}, x::SEALObject) = handle(x)
+Call the corresponding destruction function on `object` to free up memory and reset object handle to
+a null pointer. If `object` is not allocated, `destroy` will not do anything.
+"""
+function destroy(object::SEALObject) end
+
+"""
+    isnull(object::SEALObject)
+
+Return true if the object handle is a null pointer and false otherwise.
+"""
+@inline isnull(object::SEALObject) = handle(object) == C_NULL
+
+"""
+    isallocated(object::SEALObject)
+
+Return true if the object is allocated, i.e., if it is not null.
+"""
+@inline isallocated(object::SEALObject) = !isnull(object)
+
+export SEALObject, handle, destroy, isnull, isallocated
+
+Base.unsafe_convert(::Type{Ptr{Cvoid}}, object::SEALObject) = handle(object)
 
 include("auxiliary.jl")
 # Julia-only auxiliary methods -> no exports
@@ -59,7 +83,8 @@ include("relinkeys.jl")
 export RelinKeys, parms_id, save_size, save!, load!
 
 include("keygenerator.jl")
-export KeyGenerator, public_key, secret_key, relin_keys_local, relin_keys, galois_keys_local
+export KeyGenerator, create_public_key!, create_public_key, secret_key, create_relin_keys!,
+       create_relin_keys, create_galois_keys!
 
 include("plaintext.jl")
 export Plaintext, scale, scale!, parms_id, to_string, save_size, save!
@@ -68,7 +93,7 @@ include("ciphertext.jl")
 export Ciphertext, scale, scale!, parms_id, size, length, save_size, save!, load!, reserve!
 
 include("encryptor.jl")
-export Encryptor, encrypt!, encrypt_symmetric, encrypt_symmetric!
+export Encryptor, set_secret_key!, encrypt!, encrypt_symmetric, encrypt_symmetric!
 
 include("evaluator.jl")
 export Evaluator, square!, square_inplace!, relinearize!, relinearize_inplace!, rescale_to_next!,
@@ -84,9 +109,6 @@ export Decryptor, decrypt!, invariant_noise_budget
 
 include("ckks.jl")
 export CKKSEncoder, slot_count, encode!, decode!
-
-include("intencoder.jl")
-export IntegerEncoder, encode!, encode, decode_int32, plain_modulus
 
 include("batchencoder.jl")
 export BatchEncoder, slot_count, encode!, decode!

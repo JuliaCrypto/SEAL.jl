@@ -65,8 +65,10 @@ SEALContext(Ptr{Nothing} @0x0000000004298440)
 julia> keygen = KeyGenerator(context)
 KeyGenerator(Ptr{Nothing} @0x00000000021ef540)
 
-julia> public_key_ = public_key(keygen)
-PublicKey(Ptr{Nothing} @0x000000000437f760)
+julia> public_key_ = PublicKey()
+PublicKey(Ptr{Nothing} @0x0000000002272610)
+
+julia> create_public_key!(public_key_, keygen)
 
 julia> secret_key_ = secret_key(keygen)
 SecretKey(Ptr{Nothing} @0x0000000001cec2a0)
@@ -80,8 +82,8 @@ Evaluator(Ptr{Nothing} @0x000000000428bdd0)
 julia> decryptor = Decryptor(context, secret_key_)
 Decryptor(Ptr{Nothing} @0x00000000037670d0)
 
-julia> encoder = IntegerEncoder(context)
-IntegerEncoder(Ptr{Nothing} @0x0000000002ec3350, SEALContext(Ptr{Nothing} @0x0000000004298440))
+julia> encoder = IntegerEncoder(context) #FIXME fix-tests
+IntegerEncoder(Ptr{Nothing} @0x0000000002ec3350, SEALContext(Ptr{Nothing} @0x0000000004298440)) #FIXME fix-tests
 
 julia> value = 7
 7
@@ -120,7 +122,7 @@ directory. Otherwise it will be very likely that you are using SEAL.jl (and SEAL
 way that is either not secure, will produce unexpected results, or just crashes.
 The examples included in SEAL.jl follow almost line-by-line the examples provided by the
 [SEAL library](https://github.com/microsoft/SEAL/tree/master/native/examples).
-For example, the snippet above is based on the `example_integer_encoder()` function in
+For example, the snippet above is based on the `example_integer_encoder()` function in # FIXME fix-tests
 [`examples/2_encoders.jl`](https://github.com/JuliaCrypto/SEAL.jl/tree/main/examples/2_encoders.jl).
 The full list of examples is as follows:
 

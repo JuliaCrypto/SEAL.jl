@@ -1,9 +1,9 @@
 @testset "5_rotation" begin
   @testset "rotation_ckks" begin
     @testset "EncryptionParameters" begin
-      @test_nowarn EncryptionParameters(SchemeType.CKKS)
+      @test_nowarn EncryptionParameters(SchemeType.ckks)
     end
-    enc_parms = EncryptionParameters(SchemeType.CKKS)
+    enc_parms = EncryptionParameters(SchemeType.ckks)
 
     @testset "polynomial modulus degree" begin
       @test_nowarn set_poly_modulus_degree!(enc_parms, 8192)
@@ -26,9 +26,13 @@
     keygen = KeyGenerator(context)
 
     @testset "PublicKey" begin
-      @test_nowarn public_key(keygen)
+      @test_nowarn PublicKey()
     end
-    public_key_ = public_key(keygen)
+    public_key_ = PublicKey()
+
+    @testset "create_public_key" begin
+      @test_nowarn create_public_key!(public_key_, keygen)
+    end
 
     @testset "SecretKey" begin
       @test_nowarn secret_key(keygen)
@@ -36,14 +40,22 @@
     secret_key_ = secret_key(keygen)
 
     @testset "RelinKeys" begin
-      @test_nowarn relin_keys_local(keygen)
+      @test_nowarn RelinKeys()
     end
-    relin_keys_ = relin_keys_local(keygen)
+    relin_keys_ = RelinKeys()
+
+    @testset "create_relin_keys" begin
+      @test_nowarn create_relin_keys!(relin_keys_, keygen)
+    end
 
     @testset "GaloisKeys" begin
-      @test_nowarn galois_keys_local(keygen)
+      @test_nowarn GaloisKeys()
     end
-    galois_keys_ = galois_keys_local(keygen)
+    galois_keys_ = GaloisKeys()
+
+    @testset "create_galois_keys" begin
+      @test_nowarn create_galois_keys!(galois_keys_, keygen)
+    end
 
     @testset "Encryptor" begin
       @test_nowarn Encryptor(context, public_key_)

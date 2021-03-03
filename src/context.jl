@@ -21,12 +21,15 @@ mutable struct SEALContext <: SEALObject
   end
 
   function SEALContext(handle::Ptr{Cvoid})
-    x = new(handle)
-    finalizer(x) do x
-      # @async println("Finalizing $x at line $(@__LINE__).")
-      ccall((:SEALContext_Destroy, libsealc), Clong, (Ptr{Cvoid},), x)
-    end
-    return x
+    object = new(handle)
+    finalizer(destroy, object)
+    return object
+  end
+end
+
+function destroy(object::SEALContext)
+  if isallocated(object)
+    ccall((:SEALContext_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
   end
 end
 
@@ -108,12 +111,15 @@ mutable struct ContextData <: SEALObject
   handle::Ptr{Cvoid}
 
   function ContextData(handle::Ptr{Cvoid}; destroy_on_gc=true)
-    x = new(handle)
-    destroy_on_gc && finalizer(x) do x
-      # @async println("Finalizing $x at line $(@__LINE__).")
-      ccall((:ContextData_Destroy, libsealc), Clong, (Ptr{Cvoid},), x)
-    end
-    return x
+    object = new(handle)
+    destroy_on_gc && finalizer(destroy, object)
+    return object
+  end
+end
+
+function destroy(object::ContextData)
+  if isallocated(object)
+    ccall((:ContextData_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
   end
 end
 
@@ -176,12 +182,15 @@ mutable struct EncryptionParameterQualifiers <: SEALObject
   handle::Ptr{Cvoid}
 
   function EncryptionParameterQualifiers(handle::Ptr{Cvoid}; destroy_on_gc=true)
-    x = new(handle)
-    destroy_on_gc && finalizer(x) do x
-      # @async println("Finalizing $x at line $(@__LINE__).")
-      ccall((:EncryptionParameterQualifiers_Destroy, libsealc), Clong, (Ptr{Cvoid},), x)
-    end
-    return x
+    object = new(handle)
+    destroy_on_gc && finalizer(destroy, object)
+    return object
+  end
+end
+
+function destroy(object::EncryptionParameterQualifiers)
+  if isallocated(object)
+    ccall((:EncryptionParameterQualifiers_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
   end
 end
 

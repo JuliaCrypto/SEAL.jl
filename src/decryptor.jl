@@ -19,12 +19,15 @@ mutable struct Decryptor <: SEALObject
   end
 
   function Decryptor(handle::Ptr{Cvoid})
-    x = new(handle)
-    finalizer(x) do x
-      # @async println("Finalizing $x at line $(@__LINE__).")
-      ccall((:Decryptor_Destroy, libsealc), Clong, (Ptr{Cvoid},), x)
-    end
-    return x
+    object = new(handle)
+    finalizer(destroy, object)
+    return object
+  end
+end
+
+function destroy(object::Decryptor)
+  if isallocated(object)
+    ccall((:Decryptor_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
   end
 end
 

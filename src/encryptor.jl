@@ -37,13 +37,24 @@ mutable struct Encryptor <: SEALObject
   end
 
   function Encryptor(handle::Ptr{Cvoid})
-    x = new(handle)
-    finalizer(x) do x
-      # @async println("Finalizing $x at line $(@__LINE__).")
-      ccall((:Encryptor_Destroy, libsealc), Clong, (Ptr{Cvoid},), x)
-    end
-    return x
+    object = new(handle)
+    finalizer(destroy, object)
+    return object
   end
+end
+
+function destroy(object::Encryptor)
+  if isallocated(object)
+    ccall((:Encryptor_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
+  end
+end
+
+function set_secret_key!(encryptor::Encryptor, secret_key::SecretKey)
+  retval = ccall((:Encryptor_SetSecretKey, libsealc), Clong,
+                  (Ptr{Cvoid}, Ptr{Cvoid}),
+                  encryptor, secret_key)
+  @check_return_value retval
+  return nothing
 end
 
 function encrypt!(destination::Ciphertext, plain::Plaintext, encryptor::Encryptor)

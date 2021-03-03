@@ -7,7 +7,7 @@ using Printf
 function example_levels()
   print_example_banner("Example: Levels")
 
-  enc_parms = EncryptionParameters(SchemeType.BFV)
+  enc_parms = EncryptionParameters(SchemeType.bfv)
 
   poly_modulus_degree = 8192
   set_poly_modulus_degree!(enc_parms, poly_modulus_degree)
@@ -24,8 +24,7 @@ function example_levels()
   println("Print the modulus switching chain.")
 
   context_data = key_context_data(context)
-  println("----> Level (chain index): ", chain_index(context_data))
-  println(" ...... key_context_data()")
+  println("----> Level (chain index): ", chain_index(context_data), " ...... key_context_data()")
   print("      parms_id:")
   for parm_id in parms_id(context_data)
     @printf(" %016x", parm_id)
@@ -67,11 +66,12 @@ function example_levels()
   println(" End of chain reached")
 
   keygen = KeyGenerator(context)
-  public_key_ = public_key(keygen)
+  public_key_ = PublicKey()
+  create_public_key!(public_key_, keygen)
   secret_key_ = secret_key(keygen)
-  relin_keys_ = relin_keys_local(keygen)
+  relin_keys_ = RelinKeys()
+  create_relin_keys!(relin_keys_, keygen)
 
-  galois_keys_ = galois_keys_local(keygen)
   print_line(@__LINE__)
   println("Print the parameter IDs of generated elements.")
   print("    + public_key:  ")
@@ -86,11 +86,6 @@ function example_levels()
   println()
   print("    + relin_keys:  ")
   for parm_id in parms_id(relin_keys_)
-    @printf(" %016x", parm_id)
-  end
-  println()
-  print("    + galois_keys: ")
-  for parm_id in parms_id(galois_keys_)
     @printf(" %016x", parm_id)
   end
   println()
@@ -215,5 +210,6 @@ function example_levels()
     context_data = next_context_data(context_data)
   end
   println(" End of chain reached")
+  println()
 
 end

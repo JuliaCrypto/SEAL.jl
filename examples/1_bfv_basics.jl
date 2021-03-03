@@ -19,7 +19,7 @@ See also: [`example_ckks_basics`](@ref)
 function example_bfv_basics()
   print_example_banner("Example: BFV Basics")
 
-  parms = EncryptionParameters(SchemeType.BFV)
+  parms = EncryptionParameters(SchemeType.bfv)
 
   poly_modulus_degree = 4096
   set_poly_modulus_degree!(parms, poly_modulus_degree)
@@ -40,8 +40,9 @@ function example_bfv_basics()
   println("~~~~~~ A naive way to calculate 4(x^2+1)(x+1)^2. ~~~~~~")
 
   keygen = KeyGenerator(context)
-  public_key_ = public_key(keygen)
   secret_key_ = secret_key(keygen)
+  public_key_ = PublicKey()
+  create_public_key!(public_key_, keygen)
 
   encryptor = Encryptor(context, public_key_)
 
@@ -114,8 +115,9 @@ function example_bfv_basics()
   println("~~~~~~ A better way to calculate 4(x^2+1)(x+1)^2. ~~~~~~")
 
   print_line(@__LINE__)
-  println("Generate locally usable relinearization keys.")
-  relin_keys_ = relin_keys_local(keygen)
+  println("Generate relinearization keys.")
+  relin_keys_ = RelinKeys()
+  create_relin_keys!(relin_keys_, keygen)
 
   print_line(@__LINE__)
   println("Compute and relinearize x_squared (x^2),")

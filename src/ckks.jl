@@ -22,12 +22,15 @@ mutable struct CKKSEncoder <: SEALObject
   end
 
   function CKKSEncoder(handle::Ptr{Cvoid}, context)
-    x = new(handle, context)
-    finalizer(x) do x
-      # @async println("Finalizing $x at line $(@__LINE__).")
-      ccall((:CKKSEncoder_Destroy, libsealc), Clong, (Ptr{Cvoid},), x)
-    end
-    return x
+    object = new(handle, context)
+    finalizer(destroy, object)
+    return object
+  end
+end
+
+function destroy(object::CKKSEncoder)
+  if isallocated(object)
+    ccall((:CKKSEncoder_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
   end
 end
 

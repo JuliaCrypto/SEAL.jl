@@ -21,20 +21,37 @@ mutable struct KeyGenerator <: SEALObject
   end
 
   function KeyGenerator(handle::Ptr{Cvoid})
-    x = new(handle)
-    finalizer(x) do x
-      # @async println("Finalizing $x at line $(@__LINE__).")
-      ccall((:KeyGenerator_Destroy, libsealc), Clong, (Ptr{Cvoid},), x)
-    end
-    return x
+    object = new(handle)
+    finalizer(destroy, object)
+    return object
   end
 end
 
-function public_key(keygen::KeyGenerator)
+function destroy(object::KeyGenerator)
+  if isallocated(object)
+    ccall((:KeyGenerator_Destroy, libsealc), Clong, (Ptr{Cvoid},), object)
+  end
+end
+
+function create_public_key!(destination::PublicKey, keygen::KeyGenerator)
   keyptr = Ref{Ptr{Cvoid}}(C_NULL)
-  retval = ccall((:KeyGenerator_PublicKey, libsealc), Clong,
-                 (Ptr{Cvoid}, Ref{Ptr{Cvoid}}),
-                 keygen, keyptr)
+  retval = ccall((:KeyGenerator_CreatePublicKey, libsealc), Clong,
+                 (Ptr{Cvoid}, UInt8, Ref{Ptr{Cvoid}}),
+                 keygen, false, keyptr)
+  @check_return_value retval
+
+  # Destroy previous key and reuse its container
+  destroy(destination)
+  sethandle!(destination, keyptr[])
+
+  return nothing
+end
+
+function create_public_key(keygen::KeyGenerator)
+  keyptr = Ref{Ptr{Cvoid}}(C_NULL)
+  retval = ccall((:KeyGenerator_CreatePublicKey, libsealc), Clong,
+                 (Ptr{Cvoid}, UInt8, Ref{Ptr{Cvoid}}),
+                 keygen, true, keyptr)
   @check_return_value retval
   return PublicKey(keyptr[])
 end
@@ -48,29 +65,39 @@ function secret_key(keygen::KeyGenerator)
   return SecretKey(keyptr[])
 end
 
-function relin_keys_local(keygen::KeyGenerator)
+function create_relin_keys!(destination::RelinKeys, keygen::KeyGenerator)
   keyptr = Ref{Ptr{Cvoid}}(C_NULL)
-  retval = ccall((:KeyGenerator_RelinKeys, libsealc), Clong,
+  retval = ccall((:KeyGenerator_CreateRelinKeys, libsealc), Clong,
                  (Ptr{Cvoid}, UInt8, Ref{Ptr{Cvoid}}),
                  keygen, false, keyptr)
   @check_return_value retval
-  return RelinKeys(keyptr[])
+
+  # Destroy previous key and reuse its container
+  destroy(destination)
+  sethandle!(destination, keyptr[])
+
+  return nothing
 end
 
-function relin_keys(keygen::KeyGenerator)
+function create_relin_keys(keygen::KeyGenerator)
   keyptr = Ref{Ptr{Cvoid}}(C_NULL)
-  retval = ccall((:KeyGenerator_RelinKeys, libsealc), Clong,
+  retval = ccall((:KeyGenerator_CreateRelinKeys, libsealc), Clong,
                  (Ptr{Cvoid}, UInt8, Ref{Ptr{Cvoid}}),
                  keygen, true, keyptr)
   @check_return_value retval
   return RelinKeys(keyptr[])
 end
 
-function galois_keys_local(keygen::KeyGenerator)
+function create_galois_keys!(destination::GaloisKeys, keygen::KeyGenerator)
   keyptr = Ref{Ptr{Cvoid}}(C_NULL)
-  retval = ccall((:KeyGenerator_GaloisKeysAll, libsealc), Clong,
+  retval = ccall((:KeyGenerator_CreateGaloisKeysAll, libsealc), Clong,
                  (Ptr{Cvoid}, UInt8, Ref{Ptr{Cvoid}}),
                  keygen, false, keyptr)
   @check_return_value retval
-  return GaloisKeys(keyptr[])
+
+  # Destroy previous key and reuse its container
+  destroy(destination)
+  sethandle!(destination, keyptr[])
+
+  return nothing
 end
