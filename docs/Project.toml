@@ -3,4 +3,5 @@ Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 SEAL = "bac81e26-86e4-4b48-8696-7d0406d5dbc1"
 
 [compat]
-Documenter = "0.24, 0.26"
+Documenter = "0.26"
+SEAL = "0.3"
