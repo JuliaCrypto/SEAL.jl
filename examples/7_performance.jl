@@ -59,6 +59,9 @@ function bfv_performance_test(context)
   time_rotate_rows_one_step_sum = 0
   time_rotate_rows_random_sum = 0
   time_rotate_columns_sum = 0
+  time_serialize_sum = 0
+  time_serialize_zlib_sum = 0
+  time_serialize_zstd_sum = 0
 
   count = 10
 
@@ -67,7 +70,9 @@ function bfv_performance_test(context)
 
   print("Running tests ")
   for i in 1:count
-    plain = Plaintext(poly_modulus_degree(enc_params), 0)
+    plain = Plaintext(poly_modulus_degree_, 0)
+    plain1 = Plaintext(poly_modulus_degree_, 0)
+    plain2 = Plaintext(poly_modulus_degree_, 0)
     time_batch_sum += @elapsedus encode!(plain, pod_vector, batch_encoder)
 
     pod_vector2 = Vector{UInt64}(undef, slot_count_)
@@ -88,9 +93,11 @@ function bfv_performance_test(context)
     end
 
     encrypted1 = Ciphertext(context)
-    encrypt!(encrypted1, encode(UInt64(i), encoder), encryptor) #FIXME fix-tests
+    encode!(plain1, fill(UInt64(i), slot_count_), batch_encoder)
+    encrypt!(encrypted1, plain1, encryptor)
     encrypted2 = Ciphertext(context)
-    encrypt!(encrypted2, encode(UInt64(i + 1), encoder), encryptor) #FIXME fix-tests
+    encode!(plain2, fill(UInt64(i+1), slot_count_), batch_encoder)
+    encrypt!(encrypted2, plain2, encryptor) #FIXME fix-tests
     time_add_sum += @elapsedus begin
       add_inplace!(encrypted1, encrypted1, evaluator)
       add_inplace!(encrypted2, encrypted2, evaluator)
@@ -123,6 +130,24 @@ function bfv_performance_test(context)
       end
     end
 
+    buf_size = save_size(ComprModeType.none, encrypted)
+    buf = Vector{UInt8}(undef, buf_size)
+    time_serialize_sum += @elapsedus begin
+      save!(buf, buf_size, ComprModeType.none, encrypted)
+    end
+
+    buf_size = save_size(ComprModeType.zlib, encrypted)
+    resize!(buf, buf_size)
+    time_serialize_zlib_sum += @elapsedus begin
+      save!(buf, buf_size, ComprModeType.zlib, encrypted)
+    end
+
+    buf_size = save_size(ComprModeType.zstd, encrypted)
+    resize!(buf, buf_size)
+    time_serialize_zstd_sum += @elapsedus begin
+      save!(buf, buf_size, ComprModeType.zstd, encrypted)
+    end
+
     print(".")
     flush(stdout)
   end
@@ -142,6 +167,9 @@ function bfv_performance_test(context)
   avg_rotate_rows_one_step = div(time_rotate_rows_one_step_sum, (2 * count))
   avg_rotate_rows_random = div(time_rotate_rows_random_sum, count)
   avg_rotate_columns = div(time_rotate_columns_sum, count)
+  avg_serialize = div(time_serialize_sum, count)
+  avg_serialize_zlib = div(time_serialize_zlib_sum, count)
+  avg_serialize_zstd = div(time_serialize_zstd_sum, count)
 
   println("Average batch: ", avg_batch, " microseconds")
   println("Average unbatch: ", avg_unbatch, " microseconds")
@@ -157,6 +185,9 @@ function bfv_performance_test(context)
     println("Average rotate rows random: ", avg_rotate_rows_random, " microseconds")
     println("Average rotate columns: ", avg_rotate_columns, " microseconds")
   end
+  println("Average serialize ciphertext: ", avg_serialize, " microseconds")
+  println("Average compressed (ZLIB) serialize ciphertext: ", avg_serialize_zlib, " microseconds")
+  println("Average compressed (Zstandard) serialize ciphertext: ", avg_serialize_zstd, " microseconds")
 end
 
 function ckks_performance_test(context)
@@ -213,12 +244,15 @@ function ckks_performance_test(context)
   time_rotate_one_step_sum = 0
   time_rotate_random_sum = 0
   time_conjugate_sum = 0
+  time_serialize_sum = 0
+  time_serialize_zlib_sum = 0
+  time_serialize_zstd_sum = 0
 
   count = 10
 
   pod_vector = 1.001 * collect(1:slot_count(ckks_encoder))
 
-  println("Running tests ")
+  print("Running tests ")
   for i in 1:count
     plain = Plaintext(poly_modulus_degree(enc_params) * length(coeff_modulus(enc_params)), 0)
 
@@ -271,6 +305,24 @@ function ckks_performance_test(context)
       time_conjugate_sum += @elapsedus complex_conjugate_inplace!(encrypted, galois_keys_, evaluator)
     end
 
+    buf_size = save_size(ComprModeType.none, encrypted)
+    buf = Vector{UInt8}(undef, buf_size)
+    time_serialize_sum += @elapsedus begin
+      save!(buf, buf_size, ComprModeType.none, encrypted)
+    end
+
+    buf_size = save_size(ComprModeType.zlib, encrypted)
+    resize!(buf, buf_size)
+    time_serialize_zlib_sum += @elapsedus begin
+      save!(buf, buf_size, ComprModeType.zlib, encrypted)
+    end
+
+    buf_size = save_size(ComprModeType.zstd, encrypted)
+    resize!(buf, buf_size)
+    time_serialize_zstd_sum += @elapsedus begin
+      save!(buf, buf_size, ComprModeType.zstd, encrypted)
+    end
+
     print(".")
     flush(stdout)
   end
@@ -291,6 +343,9 @@ function ckks_performance_test(context)
   avg_rotate_one_step = div(time_rotate_one_step_sum, (2 * count))
   avg_rotate_random = div(time_rotate_random_sum, count)
   avg_conjugate = div(time_conjugate_sum, count)
+  avg_serialize = div(time_serialize_sum, count)
+  avg_serialize_zlib = div(time_serialize_zlib_sum, count)
+  avg_serialize_zstd = div(time_serialize_zstd_sum, count)
 
   println("Average encode: ", avg_encode, " microseconds")
   println("Average decode: ", avg_decode, " microseconds")
@@ -307,6 +362,9 @@ function ckks_performance_test(context)
     println("Average rotate vector random: ", avg_rotate_random, " microseconds")
     println("Average complex conjugate: ", avg_conjugate, " microseconds")
   end
+  println("Average serialize ciphertext: ", avg_serialize, " microseconds")
+  println("Average compressed (ZLIB) serialize ciphertext: ", avg_serialize_zlib, " microseconds")
+  println("Average compressed (Zstandard) serialize ciphertext: ", avg_serialize_zstd, " microseconds")
   flush(stdout)
 end
 
