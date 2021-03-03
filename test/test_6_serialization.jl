@@ -91,38 +91,27 @@
 
     encryptor = Encryptor(context, pk)
     encrypted1 = Ciphertext()
-    encrypted2 = Ciphertext()
     @testset "encrypt!" begin
       @test_nowarn encrypt!(encrypted1, plain1, encryptor)
-      @test_nowarn encrypt!(encrypted2, plain2, encryptor)
     end
 
-    @testset "symmetric encryptor" begin
-      @test_nowarn Encryptor(context, sk)
+    @testset "set_secret_key!" begin
+      @test_nowarn set_secret_key!(encryptor, sk)
     end
-    sym_encryptor = Encryptor(context, sk)
 
     @testset "encrypt_symmetric, encrypt_symmetric!" begin
-      @test encrypt_symmetric(plain1, sym_encryptor) isa Ciphertext
-      @test encrypt_symmetric(plain2, sym_encryptor) isa Ciphertext
+      @test encrypt_symmetric(plain2, encryptor) isa Ciphertext
       c = Ciphertext()
-      @test encrypt_symmetric!(c, plain2, sym_encryptor)  == c
+      @test encrypt_symmetric!(c, plain2, encryptor) == c
     end
-    sym_encrypted1 = encrypt_symmetric(plain1, sym_encryptor)
-    sym_encrypted2 = encrypt_symmetric(plain2, sym_encryptor)
+    sym_encrypted2 = encrypt_symmetric(plain2, encryptor)
 
     @testset "save! Ciphertext" begin
-      @test save_size(sym_encrypted1) == 131770
-      resize!(data_stream2, save_size(sym_encrypted1))
-      @test isapprox(save!(data_stream2, sym_encrypted1), 87070, rtol=0.01)
-      size_sym_encrypted1 = save!(data_stream2, sym_encrypted1)
-      resize!(data_stream2, size_sym_encrypted1)
-
       @test save_size(encrypted1) == 263273
-      resize!(data_stream3, save_size(encrypted1))
-      @test isapprox(save!(data_stream3, encrypted1), 173531, rtol=0.01)
-      size_encrypted1 = save!(data_stream3, encrypted1)
-      resize!(data_stream3, size_encrypted1)
+      resize!(data_stream2, save_size(encrypted1))
+      @test isapprox(save!(data_stream2, encrypted1), 173531, rtol=0.01)
+      size_encrypted1 = save!(data_stream2, encrypted1)
+      resize!(data_stream2, size_encrypted1)
 
       @test save_size(sym_encrypted2) == 131770
       resize!(data_stream3, save_size(sym_encrypted2))
@@ -149,7 +138,7 @@
     end
 
     @testset "load! Ciphertext" begin
-      @test isapprox(load!(encrypted1, context, data_stream2), 87070, rtol=0.01)
+      @test isapprox(load!(encrypted1, context, data_stream2), 173702, rtol=0.01)
       @test isapprox(load!(encrypted2, context, data_stream3), 86966, rtol=0.01)
     end
 
@@ -195,12 +184,12 @@
     result = Vector{Float64}(undef, slot_count_)
     @testset "decode! and check result" begin
       @test_nowarn decode!(result, plain_result, encoder)
-      @test isapprox(result[1], 10.35, rtol=0.001)
-      @test isapprox(result[2], 10.35, rtol=0.001)
-      @test isapprox(result[3], 10.35, rtol=0.001)
-      @test isapprox(result[end-2], 10.35, rtol=0.001)
-      @test isapprox(result[end-1], 10.35, rtol=0.001)
-      @test isapprox(result[end-0], 10.35, rtol=0.001)
+      @test isapprox(result[1], 10.35, rtol=0.01)
+      @test isapprox(result[2], 10.35, rtol=0.01)
+      @test isapprox(result[3], 10.35, rtol=0.01)
+      @test isapprox(result[end-2], 10.35, rtol=0.01)
+      @test isapprox(result[end-1], 10.35, rtol=0.01)
+      @test isapprox(result[end-0], 10.35, rtol=0.01)
     end
   end
 

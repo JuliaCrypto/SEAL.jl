@@ -55,6 +55,11 @@
       @test_throws ErrorException SEAL.check_return_value(0x80131509)
       @test_throws ErrorException SEAL.check_return_value(0x11111111)
     end
+
+    @testset "destroy" begin
+      mempool = memory_manager_get_pool()
+      @test_nowarn destroy(mempool)
+    end
   end
 
   @testset "additional CKKS tests" begin
@@ -66,6 +71,11 @@
     public_key_ = PublicKey()
     create_public_key!(public_key_, keygen)
     secret_key_ = secret_key(keygen)
+
+    @testset "create_public_key" begin
+      @test create_public_key(keygen) isa PublicKey
+    end
+
     @testset "Encryptor" begin
       @test_nowarn Encryptor(context, public_key_, secret_key_)
       @test_nowarn Encryptor(context, public_key_)
@@ -142,6 +152,13 @@
       c9 = Ciphertext()
       encrypt!(c9, p, encryptor)
       @test complex_conjugate_inplace!(c9, galois_keys_, evaluator) == c9
+    end
+
+    @testset "negate!" begin
+      c10 = Ciphertext()
+      c11 = Ciphertext()
+      encrypt!(c10, p, encryptor)
+      @test negate!(c11, c10, evaluator) == c11
     end
 
     @testset "using_keyswitching" begin
