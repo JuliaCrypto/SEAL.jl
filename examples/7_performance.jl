@@ -97,7 +97,7 @@ function bfv_performance_test(context)
     encrypt!(encrypted1, plain1, encryptor)
     encrypted2 = Ciphertext(context)
     encode!(plain2, fill(UInt64(i+1), slot_count_), batch_encoder)
-    encrypt!(encrypted2, plain2, encryptor) #FIXME fix-tests
+    encrypt!(encrypted2, plain2, encryptor)
     time_add_sum += @elapsedus begin
       add_inplace!(encrypted1, encrypted1, evaluator)
       add_inplace!(encrypted2, encrypted2, evaluator)
