@@ -4,6 +4,19 @@ using SEAL
 using Printf
 
 
+"""
+    example_serialization()
+
+Show example for how to use serialization in a client-server setup, where only the client knows the
+secret key and the servers does not have knowledge of any unencrypted data.
+This function is based on the file `native/examples/6_serialization.cpp` of the original
+SEAL library and should yield the exact same output, except for differences in compression ratios.
+
+* [SEAL](https://github.com/microsoft/SEAL)
+* [native/examples/6_serialization.cpp](https://github.com/microsoft/SEAL/blob/master/native/examples/6_serialization.cpp)
+
+See also: [`example_bfv_basics`](@ref), [`example_ckks_basics`](@ref)
+"""
 function example_serialization()
   print_example_banner("Example: Serialization")
 

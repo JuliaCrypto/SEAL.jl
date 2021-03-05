@@ -173,6 +173,17 @@ function example_rotation_ckks()
   return
 end
 
+
+"""
+    example_rotation()
+
+Perform some rotation on data encryped with the BFV and CKKS schemes. This routine is based on the
+file `native/examples/5_rotation.cpp` of the original SEAL library and should yield the exact same
+output.
+
+* [SEAL](https://github.com/microsoft/SEAL)
+* [native/examples/5_rotation.cpp](https://github.com/microsoft/SEAL/blob/master/native/examples/5_rotation.cpp)
+"""
 function example_rotation()
   print_example_banner("Example: Rotation")
 

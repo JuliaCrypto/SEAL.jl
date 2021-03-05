@@ -5,6 +5,23 @@ using Printf
 using Random
 
 
+"""
+    bfv_performance_test(context)
+
+Perform multiple performance tests with the BFV scheme for the SEAL encryption context given in
+`context`.
+
+This function is based on the file `native/examples/7_performance.cpp` of the original
+SEAL library and should yield the exact same output, except (of course) for the actual performance
+numbers.
+
+* [SEAL](https://github.com/microsoft/SEAL)
+* [native/examples/7_performance.cpp](https://github.com/microsoft/SEAL/blob/master/native/examples/7_performance.cpp)
+
+See also: [`example_performance_test`](@ref),
+          [`example_ckks_performance_default`](@ref), [`example_ckks_performance_custom`](@ref),
+          [`bfv_performance_test`](@ref)
+"""
 function bfv_performance_test(context)
   print_parameters(context)
   println()
@@ -190,6 +207,24 @@ function bfv_performance_test(context)
   println("Average compressed (Zstandard) serialize ciphertext: ", avg_serialize_zstd, " microseconds")
 end
 
+
+"""
+    ckks_performance_test(context)
+
+Perform multiple performance tests with the CKKS scheme for the SEAL encryption context given in
+`context`.
+
+This function is based on the file `native/examples/7_performance.cpp` of the original
+SEAL library and should yield the exact same output, except (of course) for the actual performance
+numbers.
+
+* [SEAL](https://github.com/microsoft/SEAL)
+* [native/examples/7_performance.cpp](https://github.com/microsoft/SEAL/blob/master/native/examples/7_performance.cpp)
+
+See also: [`example_performance_test`](@ref),
+          [`example_ckks_performance_default`](@ref), [`example_ckks_performance_custom`](@ref),
+          [`bfv_performance_test`](@ref)
+"""
 function ckks_performance_test(context)
   print_parameters(context)
   println()
@@ -368,6 +403,23 @@ function ckks_performance_test(context)
   flush(stdout)
 end
 
+
+"""
+    example_bfv_performance_default()
+
+Perform multiple performance tests of the BFV scheme for several polynomial modulus degrees.
+
+This function is based on the file `native/examples/7_performance.cpp` of the original
+SEAL library and should yield the exact same output, except (of course) for the actual performance
+numbers.
+
+* [SEAL](https://github.com/microsoft/SEAL)
+* [native/examples/7_performance.cpp](https://github.com/microsoft/SEAL/blob/master/native/examples/7_performance.cpp)
+
+See also: [`example_performance_test`](@ref), [`example_bfv_performance_custom`](@ref),
+          [`bfv_performance_test`](@ref),
+          [`example_ckks_performance_default`](@ref)
+"""
 function example_bfv_performance_default()
   print_example_banner("BFV Performance Test with Degrees: 4096, 8192, and 16384")
 
@@ -402,6 +454,24 @@ function example_bfv_performance_default()
   # bfv_performance_test(SEALContext(enc_parms))
 end
 
+
+"""
+    example_bfv_performance_custom()
+
+Show a terminal menu for selecting a custom polynomial modulus degree and use it for performance
+tests with the BFV scheme.
+
+This function is based on the file `native/examples/7_performance.cpp` of the original
+SEAL library and should yield the exact same output, except (of course) for the actual performance
+numbers.
+
+* [SEAL](https://github.com/microsoft/SEAL)
+* [native/examples/7_performance.cpp](https://github.com/microsoft/SEAL/blob/master/native/examples/7_performance.cpp)
+
+See also: [`example_performance_test`](@ref), [`example_bfv_performance_default`](@ref),
+          [`bfv_performance_test`](@ref),
+          [`example_ckks_performance_custom`](@ref)
+"""
 function example_bfv_performance_custom()
   poly_modulus_degree = 0
   println()
@@ -435,6 +505,23 @@ function example_bfv_performance_custom()
   bfv_performance_test(SEALContext(enc_parms))
 end
 
+
+"""
+    example_ckks_performance_default()
+
+Perform multiple performance tests of the CKKS scheme for several polynomial modulus degrees.
+
+This function is based on the file `native/examples/7_performance.cpp` of the original
+SEAL library and should yield the exact same output, except (of course) for the actual performance
+numbers.
+
+* [SEAL](https://github.com/microsoft/SEAL)
+* [native/examples/7_performance.cpp](https://github.com/microsoft/SEAL/blob/master/native/examples/7_performance.cpp)
+
+See also: [`example_performance_test`](@ref), [`example_ckks_performance_custom`](@ref),
+          [`ckks_performance_test`](@ref),
+          [`example_bfv_performance_default`](@ref)
+"""
 function example_ckks_performance_default()
   print_example_banner("CKKS Performance Test with Degrees: 4096, 8192, and 16384")
 
@@ -466,6 +553,24 @@ function example_ckks_performance_default()
   # ckks_performance_test(SEALContext(enc_parms))
 end
 
+
+"""
+    example_ckks_performance_custom()
+
+Show a terminal menu for selecting a custom polynomial modulus degree and use it for performance
+tests with the CKKS scheme.
+
+This function is based on the file `native/examples/7_performance.cpp` of the original
+SEAL library and should yield the exact same output, except (of course) for the actual performance
+numbers.
+
+* [SEAL](https://github.com/microsoft/SEAL)
+* [native/examples/7_performance.cpp](https://github.com/microsoft/SEAL/blob/master/native/examples/7_performance.cpp)
+
+See also: [`example_performance_test`](@ref), [`example_ckks_performance_default`](@ref),
+          [`ckks_performance_test`](@ref),
+          [`example_bfv_performance_custom`](@ref)
+"""
 function example_ckks_performance_custom()
   poly_modulus_degree = 0
   println()
@@ -494,6 +599,24 @@ function example_ckks_performance_custom()
   ckks_performance_test(SEALContext(enc_parms))
 end
 
+
+"""
+    example_performance_test()
+
+Show a terminal menu for selecting different performance tests.
+
+This function is based on the file `native/examples/7_performance.cpp` of the original
+SEAL library and should yield the exact same output, except (of course) for the actual performance
+numbers.
+
+* [SEAL](https://github.com/microsoft/SEAL)
+* [native/examples/7_performance.cpp](https://github.com/microsoft/SEAL/blob/master/native/examples/7_performance.cpp)
+
+See also: [`example_bfv_performance_default`](@ref), [`example_bfv_performance_custom`](@ref),
+          [`bfv_performance_test`](@ref),
+          [`example_ckks_performance_default`](@ref), [`example_ckks_performance_custom`](@ref),
+          [`ckks_performance_test`](@ref)
+"""
 function example_performance_test()
   print_example_banner("Example: Performance Test")
 
