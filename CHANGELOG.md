@@ -5,6 +5,9 @@ This file only tracks changes at a very high, summarized level, omitting patch r
 ## SEAL dev
 * ...
 
+## SEAL v0.4.0
+* Update the wrapper to support SEAL v3.6
+
 ## SEAL v0.3.0
 * Add `examples/6_serialization.jl` and `examples/7_performance.jl` and all corresponding
   functionality in the library itself
