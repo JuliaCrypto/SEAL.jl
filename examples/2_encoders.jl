@@ -3,6 +3,19 @@ include("utilities.jl")
 using SEAL
 using Printf
 
+
+"""
+    example_batch_encoder()
+
+Example to demonstrate encoding and decoding vectors of integers with the BFV scheme.
+This function is based on the file `native/examples/2_encoders.cpp` of the original
+SEAL library and should yield the exact same output.
+
+* [SEAL](https://github.com/microsoft/SEAL)
+* [native/examples/2_encoders.cpp](https://github.com/microsoft/SEAL/blob/master/native/examples/2_encoders.cpp)
+
+See also: [`example_ckks_encoder`](@ref), [`example_encoders`](@ref)
+"""
 function example_batch_encoder()
   print_example_banner("Example: Encoders / Batch Encoder")
 
@@ -92,6 +105,19 @@ function example_batch_encoder()
   print_matrix(pod_result, row_size)
 end
 
+
+"""
+    example_ckks_encoder()
+
+Example to demonstrate encoding and decoding vectors of floating point values with the CKKS scheme.
+This function is based on the file `native/examples/2_encoders.cpp` of the original
+SEAL library and should yield the exact same output.
+
+* [SEAL](https://github.com/microsoft/SEAL)
+* [native/examples/2_encoders.cpp](https://github.com/microsoft/SEAL/blob/master/native/examples/2_encoders.cpp)
+
+See also: [`example_batch_encoder`](@ref), [`example_encoders`](@ref)
+"""
 function example_ckks_encoder()
   print_example_banner("Example: Encoders / CKKS Encoder")
 
@@ -156,6 +182,20 @@ function example_ckks_encoder()
 
 end
 
+
+"""
+    example_encoders()
+
+Demonstrate how vectors of integers (BFV) or floating point values (CKKS) can be encoded/decoded
+with the BFV and CKKS schemes.
+This function is based on the file `native/examples/2_encoders.cpp` of the original
+SEAL library and should yield the exact same output.
+
+* [SEAL](https://github.com/microsoft/SEAL)
+* [native/examples/2_encoders.cpp](https://github.com/microsoft/SEAL/blob/master/native/examples/2_encoders.cpp)
+
+See also: [`example_batch_encoder`](@ref), [`example_ckks_encoder`](@ref)
+"""
 function example_encoders()
   print_example_banner("Example: Encoders")
 

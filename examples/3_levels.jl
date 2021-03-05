@@ -4,6 +4,18 @@ using SEAL
 using Printf
 
 
+"""
+    example_levels()
+
+Illustrate the concept of levels in the BFV and CKKS schemes.
+This function is based on the file `native/examples/3_levels.cpp` of the original
+SEAL library and should yield the exact same output.
+
+* [SEAL](https://github.com/microsoft/SEAL)
+* [native/examples/3_levels.cpp](https://github.com/microsoft/SEAL/blob/master/native/examples/3_levels.cpp)
+
+See also: [`example_bfv_basics`](@ref), [`example_ckks_basics`](@ref)
+"""
 function example_levels()
   print_example_banner("Example: Levels")
 
