@@ -1,0 +1,2 @@
+// Just include stddef.h since we do not need anything C++-specific and `cstddef` is not a C header
+#include <stddef.h>
