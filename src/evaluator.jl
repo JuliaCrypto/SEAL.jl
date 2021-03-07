@@ -228,3 +228,20 @@ function negate!(destination::Ciphertext, encrypted::Ciphertext, evaluator::Eval
   @check_return_value retval
   return destination
 end
+
+function negate_inplace!(encrypted::Ciphertext, evaluator::Evaluator)
+  return negate!(encrypted, encrypted, evaluator)
+end
+
+function sub!(destination::Ciphertext, encrypted1::Ciphertext, encrypted2::Ciphertext,
+              evaluator::Evaluator)
+  retval = ccall((:Evaluator_Sub, libsealc), Clong,
+                 (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}),
+                 evaluator, encrypted1, encrypted2, destination)
+  @check_return_value retval
+  return destination
+end
+
+function sub_inplace!(encrypted1::Ciphertext, encrypted2::Ciphertext, evaluator::Evaluator)
+  return sub!(encrypted1, encrypted1, encrypted2, evaluator)
+end

@@ -107,7 +107,7 @@ export Evaluator, square!, square_inplace!, relinearize!, relinearize_inplace!, 
        mod_switch_to_next_inplace!, add!, add_inplace!, add_plain!, add_plain_inplace!,
        rotate_vector!, rotate_vector_inplace!, rotate_rows!, rotate_rows_inplace!,
        rotate_columns!, rotate_columns_inplace!, complex_conjugate!, complex_conjugate_inplace!,
-       negate!
+       negate!, negate_inplace!, sub!, sub_inplace!
 
 include("decryptor.jl")
 export Decryptor, decrypt!, invariant_noise_budget

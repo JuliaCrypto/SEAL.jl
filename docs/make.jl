@@ -43,4 +43,5 @@ makedocs(
 
 deploydocs(
     repo = "github.com/JuliaCrypto/SEAL.jl.git",
+    devbranch = "main"
 )
