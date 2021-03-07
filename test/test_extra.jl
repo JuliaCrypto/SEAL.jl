@@ -161,6 +161,29 @@
       @test negate!(c11, c10, evaluator) == c11
     end
 
+    @testset "negate_inplace!" begin
+      c12 = Ciphertext()
+      encrypt!(c12, p, encryptor)
+      @test negate_inplace!(c12, evaluator) == c12
+    end
+
+    @testset "sub!" begin
+      c13 = Ciphertext()
+      c14 = Ciphertext()
+      c15 = Ciphertext()
+      encrypt!(c13, p, encryptor)
+      encrypt!(c14, p, encryptor)
+      @test sub!(c15, c13, c14, evaluator) == c15
+    end
+
+    @testset "sub_inplace!" begin
+      c16 = Ciphertext()
+      c17 = Ciphertext()
+      encrypt!(c16, p, encryptor)
+      encrypt!(c17, p, encryptor)
+      @test sub!(c16, c17, evaluator) == c16
+    end
+
     @testset "using_keyswitching" begin
       using_keyswitching(context) == true
     end
