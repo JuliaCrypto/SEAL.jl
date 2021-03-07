@@ -181,11 +181,11 @@
       c17 = Ciphertext()
       encrypt!(c16, p, encryptor)
       encrypt!(c17, p, encryptor)
-      @test sub!(c16, c17, evaluator) == c16
+      @test sub_inplace!(c16, c17, evaluator) == c16
     end
 
     @testset "using_keyswitching" begin
-      using_keyswitching(context) == true
+      @test using_keyswitching(context) == true
     end
 
     @testset "Plaintext constructor" begin
