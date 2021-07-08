@@ -1,0 +1,7 @@
+[deps]
+CBindingGen = "308a6e0c-0495-45e1-b1ab-67fb455a0d77"
+Libdl = "8f399da3-3557-5675-b5ff-fb832c97cbdb"
+SEAL_jll = "cdf55027-1209-57fc-8789-28745714751d"
+
+[compat]
+CBindingGen = "0.4"
